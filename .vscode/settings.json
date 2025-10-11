@@ -1,0 +1,6 @@
+{
+    "python-envs.pythonProjects": [],
+    "python.defaultInterpreterPath": "venv/bin/python",
+    "pythonEnvironment": "/home/stefan/Documents/robotica/venv/bin/python", 
+    "workspaceRoot": "file:///home/stefan/Documents/robotica"
+}

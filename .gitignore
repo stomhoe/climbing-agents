@@ -1,0 +1,5 @@
+#create gitignore for godot and python
+*.import
+*.pyc
+__pycache__/    
+logs/
