@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Godot Project",
+            "type": "node",
+            "request": "launch",
+            "program": "godot",
+            "args": [
+                "--path",
+                "${workspaceFolder}/godo"
+            ],
+            "cwd": "${workspaceFolder}/godo"
+        }
+    ]
+}

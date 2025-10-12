@@ -1,0 +1,88 @@
+[gd_scene load_steps=11 format=3 uid="uid://cqow47bch5ocs"]
+
+[ext_resource type="Script" uid="uid://1v8qv3d707s" path="res://scripts/character_body_3d.gd" id="1_pppb4"]
+[ext_resource type="Script" uid="uid://c6c840uwug4bv" path="res://scripts/ai_controller_3d.gd" id="2_nta2c"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0xm2m"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_h2yge"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_1bvp3"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_lquwl"]
+data = PackedVector3Array(-50, 0.049999997, 50, 50, 0.049999997, 50, -50, -0.049999997, 50, 50, 0.049999997, 50, 50, -0.049999997, 50, -50, -0.049999997, 50, 50, 0.049999997, -50, -50, 0.049999997, -50, 50, -0.049999997, -50, -50, 0.049999997, -50, -50, -0.049999997, -50, 50, -0.049999997, -50, 50, 0.049999997, 50, 50, 0.049999997, -50, 50, -0.049999997, 50, 50, 0.049999997, -50, 50, -0.049999997, -50, 50, -0.049999997, 50, -50, 0.049999997, -50, -50, 0.049999997, 50, -50, -0.049999997, -50, -50, 0.049999997, 50, -50, -0.049999997, 50, -50, -0.049999997, -50, 50, 0.049999997, 50, -50, 0.049999997, 50, 50, 0.049999997, -50, -50, 0.049999997, 50, -50, 0.049999997, -50, 50, 0.049999997, -50, -50, -0.049999997, 50, 50, -0.049999997, 50, -50, -0.049999997, -50, 50, -0.049999997, 50, 50, -0.049999997, -50, -50, -0.049999997, -50)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7mycd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_272bh"]
+emission_enabled = true
+emission = Color(0, 0.92941177, 0.007843138, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5vw27"]
+material = SubResource("StandardMaterial3D_272bh")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
+size = Vector3(10, 1, 1)
+
+[node name="Instance" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2594948, 0, 0)
+script = ExtResource("1_pppb4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_0xm2m")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7280302, 0, 0)
+mesh = SubResource("CapsuleMesh_h2yge")
+
+[node name="AIController3D" type="Node3D" parent="CharacterBody3D"]
+script = ExtResource("2_nta2c")
+metadata/_custom_type_script = "uid://jxhhl3bp3ovx"
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0825715, 0)
+mesh = SubResource("BoxMesh_1bvp3")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_lquwl")
+
+[node name="Target" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5726, -0.44845438, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Target"]
+shape = SubResource("BoxShape3D_7mycd")
+debug_color = Color(6.256998e-07, 0.63379276, 0.4400303, 0.41960785)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Target"]
+mesh = SubResource("BoxMesh_5vw27")
+
+[node name="Walls" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.587, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+shape = SubResource("BoxShape3D_0xm2m")
+debug_color = Color(6.256998e-07, 0.63379276, 0.4400303, 0.41960785)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+shape = SubResource("BoxShape3D_0xm2m")
+debug_color = Color(6.256998e-07, 0.63379276, 0.4400303, 0.41960785)
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Walls"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5, 0, 0)
+shape = SubResource("BoxShape3D_0xm2m")
+debug_color = Color(6.256998e-07, 0.63379276, 0.4400303, 0.41960785)
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Walls"]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5, 0, 0)
+shape = SubResource("BoxShape3D_0xm2m")
+debug_color = Color(6.256998e-07, 0.63379276, 0.4400303, 0.41960785)
+
+[connection signal="body_entered" from="Target" to="CharacterBody3D" method="_on_target_body_entered"]
+[connection signal="body_entered" from="Walls" to="CharacterBody3D" method="_on_walls_body_entered"]

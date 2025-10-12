@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bha5741d6yi3m"]
+
+[ext_resource type="PackedScene" uid="uid://cqow47bch5ocs" path="res://instance.tscn" id="1_wdvcg"]
+[ext_resource type="Script" uid="uid://bgnch8w7tbswk" path="res://addons/godot_rl_agents/sync.gd" id="2_pk8dh"]
+
+[node name="BatchEnvs" type="Node3D"]
+
+[node name="Instance" parent="." instance=ExtResource("1_wdvcg")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.94437635, 0.32886663, 0, -0.32886663, 0.94437635, -0.06559062, 0.55917645, 6.269412)
+
+[node name="Sync" type="Node" parent="."]
+script = ExtResource("2_pk8dh")
+speed_up = 59.5
+metadata/_custom_type_script = "uid://bgnch8w7tbswk"
