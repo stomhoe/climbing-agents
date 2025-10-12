@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="Script" uid="uid://1v8qv3d707s" path="res://scripts/character_body_3d.gd" id="1_pppb4"]
-[ext_resource type="Script" uid="uid://c6c840uwug4bv" path="res://scripts/ai_controller_3d.gd" id="2_nta2c"]
+[ext_resource type="Script" uid="uid://c6c840uwug4bv" path="res://scripts/ai_controller_cube.gd" id="2_nta2c"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0xm2m"]
 

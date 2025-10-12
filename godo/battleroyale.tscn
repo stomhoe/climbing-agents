@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://j1lfmltsw254"]
+
+[node name="Battleroyale" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]

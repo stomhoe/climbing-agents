@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bha5741d6yi3m"]
 
-[ext_resource type="PackedScene" uid="uid://cqow47bch5ocs" path="res://instance.tscn" id="1_wdvcg"]
+[ext_resource type="PackedScene" uid="uid://cqow47bch5ocs" path="res://reach_point.tscn" id="1_wdvcg"]
 [ext_resource type="Script" uid="uid://bgnch8w7tbswk" path="res://addons/godot_rl_agents/sync.gd" id="2_pk8dh"]
 
 [node name="BatchEnvs" type="Node3D"]

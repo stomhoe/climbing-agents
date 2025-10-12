@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cauremdkrp35l"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_xn8ec"]
+size = Vector2(9999, 9999)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_hl0nu"]
+data = PackedVector3Array(-50, 0.049999997, 50, 50, 0.049999997, 50, -50, -0.049999997, 50, 50, 0.049999997, 50, 50, -0.049999997, 50, -50, -0.049999997, 50, 50, 0.049999997, -50, -50, 0.049999997, -50, 50, -0.049999997, -50, -50, 0.049999997, -50, -50, -0.049999997, -50, 50, -0.049999997, -50, 50, 0.049999997, 50, 50, 0.049999997, -50, 50, -0.049999997, 50, 50, 0.049999997, -50, 50, -0.049999997, -50, 50, -0.049999997, 50, -50, 0.049999997, -50, -50, 0.049999997, 50, -50, -0.049999997, -50, -50, 0.049999997, 50, -50, -0.049999997, 50, -50, -0.049999997, -50, 50, 0.049999997, 50, -50, 0.049999997, 50, 50, 0.049999997, -50, -50, 0.049999997, 50, -50, 0.049999997, -50, 50, 0.049999997, -50, -50, -0.049999997, 50, 50, -0.049999997, 50, -50, -0.049999997, -50, 50, -0.049999997, 50, 50, -0.049999997, -50, -50, -0.049999997, -50)
+
+[node name="Bomber" type="Node3D"]
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.0825715, 0)
+mesh = SubResource("PlaneMesh_xn8ec")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_hl0nu")
