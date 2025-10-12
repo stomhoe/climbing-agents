@@ -8,7 +8,7 @@
 [node name="Instance" parent="." instance=ExtResource("1_wdvcg")]
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.94437635, 0.32886663, 0, -0.32886663, 0.94437635, -0.06559062, 0.55917645, 6.269412)
+transform = Transform3D(1, 0, 0, 0, 0.94437635, 0.32886663, 0, -0.32886663, 0.94437635, -0.06559062, 9.158089, 13.4934435)
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("2_pk8dh")
