@@ -1,10 +1,10 @@
 extends Node3D
-class_name Character
+class_name Combatant
 
 # movement/walking/jumping stuff
 const JUMP_STRENGTH = 60
 const SPEED = 50
-const DAMPING = 0.9
+const DAMPING = 0.99
 @onready var on_floor_left = $"Physical/Armature/Skeleton3D/Physical Bone LLeg2/OnFloorLeft" # shapecast on the feet to check if its on floor
 @onready var on_floor_right = $"Physical/Armature/Skeleton3D/Physical Bone RLeg2/OnFloorRight" # shapecast on the feet to check if its on floor
 @onready var jump_timer = $Physical/JumpTimer # timer to stop excidental double jump
@@ -12,6 +12,7 @@ var can_jump = true
 var is_on_floor = false
 var walking = false # if it is walking
 
+@onready var arena: Arena = get_parent().get_parent()
 
 # spring stuff
 @export var angular_spring_stiffness: float = 4000.0
@@ -34,7 +35,6 @@ var physics_bones = [] # all physical bones
 # grabbing related stuff
 var active_arm_left = false
 var active_arm_right = false
-var grabbed_object = null
 var grabbing_arm_left = false
 var grabbing_arm_right = false
 @onready var grab_joint_right = $Physical/GrabJointRight
@@ -43,6 +43,8 @@ var grabbing_arm_right = false
 @onready var physical_bone_r_arm_2 = $"Physical/Armature/Skeleton3D/Physical Bone RArm2"
 @onready var l_grab_area = $"Physical/Armature/Skeleton3D/Physical Bone LArm2/LGrabArea"
 @onready var r_grab_area = $"Physical/Armature/Skeleton3D/Physical Bone RArm2/RGrabArea"
+
+var ai_controller
 
 var current_delta:float
 
@@ -149,7 +151,6 @@ func _on_l_grab_area_body_entered(body:Node3D):
     if body is PhysicsBody3D and body.get_parent() != physical_skel and not body is StaticBody3D:
         if active_arm_left and not grabbing_arm_left:
             grabbing_arm_left = true
-            grabbed_object = body
             grab_joint_left.global_position = l_grab_area.global_position
             grab_joint_left.node_a = physical_bone_l_arm_2.get_path()
             grab_joint_left.node_b = body.get_path()
@@ -172,19 +173,35 @@ func _on_skeleton_3d_skeleton_updated() -> void:
             
 func get_body_data() -> Array: 
     return [
-        physical_bone_body.angular_velocity,
-        physical_bone_body.linear_velocity,
-        physical_bone_body.position,
-        physical_bone_body.rotation,
-        physical_bone_head.rotation,
-        physical_bone_l_arm_2.position,
-        physical_bone_l_arm_2.rotation,
-        physical_bone_l_arm_2.angular_velocity,
-        physical_bone_l_arm_2.linear_velocity,
-        physical_bone_r_arm_2.position,
-        physical_bone_r_arm_2.rotation,
-        physical_bone_r_arm_2.angular_velocity,
-        physical_bone_r_arm_2.linear_velocity,
+        physical_bone_body.linear_velocity.x,
+        physical_bone_body.linear_velocity.y,
+        physical_bone_body.linear_velocity.z,
+        physical_bone_body.position.x,
+        physical_bone_body.position.y,
+        physical_bone_body.position.z,
+        physical_bone_body.rotation.x,
+        physical_bone_head.rotation.y,
+        physical_bone_head.rotation.z,
+        physical_bone_l_arm_2.position.x,
+        physical_bone_l_arm_2.position.y,
+        physical_bone_l_arm_2.position.z,
+        physical_bone_l_arm_2.rotation.x,
+        physical_bone_l_arm_2.rotation.y,
+        physical_bone_l_arm_2.rotation.z,
+        physical_bone_l_arm_2.angular_velocity.x,
+        physical_bone_l_arm_2.angular_velocity.y,
+        physical_bone_l_arm_2.angular_velocity.z,
+        physical_bone_r_arm_2.position.x,
+        physical_bone_r_arm_2.position.y,
+        physical_bone_r_arm_2.position.z,
+        physical_bone_r_arm_2.rotation.x,
+        physical_bone_r_arm_2.rotation.y,
+        physical_bone_r_arm_2.rotation.z,
+        physical_bone_r_arm_2.angular_velocity.x,
+        physical_bone_r_arm_2.angular_velocity.y,
+        physical_bone_r_arm_2.angular_velocity.z,
+        grabbing_arm_left,
+        grabbing_arm_right,
     ]
     
 

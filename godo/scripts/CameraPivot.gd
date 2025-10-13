@@ -6,7 +6,7 @@ var mouse_sensitivity: float = 0.1# camera rotation speed
 
 @onready var spring_arm = $SpringArm3D
 
-@onready var character: Character = get_parent()
+@onready var character: Combatant = get_parent()
 
 var mouse_lock = false # is mouse locked
 
@@ -24,6 +24,8 @@ func _input(event):
     if Input.is_action_just_pressed(&"ragdoll"): character.ragdoll_mode = !character.ragdoll_mode # toggle ragdoll mode
 
     character.input_move = Input.get_vector(&"move_left", &"move_right", &"move_forward", &"move_backward")
+    
+    character.jump = Input.is_action_just_pressed(&"jump")
 
     character.active_arm_left = Input.is_action_pressed(&"grab_left")# activate left arm with mouse left click
     character.active_arm_right = Input.is_action_pressed(&"grab_right")# activate right arm with mouse right click

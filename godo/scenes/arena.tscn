@@ -1,0 +1,123 @@
+[gd_scene load_steps=17 format=3 uid="uid://bwfbnvkr1oku7"]
+
+[ext_resource type="Script" uid="uid://bmu4ammqx3ali" path="res://scripts/arena.gd" id="1_oexds"]
+[ext_resource type="PackedScene" uid="uid://cxf173edblocb" path="res://scenes/ragdoll_ai.tscn" id="3_4ag8t"]
+[ext_resource type="PackedScene" uid="uid://cd70x3de3pbl4" path="res://scenes/combatant_body.tscn" id="3_41jku"]
+[ext_resource type="Texture2D" uid="uid://p3vl4tw45c5r" path="res://assets/godot-prototype-texture/PNG/logo_blue_512x512.png" id="6_8vbsj"]
+[ext_resource type="Texture2D" uid="uid://gs6n3sg4t772" path="res://assets/godot-prototype-texture/PNG/checker_black_512x512.png" id="7_xsx6r"]
+[ext_resource type="Script" uid="uid://dftya00rl23nd" path="res://scripts/grabbable.gd" id="8_ixwup"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k0juu"]
+size = Vector3(16, 1, 16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kjm3o"]
+albedo_texture = ExtResource("7_xsx6r")
+uv1_scale = Vector3(60, 45, 60)
+
+[sub_resource type="BoxMesh" id="BoxMesh_71j4m"]
+size = Vector3(16, 1, 16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_71j4m"]
+albedo_color = Color(1, 0.19460034, 0.11959977, 1)
+emission_enabled = true
+emission = Color(0.88431424, 3.0563026e-06, 1.8289685e-06, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_71j4m"]
+material = SubResource("StandardMaterial3D_71j4m")
+radius = 1.0
+height = 2.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qfnet"]
+radius = 1.0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_k3kff"]
+friction = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_7dkeg"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t3ptc"]
+albedo_texture = ExtResource("6_8vbsj")
+uv1_scale = Vector3(3, 2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v56dp"]
+size = Vector3(2, 2, 2)
+
+[node name="Arena" type="Node3D"]
+script = ExtResource("1_oexds")
+
+[node name="Combatants" type="Node3D" parent="."]
+
+[node name="Combatant" parent="Combatants" instance=ExtResource("3_41jku")]
+transform = Transform3D(1, 0, 7.35137e-08, 0, 1, 0, -7.35137e-08, 0, 1, 0.43332338, 2.967497, -3.228979)
+
+[node name="AIController3D" parent="Combatants/Combatant" instance=ExtResource("3_4ag8t")]
+control_mode = 0
+
+[node name="Combatant2" parent="Combatants" instance=ExtResource("3_41jku")]
+transform = Transform3D(-0.9998021, 0, -0.019895464, 0, 1, 0, 0.019895464, 0, -0.9998021, 0.8666462, 2.7980642, 1.2178192)
+angular_spring_stiffness = 4000.0
+
+[node name="AIController3D" parent="Combatants/Combatant2" instance=ExtResource("3_4ag8t")]
+
+[node name="Level" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Level"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Level/Floor"]
+shape = SubResource("BoxShape3D_k0juu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/Floor"]
+material_override = SubResource("StandardMaterial3D_kjm3o")
+mesh = SubResource("BoxMesh_71j4m")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Walk - WASD
+Jump - Space
+Grab left - Left mouse
+Grab right - Right mouse
+Toggle ragdoll - R
+Show cursor - Esc
+"
+
+[node name="Objects" type="Node3D" parent="."]
+
+[node name="Ball" type="RigidBody3D" parent="Objects"]
+transform = Transform3D(1.025, 0, 0, 0, 1.025, 0, 0, 0, 1.025, 5.160158, 1.6937981, 0)
+mass = 4.0
+script = ExtResource("8_ixwup")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Objects/Ball"]
+mesh = SubResource("SphereMesh_71j4m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Objects/Ball"]
+shape = SubResource("SphereShape3D_qfnet")
+
+[node name="BigBox" type="RigidBody3D" parent="Objects"]
+transform = Transform3D(0.823453, 0, 0.567384, 0, 1, 0, -0.567384, 0, 0.823453, 4.92097, 1.7884753, 5.0569916)
+mass = 4.0
+physics_material_override = SubResource("PhysicsMaterial_k3kff")
+script = ExtResource("8_ixwup")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Objects/BigBox"]
+mesh = SubResource("BoxMesh_7dkeg")
+surface_material_override/0 = SubResource("StandardMaterial3D_t3ptc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Objects/BigBox"]
+shape = SubResource("BoxShape3D_v56dp")
+
+[node name="BigBox2" type="RigidBody3D" parent="Objects"]
+transform = Transform3D(0.35615036, 0, 0.9344283, 0, 1, 0, -0.9344283, 0, 0.35615036, -5.34126, 2.1989126, 6.4291053)
+mass = 4.0
+physics_material_override = SubResource("PhysicsMaterial_k3kff")
+script = ExtResource("8_ixwup")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Objects/BigBox2"]
+mesh = SubResource("BoxMesh_7dkeg")
+skeleton = NodePath("../../BigBox2")
+surface_material_override/0 = SubResource("StandardMaterial3D_t3ptc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Objects/BigBox2"]
+shape = SubResource("BoxShape3D_v56dp")
