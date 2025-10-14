@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://51gjpid7sjyr"]
+[gd_scene load_steps=10 format=3 uid="uid://51gjpid7sjyr"]
 
 [ext_resource type="Script" uid="uid://cbvbaw10r28o3" path="res://scripts/boundaries.gd" id="1_00lvc"]
+[ext_resource type="Script" uid="uid://bm4xivmekhm3w" path="res://scripts/climb_map.gd" id="1_w1vl5"]
 [ext_resource type="PackedScene" uid="uid://du810krjernvh" path="res://scenes/climber.tscn" id="2_5nyud"]
 [ext_resource type="PackedScene" uid="uid://dh3naami7rgg6" path="res://scenes/box.tscn" id="3_qsneh"]
+[ext_resource type="Script" uid="uid://bgnch8w7tbswk" path="res://addons/godot_rl_agents/sync.gd" id="4_aymul"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5nyud"]
 normal = Vector2(1, 0)
@@ -18,8 +20,11 @@ size = Vector3(200, 1, 1)
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gpkft"]
 
 [node name="ClimbMap" type="Node2D"]
+script = ExtResource("1_w1vl5")
 
 [node name="Boundaries" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_00lvc")
 
 [node name="Wall" type="CollisionShape2D" parent="Boundaries"]
@@ -36,7 +41,12 @@ mesh = SubResource("BoxMesh_00lvc")
 [node name="Floor" type="CollisionShape2D" parent="Floor"]
 shape = SubResource("WorldBoundaryShape2D_gpkft")
 
-[node name="Climber" parent="." instance=ExtResource("2_5nyud")]
+[node name="Target" type="Node2D" parent="."]
+position = Vector2(0, -800)
+
+[node name="Climbers" type="Node2D" parent="."]
+
+[node name="Climber" parent="Climbers" instance=ExtResource("2_5nyud")]
 position = Vector2(70, -39)
 
 [node name="Box" parent="." instance=ExtResource("3_qsneh")]
@@ -72,5 +82,48 @@ position = Vector2(-38, -378)
 [node name="Box11" parent="." instance=ExtResource("3_qsneh")]
 position = Vector2(58, -418)
 
+[node name="Box15" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(132, -576)
+
 [node name="Box12" parent="." instance=ExtResource("3_qsneh")]
 position = Vector2(-44, -300)
+
+[node name="Box13" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-9, -421)
+
+[node name="Box14" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-86, -453)
+
+[node name="Box16" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-92, -375)
+
+[node name="Box17" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(36, -532)
+
+[node name="Box23" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(20, -662)
+
+[node name="Box18" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-41, -564)
+
+[node name="Box19" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(58, -620)
+
+[node name="Box24" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(70, -704)
+
+[node name="Box25" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(122, -657)
+
+[node name="Box20" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-47, -486)
+
+[node name="Box21" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-60, -691)
+
+[node name="Box22" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-66, -613)
+
+[node name="Sync" type="Node" parent="."]
+script = ExtResource("4_aymul")
+metadata/_custom_type_script = "uid://bgnch8w7tbswk"

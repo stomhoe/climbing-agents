@@ -27,6 +27,23 @@ class_name Climber
 @onready var r_foot_grabber: Grabber = $Rcalf/Grabber
 @onready var l_foot_grabber: Grabber = $Lcalf/Grabber
 
+@onready var ai_controller: AIController2D = $AIController2D
+var target: Node2D
+
+func get_pos() -> Vector2:
+    return torso.global_position
+    
+func distance_to_target() -> float:
+    if target:
+        return torso.global_position.distance_to(target.global_position)
+    return 0.0
+
+func distance_vector_to_target() -> Vector2:
+    if target:
+        return (target.global_position - torso.global_position)
+    return Vector2.ZERO
+
+
 @onready var joints: Dictionary[Grabber, Array] = {
     r_hand_grabber: [r_shoulder, r_elbow],
     l_hand_grabber: [l_shoulder, l_elbow],
@@ -64,7 +81,7 @@ func _physics_process(delta: float):
 
 # Add any necessary vars here
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
-var swing_boost_strength: float = 1300.0  # Additional strength during the swing boost
+var swing_boost_strength: float = 1400.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
 
 func _apply_muscle_forces(delta: float):
@@ -73,10 +90,12 @@ func _apply_muscle_forces(delta: float):
         var limb: RigidBody2D = currently_controlled.get_parent() as RigidBody2D
         var applied_strength = control_strength
         
-        # Apply swing boost if within the boost time
-        if swing_timer > 0.0 and _at_least_one_grabbed():
-            applied_strength += 2500. + swing_boost_strength
-            swing_timer -= delta
+        # Apply swing boost if within the boost timead
+        if _at_least_one_grabbed():
+            if swing_timer > 0.0:
+                applied_strength += swing_boost_strength * swing_boost_time
+                swing_timer -= delta
+            applied_strength += 1500.
         
         limb.apply_force(force_direction * applied_strength, currently_controlled.global_position - limb.global_position)
     

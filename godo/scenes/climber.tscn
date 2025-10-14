@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://du810krjernvh"]
+[gd_scene load_steps=9 format=3 uid="uid://du810krjernvh"]
 
 [ext_resource type="Script" uid="uid://csywm5ogyueew" path="res://scripts/climber.gd" id="1_7e176"]
 [ext_resource type="Shape2D" uid="uid://cr7ppqcms2hw4" path="res://colliders/body.tres" id="2_ygfqx"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://e4xbb806qvh2" path="res://scripts/monke_raycast.gd" id="4_nwbdq"]
 [ext_resource type="PackedScene" uid="uid://chsdkprww0adx" path="res://scenes/grabber.tscn" id="5_3nhoh"]
 [ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="5_nwbdq"]
+[ext_resource type="Script" uid="uid://dpskjb7a14727" path="res://scripts/ai_controller_2d.gd" id="7_nwbdq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_emysf"]
 size = Vector2(9, 3)
@@ -14,7 +15,8 @@ size = Vector2(9, 3)
 script = ExtResource("1_7e176")
 
 [node name="Torso" type="RigidBody2D" parent="."]
-collision_layer = 2
+collision_layer = 0
+collision_mask = 3
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Torso"]
@@ -43,10 +45,21 @@ node_b = NodePath("../../Rthigh")
 [node name="Camera2D" type="Camera2D" parent="Torso"]
 zoom = Vector2(3, 3)
 
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Torso"]
+remote_path = NodePath("../../AIController2D/RaycastBody")
+update_rotation = false
+update_scale = false
+
+[node name="RemoteTransform2D2" type="RemoteTransform2D" parent="Torso"]
+remote_path = NodePath("../../AIController2D/NodeAbove")
+update_rotation = false
+update_scale = false
+
 [node name="Lthigh" type="RigidBody2D" parent="."]
 position = Vector2(-6, 12.585)
 rotation = 1.5707964
-collision_layer = 2
+collision_layer = 0
+collision_mask = 3
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lthigh"]
@@ -61,7 +74,8 @@ node_b = NodePath("../../Lcalf")
 [node name="Rthigh" type="RigidBody2D" parent="."]
 position = Vector2(6, 12.585)
 rotation = 1.5707964
-collision_layer = 2
+collision_layer = 0
+collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -76,7 +90,8 @@ node_b = NodePath("../../Rcalf")
 
 [node name="Lupperarm" type="RigidBody2D" parent="."]
 position = Vector2(-12.15, -9)
-collision_layer = 2
+collision_layer = 0
+collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -90,7 +105,8 @@ node_b = NodePath("../../Lforearm")
 
 [node name="Rupperarm" type="RigidBody2D" parent="."]
 position = Vector2(12.149994, -9)
-collision_layer = 2
+collision_layer = 0
+collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -104,7 +120,8 @@ node_b = NodePath("../../Rforearm")
 
 [node name="Lforearm" type="RigidBody2D" parent="."]
 position = Vector2(-21.65, -9)
-collision_layer = 2
+collision_layer = 0
+collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -116,7 +133,8 @@ position = Vector2(-6, 0)
 
 [node name="Rforearm" type="RigidBody2D" parent="."]
 position = Vector2(21.65, -9)
-collision_layer = 2
+collision_layer = 0
+collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -129,7 +147,8 @@ position = Vector2(7, 0)
 [node name="Lcalf" type="RigidBody2D" parent="."]
 position = Vector2(-6, 19.615)
 rotation = 1.5707964
-collision_layer = 2
+collision_layer = 0
+collision_mask = 3
 gravity_scale = 0.01
 script = ExtResource("5_nwbdq")
 
@@ -142,7 +161,8 @@ position = Vector2(7, 0)
 [node name="Rcalf" type="RigidBody2D" parent="."]
 position = Vector2(6, 19.615)
 rotation = 1.5707964
-collision_layer = 2
+collision_layer = 0
+collision_mask = 3
 gravity_scale = 0.01
 script = ExtResource("5_nwbdq")
 
@@ -152,9 +172,17 @@ shape = SubResource("RectangleShape2D_emysf")
 [node name="Grabber" parent="Rcalf" instance=ExtResource("5_3nhoh")]
 position = Vector2(7, 0)
 
-[node name="RaycastSensor2D" type="Node2D" parent="."]
-visible = false
+[node name="AIController2D" type="Node2D" parent="." groups=["AGENT"]]
+script = ExtResource("7_nwbdq")
+control_mode = 2
+metadata/_custom_type_script = "uid://baugigub80dua"
+
+[node name="RaycastBody" type="Node2D" parent="AIController2D"]
 script = ExtResource("4_nwbdq")
-n_rays = 32.0
-ray_length = 100
+metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
+
+[node name="NodeAbove" type="Node2D" parent="AIController2D"]
+
+[node name="RaycastAbove" type="Node2D" parent="AIController2D/NodeAbove"]
+script = ExtResource("4_nwbdq")
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
