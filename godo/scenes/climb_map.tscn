@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://51gjpid7sjyr"]
+[gd_scene load_steps=8 format=3 uid="uid://51gjpid7sjyr"]
 
 [ext_resource type="Script" uid="uid://cbvbaw10r28o3" path="res://scripts/boundaries.gd" id="1_00lvc"]
 [ext_resource type="PackedScene" uid="uid://du810krjernvh" path="res://scenes/climber.tscn" id="2_5nyud"]
@@ -15,6 +15,8 @@ distance = -100.0
 size = Vector3(200, 1, 1)
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gpkft"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tkjw4"]
 
 [node name="ClimbMap" type="Node2D"]
 
@@ -37,3 +39,22 @@ shape = SubResource("WorldBoundaryShape2D_gpkft")
 
 [node name="Climber" parent="." instance=ExtResource("2_5nyud")]
 position = Vector2(70, -39)
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+position = Vector2(19, -69)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(-56, 35)
+shape = SubResource("RectangleShape2D_tkjw4")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(19, -69)
+shape = SubResource("RectangleShape2D_tkjw4")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-2, -40)
+shape = SubResource("RectangleShape2D_tkjw4")
