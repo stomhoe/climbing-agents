@@ -9,9 +9,10 @@ script = ExtResource("1_snmkx")
 [node name="Joint" type="PinJoint2D" parent="."]
 rotation = 1.5707964
 disable_collision = false
-softness = 1.0
+softness = 0.5
 
 [node name="GrabArea" type="Area2D" parent="."]
+priority = 100
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GrabArea"]
 shape = ExtResource("2_g6pxq")

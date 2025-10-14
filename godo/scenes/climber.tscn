@@ -112,6 +112,7 @@ script = ExtResource("5_nwbdq")
 shape = ExtResource("3_3nhoh")
 
 [node name="Grabber" parent="Lforearm" instance=ExtResource("5_3nhoh")]
+position = Vector2(-6, 0)
 
 [node name="Rforearm" type="RigidBody2D" parent="."]
 position = Vector2(21.65, -9)
@@ -123,6 +124,7 @@ script = ExtResource("5_nwbdq")
 shape = ExtResource("3_3nhoh")
 
 [node name="Grabber" parent="Rforearm" instance=ExtResource("5_3nhoh")]
+position = Vector2(7, 0)
 
 [node name="Lcalf" type="RigidBody2D" parent="."]
 position = Vector2(-6, 19.615)
@@ -135,6 +137,7 @@ script = ExtResource("5_nwbdq")
 shape = SubResource("RectangleShape2D_emysf")
 
 [node name="Grabber" parent="Lcalf" instance=ExtResource("5_3nhoh")]
+position = Vector2(7, 0)
 
 [node name="Rcalf" type="RigidBody2D" parent="."]
 position = Vector2(6, 19.615)
@@ -147,6 +150,7 @@ script = ExtResource("5_nwbdq")
 shape = SubResource("RectangleShape2D_emysf")
 
 [node name="Grabber" parent="Rcalf" instance=ExtResource("5_3nhoh")]
+position = Vector2(7, 0)
 
 [node name="RaycastSensor2D" type="Node2D" parent="."]
 visible = false

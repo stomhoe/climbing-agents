@@ -12,26 +12,32 @@ class_name Climber
 @onready var r_calf: RigidBody2D = $Rcalf
 @onready var l_calf: RigidBody2D = $Lcalf
 
-@onready var l_shoulder = $Torso/Lshoulder
-@onready var r_shoulder = $Torso/Rshoulder
-@onready var l_hip = $Torso/Lhip
-@onready var r_hip = $Torso/Rhip
-@onready var r_knee = $Rthigh/Rknee
-@onready var r_elbow = $Rupperarm/Relbow
-@onready var l_knee = $Lthigh/Lknee
+@onready var l_shoulder: PinJoint2D = $Torso/Lshoulder
+@onready var r_shoulder: PinJoint2D = $Torso/Rshoulder
+@onready var l_elbow: PinJoint2D = $Lupperarm/Lelbow
+@onready var r_elbow: PinJoint2D = $Rupperarm/Relbow
+@onready var l_hip: PinJoint2D = $Torso/Lhip
+@onready var r_hip: PinJoint2D = $Torso/Rhip
+@onready var l_knee: PinJoint2D = $Lthigh/Lknee
+@onready var r_knee: PinJoint2D = $Rthigh/Rknee
 
 # also stores Grab states
-@onready var r_hand_grabber = $Rforearm/Grabber
-@onready var l_hand_grabber = $Lforearm/Grabber
-@onready var r_foot_grabber = $Rcalf/Grabber
-@onready var l_foot_grabber = $Lcalf/Grabber
+@onready var r_hand_grabber: Grabber = $Rforearm/Grabber
+@onready var l_hand_grabber: Grabber = $Lforearm/Grabber
+@onready var r_foot_grabber: Grabber = $Rcalf/Grabber
+@onready var l_foot_grabber: Grabber = $Lcalf/Grabber
 
+@onready var joints: Dictionary[Grabber, Array] = {
+    r_hand_grabber: [r_shoulder, r_elbow],
+    l_hand_grabber: [l_shoulder, l_elbow],
+    r_foot_grabber: [r_hip, r_knee],
+    l_foot_grabber: [l_hip, l_knee]
+}
+func _at_least_one_grabbed() -> bool:
+    return r_hand_grabber.is_grabbing() or l_hand_grabber.is_grabbing() or r_foot_grabber.is_grabbing() or l_foot_grabber.is_grabbing()
 
 # Control variables
-var control_strength: float = 2000.0
-var damping: float = 3
-
-
+var control_strength: float = 1000.0
 # Input states
 var left_trigger_pressed: bool = false
 var right_trigger_pressed: bool = false
@@ -44,25 +50,21 @@ func _ready():
     l_hand_grabber.grab_area.body_entered.connect(_on_grab_area_entered.bind(l_hand_grabber))
     r_foot_grabber.grab_area.body_entered.connect(_on_grab_area_entered.bind(r_foot_grabber))
     l_foot_grabber.grab_area.body_entered.connect(_on_grab_area_entered.bind(l_foot_grabber))
-
-    _setup_body_physics()
-
-func _setup_body_physics():
-    # Make the climber more responsive and realistic
-    var bodies = [r_forearm, l_forearm, r_upperarm, l_upperarm, 
-                  r_thigh, l_thigh, r_calf, l_calf]
     
-    for body in bodies:
-        body.linear_damp = damping
-        body.angular_damp = damping
+    for joints_arr in joints.values():
+        for joint in joints_arr:
+            joint.angular_limit_lower = -2.5
+            joint.angular_limit_upper = 2.5
+
+
 
 func _physics_process(delta: float):
     _handle_input()
     _apply_muscle_forces(delta)
 
 # Add any necessary vars here
-var swing_boost_time: float = 0.5  # Duration of the swing boost in seconds
-var swing_boost_strength: float = 4000.0  # Additional strength during the swing boost
+var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
+var swing_boost_strength: float = 1300.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
 
 func _apply_muscle_forces(delta: float):
@@ -72,11 +74,23 @@ func _apply_muscle_forces(delta: float):
         var applied_strength = control_strength
         
         # Apply swing boost if within the boost time
-        if swing_timer > 0.0:
-            applied_strength += swing_boost_strength
+        if swing_timer > 0.0 and _at_least_one_grabbed():
+            applied_strength += 2500. + swing_boost_strength
             swing_timer -= delta
         
         limb.apply_force(force_direction * applied_strength, currently_controlled.global_position - limb.global_position)
+    
+    # Lock joints for uncontrolled limbs that aren't grabbing anything
+
+    for grabber in joints:
+        var joint_list = joints[grabber]
+        if grabber != currently_controlled and not grabber.is_grabbing():
+            for joint in joint_list:
+                joint.angular_limit_enabled = true
+        else:
+            for joint in joint_list:
+                joint.angular_limit_enabled = false
+
 
 func _handle_input():
     var left_hand_pressed: bool = Input.is_action_pressed(&"left_hand_control")
@@ -101,11 +115,10 @@ func _handle_input():
     # If we just stopped controlling a grabber, try to grab
     if currently_controlled != null and new_controlled != currently_controlled:
         _try_auto_grab(currently_controlled)
-    
-    # If we just started controlling a grabber, release its grab and reset swing boost
+        
     if new_controlled != null and new_controlled != currently_controlled:
         _release_grab(new_controlled)
-        swing_timer = swing_boost_time  # Reset swing boost timer
+        swing_timer = swing_boost_time 
     
     currently_controlled = new_controlled
 
@@ -119,42 +132,37 @@ var force_direction: Vector2 = Vector2.ZERO
 
 
 func _on_grab_area_entered(body: Node2D, grabber: Grabber):
-    # This function now just provides debug info
-    # Actual grabbing is handled by _try_auto_grab when releasing control
-    if not (body is Boundaries or (body is BodyPart and body.get_parent() == self)):
-        print("%s detected %s in grab range" % [grabber.get_parent().name, body.name])
+    """Automatically grab any valid body if the grabber is not currently controlled."""
+    if grabber != currently_controlled:
+        if _is_valid_grab_target(body, grabber):
+            grabber.joint.node_b = body.get_path()
+            grabber.joint.position = grabber.position
+            print("Auto-grabbed %s with %s" % [body.name, grabber.get_parent().name])
 
 func _release_grab(grabber: Grabber):
-    """Release the grab by disconnecting the joint"""
+    """Release the grab by disconnecting the joint."""
     grabber.release()
     print("Released grab for: " + grabber.get_parent().name)
 
 func _try_auto_grab(grabber: Grabber):
-    """Try to automatically grab whatever this grabber is touching"""
+    """Try to automatically grab whatever this grabber is touching."""
     var bodies = grabber.grab_area.get_overlapping_bodies()
     
     print("Trying to auto-grab with %s, found %d bodies" % [grabber.get_parent().name, bodies.size()])
     
     for body in bodies:
-        print("  - Found body: %s (type: %s)" % [body.name, body.get_class()])
-        
-        # Check if it's a valid body to grab
-        if body is Boundaries:
-            print("    Skipping: is Boundaries")
-            continue
-            
-        # Prevent grabbing own body parts
-        if body is BodyPart and body.get_parent() == self:
-            print("    Skipping: is own body part")
-            continue
-            
-        # Found a valid body to grab
-        grabber.joint.node_b = body.get_path()
-        # Set the joint position to the grabber's local position relative to its parent
-        grabber.joint.position = grabber.position
-        print("    SUCCESS: %s auto-grabbed %s" % [grabber.get_parent().name, body.name])
-        return
+        if _is_valid_grab_target(body, grabber):
+            grabber.joint.node_b = body.get_path()
+            grabber.joint.position = grabber.position
+            print("SUCCESS: %s auto-grabbed %s" % [grabber.get_parent().name, body.name])
+            return
     
-    print("  %s found nothing valid to grab" % grabber.get_parent().name)
-            
-            
+    print("%s found nothing valid to grab" % grabber.get_parent().name)
+
+func _is_valid_grab_target(body: Node2D, grabber: Grabber) -> bool:
+    """Check if the body is a valid target for grabbing."""
+    if body is Boundaries:
+        return false
+    if body is BodyPart and body.get_parent() == self:
+        return false
+    return true
