@@ -156,18 +156,14 @@ func _on_grab_area_entered(body: Node2D, grabber: Grabber):
         if _is_valid_grab_target(body, grabber):
             grabber.joint.node_b = body.get_path()
             grabber.joint.position = grabber.position
-            print("Auto-grabbed %s with %s" % [body.name, grabber.get_parent().name])
 
 func _release_grab(grabber: Grabber):
     """Release the grab by disconnecting the joint."""
     grabber.release()
-    print("Released grab for: " + grabber.get_parent().name)
 
 func _try_auto_grab(grabber: Grabber):
     """Try to automatically grab whatever this grabber is touching."""
     var bodies = grabber.grab_area.get_overlapping_bodies()
-    
-    print("Trying to auto-grab with %s, found %d bodies" % [grabber.get_parent().name, bodies.size()])
     
     for body in bodies:
         if _is_valid_grab_target(body, grabber):
@@ -176,7 +172,6 @@ func _try_auto_grab(grabber: Grabber):
             print("SUCCESS: %s auto-grabbed %s" % [grabber.get_parent().name, body.name])
             return
     
-    print("%s found nothing valid to grab" % grabber.get_parent().name)
 
 func _is_valid_grab_target(body: Node2D, grabber: Grabber) -> bool:
     """Check if the body is a valid target for grabbing."""

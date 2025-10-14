@@ -12,11 +12,11 @@ func get_obs() -> Dictionary:
     var dist_vec: Vector2 = climber.distance_vector_to_target()
     var obs: Array = [
         dist_vec[0], dist_vec[1],
-        body_sensor.calculate_raycasts(),
-        raycast_above.calculate_raycasts(),
+
         climber.torso.rotation,
         climber.torso.angular_velocity,
-        climber.torso.linear_velocity,
+        climber.torso.linear_velocity.x,
+        climber.torso.linear_velocity.y,
         climber.l_forearm.rotation,
         climber.r_forearm.rotation,
         climber.l_upperarm.rotation,
@@ -30,7 +30,7 @@ func get_obs() -> Dictionary:
         climber.l_hand_grabber.is_grabbing(),
         climber.r_hand_grabber.is_grabbing(),
         climber.swing_timer,
-    ]
+    ] + body_sensor.calculate_raycasts() + raycast_above.calculate_raycasts()
     return {"obs":obs}
 
 func get_reward() -> float:	
@@ -55,9 +55,6 @@ func set_action(action: Dictionary) -> void:
     
     var grabber_i: int = clamp(action[&"grabber"], 0, 3)
     
-    # if grabber_i == -1:
-    #     climber.currently_controlled = null
-    # else:
     climber.currently_controlled = climber.joints.values()[grabber_i]
         
         

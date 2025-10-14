@@ -179,6 +179,7 @@ metadata/_custom_type_script = "uid://baugigub80dua"
 
 [node name="RaycastBody" type="Node2D" parent="AIController2D"]
 script = ExtResource("4_nwbdq")
+n_rays = 20.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
 [node name="NodeAbove" type="Node2D" parent="AIController2D"]
