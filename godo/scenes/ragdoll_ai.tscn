@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://cxf173edblocb"]
-
-[ext_resource type="Script" uid="uid://d0jp7w6hlh4qf" path="res://scripts/ai_controller_ragdoll.gd" id="1_664jl"]
-
-[node name="AIController3D" type="Node3D" groups=["AGENT"]]
-script = ExtResource("1_664jl")
-control_mode = 2
-metadata/_custom_type_script = "uid://jxhhl3bp3ovx"

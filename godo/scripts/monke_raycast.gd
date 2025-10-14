@@ -1,0 +1,1 @@
+extends RaycastSensor2D

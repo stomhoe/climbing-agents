@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://chsdkprww0adx"]
+
+[ext_resource type="Script" uid="uid://b2apmem0gyo3o" path="res://scripts/grabber.gd" id="1_snmkx"]
+[ext_resource type="Shape2D" uid="uid://dlarbd2ym2asc" path="res://colliders/grab.tres" id="2_g6pxq"]
+
+[node name="Grabber" type="Node2D"]
+script = ExtResource("1_snmkx")
+
+[node name="Joint" type="PinJoint2D" parent="."]
+rotation = 1.5707964
+node_a = NodePath("../..")
+disable_collision = false
+
+[node name="GrabArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GrabArea"]
+shape = ExtResource("2_g6pxq")
+debug_color = Color(4.1392445e-06, 0.64874595, 0.18077826, 0.41960785)
