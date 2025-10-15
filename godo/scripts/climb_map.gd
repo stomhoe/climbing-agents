@@ -24,7 +24,7 @@ func _process(delta: float):
         for climber in climbers.get_children():
             var cli: Climber = climber as Climber
             var reward: float = get_reward(cli)
-            cli.ai_controller.reward = reward #max(reward, cli.ai_controller.reward)
+            cli.ai_controller.reward = max(reward, cli.ai_controller.reward)
 
 var reward_angle: float = -PI/2
 

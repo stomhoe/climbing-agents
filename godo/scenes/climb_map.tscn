@@ -7,12 +7,12 @@
 [ext_resource type="Script" uid="uid://bgnch8w7tbswk" path="res://addons/godot_rl_agents/sync.gd" id="4_aymul"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5nyud"]
-normal = Vector2(1, 0)
-distance = -200.0
+normal = Vector2(1, -0.1)
+distance = -100.0
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xrnny"]
-normal = Vector2(-1, 0)
-distance = -200.0
+normal = Vector2(-1, -0.1)
+distance = -100.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_00lvc"]
 size = Vector3(200, 1, 1)
@@ -434,3 +434,7 @@ position = Vector2(-14, -1814)
 script = ExtResource("4_aymul")
 speed_up = 20.0
 metadata/_custom_type_script = "uid://bgnch8w7tbswk"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -160)
+zoom = Vector2(2, 2)

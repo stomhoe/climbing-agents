@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://du810krjernvh"]
+[gd_scene load_steps=14 format=3 uid="uid://du810krjernvh"]
 
 [ext_resource type="Script" uid="uid://csywm5ogyueew" path="res://scripts/climber.gd" id="1_7e176"]
 [ext_resource type="Shape2D" uid="uid://cr7ppqcms2hw4" path="res://colliders/body.tres" id="2_ygfqx"]
@@ -16,8 +16,14 @@ material = SubResource("StandardMaterial3D_kce74")
 radius = 10.096
 height = 24.737
 
+[sub_resource type="BoxMesh" id="BoxMesh_kce74"]
+size = Vector3(12, 3, 1)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_emysf"]
 size = Vector2(9, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7aipt"]
+size = Vector3(10, 3, 1)
 
 [node name="Climber" type="Node2D"]
 script = ExtResource("1_7e176")
@@ -55,6 +61,7 @@ node_a = NodePath("..")
 node_b = NodePath("../../Rthigh")
 
 [node name="Camera2D" type="Camera2D" parent="Torso"]
+enabled = false
 zoom = Vector2(4, 4)
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Torso"]
@@ -102,6 +109,9 @@ shape = ExtResource("3_3nhoh")
 visible = false
 position = Vector2(-6, 0)
 
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Lforearm"]
+mesh = SubResource("BoxMesh_kce74")
+
 [node name="Rforearm" type="RigidBody2D" parent="."]
 position = Vector2(21.65, -9)
 collision_layer = 0
@@ -111,6 +121,9 @@ script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rforearm"]
 shape = ExtResource("3_3nhoh")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="Rforearm"]
+mesh = SubResource("BoxMesh_kce74")
 
 [node name="Grabber" parent="Rforearm" instance=ExtResource("5_3nhoh")]
 visible = false
@@ -131,6 +144,9 @@ shape = SubResource("RectangleShape2D_emysf")
 visible = false
 position = Vector2(7, 0)
 
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Lcalf"]
+mesh = SubResource("BoxMesh_7aipt")
+
 [node name="Rcalf" type="RigidBody2D" parent="."]
 position = Vector2(6, 19.615)
 rotation = 1.5707964
@@ -145,6 +161,9 @@ shape = SubResource("RectangleShape2D_emysf")
 [node name="Grabber" parent="Rcalf" instance=ExtResource("5_3nhoh")]
 visible = false
 position = Vector2(7, 0)
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Rcalf"]
+mesh = SubResource("BoxMesh_7aipt")
 
 [node name="AIController2D" type="Node2D" parent="." groups=["AGENT"]]
 script = ExtResource("7_nwbdq")
