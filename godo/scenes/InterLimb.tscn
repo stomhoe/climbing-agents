@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://cathck1hstnnf"]
+
+[ext_resource type="Script" uid="uid://beuvwkft1666w" path="res://scripts/inter_limb.gd" id="1_8ovy2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_50pj0"]
+radius = 1.4
+height = 9.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ovy2"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_v2l4i"]
+material = SubResource("StandardMaterial3D_8ovy2")
+
+[sub_resource type="Gradient" id="Gradient_8ovy2"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_oviuh"]
+gradient = SubResource("Gradient_8ovy2")
+
+[node name="InterLimb" type="RigidBody2D"]
+rotation = 1.5707964
+collision_layer = 0
+collision_mask = 3
+script = ExtResource("1_8ovy2")
+metadata/_custom_type_script = "uid://beuvwkft1666w"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_50pj0")
+
+[node name="Joint" type="PinJoint2D" parent="."]
+visible = false
+position = Vector2(3.415, 0)
+rotation = -1.5707964
+node_a = NodePath("..")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+scale = Vector2(9.052049, 1.668372)
+mesh = SubResource("CapsuleMesh_v2l4i")
+texture = SubResource("GradientTexture2D_oviuh")

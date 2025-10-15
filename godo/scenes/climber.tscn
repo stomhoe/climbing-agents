@@ -1,12 +1,20 @@
-[gd_scene load_steps=9 format=3 uid="uid://du810krjernvh"]
+[gd_scene load_steps=12 format=3 uid="uid://du810krjernvh"]
 
 [ext_resource type="Script" uid="uid://csywm5ogyueew" path="res://scripts/climber.gd" id="1_7e176"]
 [ext_resource type="Shape2D" uid="uid://cr7ppqcms2hw4" path="res://colliders/body.tres" id="2_ygfqx"]
 [ext_resource type="Shape2D" uid="uid://gnqvkohl8wu4" path="res://colliders/arm.tres" id="3_3nhoh"]
+[ext_resource type="PackedScene" uid="uid://cathck1hstnnf" path="res://scenes/InterLimb.tscn" id="4_7aipt"]
 [ext_resource type="Script" uid="uid://e4xbb806qvh2" path="res://scripts/monke_raycast.gd" id="4_nwbdq"]
 [ext_resource type="PackedScene" uid="uid://chsdkprww0adx" path="res://scenes/grabber.tscn" id="5_3nhoh"]
 [ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="5_nwbdq"]
 [ext_resource type="Script" uid="uid://dpskjb7a14727" path="res://scripts/ai_controller_2d.gd" id="7_nwbdq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kce74"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_7aipt"]
+material = SubResource("StandardMaterial3D_kce74")
+radius = 10.096
+height = 24.737
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_emysf"]
 size = Vector2(9, 3)
@@ -47,7 +55,7 @@ node_a = NodePath("..")
 node_b = NodePath("../../Rthigh")
 
 [node name="Camera2D" type="Camera2D" parent="Torso"]
-zoom = Vector2(3, 3)
+zoom = Vector2(4, 4)
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="Torso"]
 remote_path = NodePath("../../AIController2D/RaycastBody")
@@ -59,72 +67,26 @@ remote_path = NodePath("../../AIController2D/NodeAbove")
 update_rotation = false
 update_scale = false
 
-[node name="Lthigh" type="RigidBody2D" parent="."]
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Torso"]
+mesh = SubResource("CapsuleMesh_7aipt")
+
+[node name="Lthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-6, 12.585)
-rotation = 1.5707964
-collision_layer = 0
-collision_mask = 3
-script = ExtResource("5_nwbdq")
+next_limb = NodePath("../Lcalf")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Lthigh"]
-shape = SubResource("RectangleShape2D_emysf")
-
-[node name="Lknee" type="PinJoint2D" parent="Lthigh"]
-visible = false
-position = Vector2(3.415, 0)
-rotation = -1.5707964
-node_a = NodePath("..")
-node_b = NodePath("../../Lcalf")
-
-[node name="Rthigh" type="RigidBody2D" parent="."]
+[node name="Rthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(6, 12.585)
-rotation = 1.5707964
-collision_layer = 0
-collision_mask = 3
-gravity_scale = 0.0
-script = ExtResource("5_nwbdq")
+next_limb = NodePath("../Rcalf")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rthigh"]
-shape = SubResource("RectangleShape2D_emysf")
+[node name="Lupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
+position = Vector2(-12, -9)
+rotation = -3.1415927
+next_limb = NodePath("../Lforearm")
 
-[node name="Rknee" type="PinJoint2D" parent="Rthigh"]
-visible = false
-position = Vector2(3.415, 0)
-rotation = -1.5707964
-node_a = NodePath("..")
-node_b = NodePath("../../Rcalf")
-
-[node name="Lupperarm" type="RigidBody2D" parent="."]
-position = Vector2(-12.15, -9)
-collision_layer = 0
-collision_mask = 3
-gravity_scale = 0.0
-script = ExtResource("5_nwbdq")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Lupperarm"]
-shape = ExtResource("3_3nhoh")
-
-[node name="Lelbow" type="PinJoint2D" parent="Lupperarm"]
-visible = false
-position = Vector2(-4.9750004, 0)
-node_a = NodePath("..")
-node_b = NodePath("../../Lforearm")
-
-[node name="Rupperarm" type="RigidBody2D" parent="."]
-position = Vector2(12.149994, -9)
-collision_layer = 0
-collision_mask = 3
-gravity_scale = 0.0
-script = ExtResource("5_nwbdq")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rupperarm"]
-shape = ExtResource("3_3nhoh")
-
-[node name="Relbow" type="PinJoint2D" parent="Rupperarm"]
-visible = false
-position = Vector2(4.9749985, 0)
-node_a = NodePath("..")
-node_b = NodePath("../../Rforearm")
+[node name="Rupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
+position = Vector2(12, -9)
+rotation = 0.0
+next_limb = NodePath("../Rforearm")
 
 [node name="Lforearm" type="RigidBody2D" parent="."]
 position = Vector2(-21.65, -9)

@@ -5,21 +5,17 @@ class_name Climber
 @onready var torso: RigidBody2D = $Torso
 @onready var r_forearm: RigidBody2D = $Rforearm
 @onready var l_forearm: RigidBody2D = $Lforearm
-@onready var r_upperarm: RigidBody2D = $Rupperarm
-@onready var l_upperarm: RigidBody2D = $Lupperarm
-@onready var r_thigh: RigidBody2D = $Rthigh
-@onready var l_thigh: RigidBody2D = $Lthigh
+@onready var r_upperarm: InterLimb = $Rupperarm
+@onready var l_upperarm: InterLimb = $Lupperarm
+@onready var r_thigh: InterLimb = $Rthigh
+@onready var l_thigh: InterLimb = $Lthigh
 @onready var r_calf: RigidBody2D = $Rcalf
 @onready var l_calf: RigidBody2D = $Lcalf
 
 @onready var l_shoulder: PinJoint2D = $Torso/Lshoulder
 @onready var r_shoulder: PinJoint2D = $Torso/Rshoulder
-@onready var l_elbow: PinJoint2D = $Lupperarm/Lelbow
-@onready var r_elbow: PinJoint2D = $Rupperarm/Relbow
 @onready var l_hip: PinJoint2D = $Torso/Lhip
 @onready var r_hip: PinJoint2D = $Torso/Rhip
-@onready var l_knee: PinJoint2D = $Lthigh/Lknee
-@onready var r_knee: PinJoint2D = $Rthigh/Rknee
 
 # also stores Grab states
 @onready var r_hand_grabber: Grabber = $Rforearm/Grabber
@@ -34,10 +30,10 @@ func get_pos() -> Vector2:
     return torso.global_position
 
 @onready var joints: Dictionary[Grabber, Array] = {
-    r_hand_grabber: [r_shoulder, r_elbow],
-    l_hand_grabber: [l_shoulder, l_elbow],
-    r_foot_grabber: [r_hip, r_knee],
-    l_foot_grabber: [l_hip, l_knee]
+    r_hand_grabber: [r_shoulder, r_upperarm.joint],
+    l_hand_grabber: [l_shoulder, l_upperarm.joint],
+    r_foot_grabber: [r_hip, r_thigh.joint],
+    l_foot_grabber: [l_hip, l_thigh.joint]
 }
 func _at_least_one_grabbed() -> bool:
     return r_hand_grabber.is_grabbing() or l_hand_grabber.is_grabbing() or r_foot_grabber.is_grabbing() or l_foot_grabber.is_grabbing()

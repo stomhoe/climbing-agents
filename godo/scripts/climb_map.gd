@@ -7,8 +7,8 @@ func _ready():
     for climber in climbers.get_children():
         climber.target_angle = reward_angle
 
-var climb_time:float = 180
-var timer = climb_time
+var climb_time: float = 180.0
+var timer: float = climb_time
         
 #TODO: GENERACIÓN RANDOM ASÍ NO SE BASA EN RANDOMIZACIÓN A BASE DE POSICION
 

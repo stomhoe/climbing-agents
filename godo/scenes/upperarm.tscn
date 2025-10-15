@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://jct4ivjcw2ia"]
+
+[ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="1_ps3k4"]
+[ext_resource type="Shape2D" uid="uid://gnqvkohl8wu4" path="res://colliders/arm.tres" id="2_3umlt"]
+
+[node name="Lupperarm" type="RigidBody2D"]
+collision_layer = 0
+collision_mask = 3
+gravity_scale = 0.0
+script = ExtResource("1_ps3k4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = ExtResource("2_3umlt")
+
+[node name="Lelbow" type="PinJoint2D" parent="."]
+visible = false
+position = Vector2(-4.9750004, 0)
+node_a = NodePath("..")
+node_b = NodePath("../../Lforearm")
