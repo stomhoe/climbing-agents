@@ -1,36 +1,40 @@
 extends AIController2D
-
+class_name AIClimbController
 
 @onready var climber: Climber = $".."
-@onready var body_sensor = $RaycastBody
-@onready var raycast_above = $NodeAbove/RaycastAbove
+@onready var node_above: Node2D = $NodeAbove
 
-func _process(delta):
-    raycast_above.position = 80 * Vector2(cos(climber.target_angle), sin(climber.target_angle))
+@onready var body_sensor: RaycastSensor2D = $RaycastBody
+@onready var raycast_right: RaycastSensor2D = $NodeAbove/RaycastRight
+@onready var raycast_left: RaycastSensor2D = $NodeAbove/RaycastLeft
+
+func _process(delta: float):
+    node_above.global_rotation = climber.target_angle + PI/2
 
 func get_obs() -> Dictionary:
     var obs: Array = [
         climber.target_angle,
         climber.get_pos().x,
         climber.get_pos().y,
-        climber.torso.rotation,
+        climber.torso.global_rotation,
         climber.torso.angular_velocity,
         climber.torso.linear_velocity.x,
         climber.torso.linear_velocity.y,
-        climber.l_forearm.rotation,
-        climber.r_forearm.rotation,
-        climber.l_upperarm.rotation,
-        climber.r_upperarm.rotation,
-        climber.l_thigh.rotation,
-        climber.r_thigh.rotation,
-        climber.l_calf.rotation,
-        climber.r_calf.rotation,
+        climber.l_forearm.global_rotation,
+        climber.r_forearm.global_rotation,
+        climber.l_upperarm.global_rotation,
+        climber.r_upperarm.global_rotation,
+        climber.l_thigh.global_rotation,
+        climber.r_thigh.global_rotation,
+        climber.l_calf.global_rotation,
+        climber.r_calf.global_rotation,
         climber.l_foot_grabber.is_grabbing(),
         climber.r_foot_grabber.is_grabbing(),
         climber.l_hand_grabber.is_grabbing(),
         climber.r_hand_grabber.is_grabbing(),
         climber.swing_timer,
-    ] + body_sensor.calculate_raycasts() + raycast_above.calculate_raycasts()
+        climber.stagnation_timer
+    ] + body_sensor.calculate_raycasts() + raycast_left.calculate_raycasts() + raycast_right.calculate_raycasts()
     return {"obs":obs}
 
 func get_reward() -> float:	

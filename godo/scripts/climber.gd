@@ -23,8 +23,21 @@ class_name Climber
 @onready var r_foot_grabber: Grabber = $Rcalf/Grabber
 @onready var l_foot_grabber: Grabber = $Lcalf/Grabber
 
-@onready var ai_controller: AIController2D = $AIController2D
+@onready var ai_controller: AIClimbController = $AIController2D
 var target_angle: float
+
+var stagnation_timer: float = 0.0
+
+func set_pos(pos: Vector2) -> void:
+    torso.global_position = pos
+    r_upperarm.global_position = pos
+    l_upperarm.global_position = pos
+    r_thigh.global_position = pos
+    l_thigh.global_position = pos
+    r_forearm.global_position = pos
+    l_forearm.global_position = pos
+    r_calf.global_position = pos
+    l_calf.global_position = pos
 
 func get_pos() -> Vector2:
     return torso.global_position
@@ -66,7 +79,7 @@ func _physics_process(delta: float):
 
 # Add any necessary vars here
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
-var swing_boost_strength: float = 1400.0  # Additional strength during the swing boost
+var swing_boost_strength: float = 1800.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
 
 func _apply_muscle_forces(delta: float):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://du810krjernvh"]
+[gd_scene load_steps=15 format=3 uid="uid://du810krjernvh"]
 
 [ext_resource type="Script" uid="uid://csywm5ogyueew" path="res://scripts/climber.gd" id="1_7e176"]
 [ext_resource type="Shape2D" uid="uid://cr7ppqcms2hw4" path="res://colliders/body.tres" id="2_ygfqx"]
@@ -7,7 +7,8 @@
 [ext_resource type="Script" uid="uid://e4xbb806qvh2" path="res://scripts/monke_raycast.gd" id="4_nwbdq"]
 [ext_resource type="PackedScene" uid="uid://chsdkprww0adx" path="res://scenes/grabber.tscn" id="5_3nhoh"]
 [ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="5_nwbdq"]
-[ext_resource type="Script" uid="uid://dpskjb7a14727" path="res://scripts/ai_controller_2d.gd" id="7_nwbdq"]
+[ext_resource type="Script" uid="uid://n04gwns6q2lp" path="res://scripts/ai_climb_controller.gd" id="7_7aipt"]
+[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="9_7aipt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kce74"]
 
@@ -166,20 +167,35 @@ position = Vector2(7, 0)
 mesh = SubResource("BoxMesh_7aipt")
 
 [node name="AIController2D" type="Node2D" parent="." groups=["AGENT"]]
-script = ExtResource("7_nwbdq")
+script = ExtResource("7_7aipt")
 control_mode = 2
-metadata/_custom_type_script = "uid://baugigub80dua"
 
 [node name="RaycastBody" type="Node2D" parent="AIController2D"]
-visible = false
+rotation = -1.5707964
 script = ExtResource("4_nwbdq")
 n_rays = 20.0
+ray_length = 400
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
 [node name="NodeAbove" type="Node2D" parent="AIController2D"]
 
-[node name="RaycastAbove" type="Node2D" parent="AIController2D/NodeAbove"]
-visible = false
+[node name="RaycastLeft" type="Node2D" parent="AIController2D/NodeAbove"]
+position = Vector2(-100, -80)
 script = ExtResource("4_nwbdq")
-n_rays = 30.0
+ray_length = 400
+cone_width = 120.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
+
+[node name="RaycastRight" type="Node2D" parent="AIController2D/NodeAbove"]
+position = Vector2(100, -80)
+rotation = 3.1415927
+script = ExtResource("4_nwbdq")
+ray_length = 400
+cone_width = 120.0
+metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
+
+[node name="Sprite2D" type="Sprite2D" parent="AIController2D/NodeAbove"]
+visible = false
+position = Vector2(-3.8146973e-06, -82)
+scale = Vector2(0.1171875, 0.15625)
+texture = ExtResource("9_7aipt")

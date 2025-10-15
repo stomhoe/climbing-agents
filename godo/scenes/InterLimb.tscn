@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cathck1hstnnf"]
+[gd_scene load_steps=4 format=3 uid="uid://cathck1hstnnf"]
 
 [ext_resource type="Script" uid="uid://beuvwkft1666w" path="res://scripts/inter_limb.gd" id="1_8ovy2"]
 
@@ -6,15 +6,7 @@
 radius = 1.4
 height = 9.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ovy2"]
-
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v2l4i"]
-material = SubResource("StandardMaterial3D_8ovy2")
-
-[sub_resource type="Gradient" id="Gradient_8ovy2"]
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_oviuh"]
-gradient = SubResource("Gradient_8ovy2")
 
 [node name="InterLimb" type="RigidBody2D"]
 rotation = 1.5707964
@@ -36,4 +28,3 @@ node_a = NodePath("..")
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 scale = Vector2(9.052049, 1.668372)
 mesh = SubResource("CapsuleMesh_v2l4i")
-texture = SubResource("GradientTexture2D_oviuh")
