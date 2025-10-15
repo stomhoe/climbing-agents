@@ -28,21 +28,10 @@ class_name Climber
 @onready var l_foot_grabber: Grabber = $Lcalf/Grabber
 
 @onready var ai_controller: AIController2D = $AIController2D
-var target: Node2D
+var target_angle: float
 
 func get_pos() -> Vector2:
     return torso.global_position
-    
-func distance_to_target() -> float:
-    if target:
-        return torso.global_position.distance_to(target.global_position)
-    return 0.0
-
-func distance_vector_to_target() -> Vector2:
-    if target:
-        return (target.global_position - torso.global_position)
-    return Vector2.ZERO
-
 
 @onready var joints: Dictionary[Grabber, Array] = {
     r_hand_grabber: [r_shoulder, r_elbow],
@@ -76,7 +65,7 @@ func _ready():
 
 
 func _physics_process(delta: float):
-    _handle_input()
+    #_handle_input()
     _apply_muscle_forces(delta)
 
 # Add any necessary vars here

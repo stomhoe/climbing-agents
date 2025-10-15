@@ -49,6 +49,135 @@ position = Vector2(0, -800)
 [node name="Climber" parent="Climbers" instance=ExtResource("2_5nyud")]
 position = Vector2(70, -39)
 
+[node name="Climber2" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber3" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber4" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber5" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber6" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber7" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber8" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber9" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber10" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber11" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber12" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber13" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber14" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber15" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber16" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber17" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber18" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber19" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber20" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber21" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber22" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber23" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber24" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber25" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber26" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber27" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber28" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber29" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber30" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber31" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber32" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber33" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber34" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber35" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber36" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber37" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber38" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber39" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber40" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber41" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber42" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber43" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
+[node name="Climber44" parent="Climbers" instance=ExtResource("2_5nyud")]
+position = Vector2(70, -39)
+
 [node name="Box" parent="." instance=ExtResource("3_qsneh")]
 position = Vector2(-27, -31)
 
@@ -124,6 +253,184 @@ position = Vector2(-60, -691)
 [node name="Box22" parent="." instance=ExtResource("3_qsneh")]
 position = Vector2(-66, -613)
 
+[node name="Box26" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-42, -787)
+
+[node name="Box27" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-4, -745)
+
+[node name="Box28" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(8, -829)
+
+[node name="Box29" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(60, -782)
+
+[node name="Box30" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-122, -816)
+
+[node name="Box31" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-128, -738)
+
+[node name="Box32" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(25, -899)
+
+[node name="Box33" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(63, -857)
+
+[node name="Box34" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(75, -941)
+
+[node name="Box35" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(127, -894)
+
+[node name="Box36" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-55, -928)
+
+[node name="Box37" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-61, -850)
+
+[node name="Box38" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(193, -1076)
+
+[node name="Box39" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-25, -953)
+
+[node name="Box40" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(97, -1032)
+
+[node name="Box41" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(81, -1162)
+
+[node name="Box42" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(20, -1064)
+
+[node name="Box43" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(119, -1120)
+
+[node name="Box44" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(131, -1204)
+
+[node name="Box45" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(183, -1157)
+
+[node name="Box46" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(14, -986)
+
+[node name="Box47" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(1, -1191)
+
+[node name="Box48" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-5, -1113)
+
+[node name="Box49" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(19, -1287)
+
+[node name="Box50" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(57, -1245)
+
+[node name="Box51" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(69, -1329)
+
+[node name="Box52" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(121, -1282)
+
+[node name="Box53" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-61, -1316)
+
+[node name="Box54" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-67, -1238)
+
+[node name="Box55" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(86, -1399)
+
+[node name="Box56" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(124, -1357)
+
+[node name="Box57" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(136, -1441)
+
+[node name="Box58" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(188, -1394)
+
+[node name="Box59" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(6, -1428)
+
+[node name="Box60" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(0, -1350)
+
+[node name="Target3" type="Node2D" parent="."]
+position = Vector2(47, -1764)
+
+[node name="Box61" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(179, -1540)
+
+[node name="Box62" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-39, -1417)
+
+[node name="Box63" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(83, -1496)
+
+[node name="Box64" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(67, -1626)
+
+[node name="Box65" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(6, -1528)
+
+[node name="Box66" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(105, -1584)
+
+[node name="Box67" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(117, -1668)
+
+[node name="Box68" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(169, -1621)
+
+[node name="Box69" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(0, -1450)
+
+[node name="Box70" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-13, -1655)
+
+[node name="Box71" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-19, -1577)
+
+[node name="Box72" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(5, -1751)
+
+[node name="Box73" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(43, -1709)
+
+[node name="Box74" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(55, -1793)
+
+[node name="Box75" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(107, -1746)
+
+[node name="Box76" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-75, -1780)
+
+[node name="Box77" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-81, -1702)
+
+[node name="Box78" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(72, -1863)
+
+[node name="Box79" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(110, -1821)
+
+[node name="Box80" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(122, -1905)
+
+[node name="Box81" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(174, -1858)
+
+[node name="Box82" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-8, -1892)
+
+[node name="Box83" parent="." instance=ExtResource("3_qsneh")]
+position = Vector2(-14, -1814)
+
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_aymul")
+speed_up = 20.0
 metadata/_custom_type_script = "uid://bgnch8w7tbswk"

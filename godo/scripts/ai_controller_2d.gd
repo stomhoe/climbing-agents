@@ -6,13 +6,13 @@ extends AIController2D
 @onready var raycast_above = $NodeAbove/RaycastAbove
 
 func _process(delta):
-    raycast_above.position = 80 * climber.distance_vector_to_target().normalized()
+    raycast_above.position = 80 * Vector2(cos(climber.target_angle), sin(climber.target_angle))
 
 func get_obs() -> Dictionary:
-    var dist_vec: Vector2 = climber.distance_vector_to_target()
     var obs: Array = [
-        dist_vec[0], dist_vec[1],
-
+        climber.target_angle,
+        climber.get_pos().x,
+        climber.get_pos().y,
         climber.torso.rotation,
         climber.torso.angular_velocity,
         climber.torso.linear_velocity.x,
@@ -40,7 +40,7 @@ func get_action_space() -> Dictionary:
     return {
         "grabber" : {
             "size": 1,
-            "action_type": "discrete"
+            "action_type": "continuous"
         },
         "move" : {
             "size": 2,
@@ -52,10 +52,12 @@ func set_action(action: Dictionary) -> void:
     
     var move: Vector2 = Vector2(action[&"move"][0], action[&"move"][1])
     climber.force_direction = move.normalized()
+
+
+    var grabber_i: int = (abs(action[&"grabber"][0]*3)) as int
+    print(grabber_i)
     
-    var grabber_i: int = clamp(action[&"grabber"], 0, 3)
-    
-    climber.currently_controlled = climber.joints.values()[grabber_i]
+    climber.currently_controlled = (climber.joints.keys())[grabber_i]
         
         
     
