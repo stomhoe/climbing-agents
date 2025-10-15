@@ -52,12 +52,10 @@ func set_action(action: Dictionary) -> void:
     
     var move: Vector2 = Vector2(action[&"move"][0], action[&"move"][1])
     climber.force_direction = move.normalized()
-
-
     var grabber_i: int = (abs(action[&"grabber"][0]*3)) as int
-    print(grabber_i)
     
-    climber.currently_controlled = (climber.joints.keys())[grabber_i]
+    var new_controlled = (climber.joints.keys())[grabber_i]
+    climber.set_controlled_grabber(new_controlled)
         
         
     

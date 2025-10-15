@@ -120,6 +120,19 @@ func _handle_input():
         [true, _, _, _]:
             new_controlled = l_hand_grabber
     
+    # Use the helper method to set the controlled grabber
+    set_controlled_grabber(new_controlled)
+
+    if currently_controlled:
+        force_direction = (get_global_mouse_position() - currently_controlled.global_position).normalized()
+
+
+var currently_controlled: Grabber = null
+
+var force_direction: Vector2 = Vector2.ZERO
+
+func set_controlled_grabber(new_controlled: Grabber):
+    """Set the currently controlled grabber and handle grab/release logic."""
     # If we just stopped controlling a grabber, try to grab
     if currently_controlled != null and new_controlled != currently_controlled:
         _try_auto_grab(currently_controlled)
@@ -129,14 +142,6 @@ func _handle_input():
         swing_timer = swing_boost_time 
     
     currently_controlled = new_controlled
-
-    if currently_controlled:
-        force_direction = (get_global_mouse_position() - currently_controlled.global_position).normalized()
-
-
-var currently_controlled: Grabber = null
-
-var force_direction: Vector2 = Vector2.ZERO
 
 
 func _on_grab_area_entered(body: Node2D, grabber: Grabber):
@@ -158,7 +163,6 @@ func _try_auto_grab(grabber: Grabber):
         if _is_valid_grab_target(body, grabber):
             grabber.joint.node_b = body.get_path()
             grabber.joint.position = grabber.position
-            print("SUCCESS: %s auto-grabbed %s" % [grabber.get_parent().name, body.name])
             return
     
 

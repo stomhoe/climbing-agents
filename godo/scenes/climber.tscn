@@ -23,21 +23,25 @@ script = ExtResource("5_nwbdq")
 shape = ExtResource("2_ygfqx")
 
 [node name="Lshoulder" type="PinJoint2D" parent="Torso"]
+visible = false
 position = Vector2(-7, -9)
 node_a = NodePath("..")
 node_b = NodePath("../../Lupperarm")
 
 [node name="Rshoulder" type="PinJoint2D" parent="Torso"]
+visible = false
 position = Vector2(7.465, -9)
 node_a = NodePath("..")
 node_b = NodePath("../../Rupperarm")
 
 [node name="Lhip" type="PinJoint2D" parent="Torso"]
+visible = false
 position = Vector2(-6, 9)
 node_a = NodePath("..")
 node_b = NodePath("../../Lthigh")
 
 [node name="Rhip" type="PinJoint2D" parent="Torso"]
+visible = false
 position = Vector2(6, 9)
 node_a = NodePath("..")
 node_b = NodePath("../../Rthigh")
@@ -66,6 +70,7 @@ script = ExtResource("5_nwbdq")
 shape = SubResource("RectangleShape2D_emysf")
 
 [node name="Lknee" type="PinJoint2D" parent="Lthigh"]
+visible = false
 position = Vector2(3.415, 0)
 rotation = -1.5707964
 node_a = NodePath("..")
@@ -83,6 +88,7 @@ script = ExtResource("5_nwbdq")
 shape = SubResource("RectangleShape2D_emysf")
 
 [node name="Rknee" type="PinJoint2D" parent="Rthigh"]
+visible = false
 position = Vector2(3.415, 0)
 rotation = -1.5707964
 node_a = NodePath("..")
@@ -99,6 +105,7 @@ script = ExtResource("5_nwbdq")
 shape = ExtResource("3_3nhoh")
 
 [node name="Lelbow" type="PinJoint2D" parent="Lupperarm"]
+visible = false
 position = Vector2(-4.9750004, 0)
 node_a = NodePath("..")
 node_b = NodePath("../../Lforearm")
@@ -114,6 +121,7 @@ script = ExtResource("5_nwbdq")
 shape = ExtResource("3_3nhoh")
 
 [node name="Relbow" type="PinJoint2D" parent="Rupperarm"]
+visible = false
 position = Vector2(4.9749985, 0)
 node_a = NodePath("..")
 node_b = NodePath("../../Rforearm")
@@ -129,6 +137,7 @@ script = ExtResource("5_nwbdq")
 shape = ExtResource("3_3nhoh")
 
 [node name="Grabber" parent="Lforearm" instance=ExtResource("5_3nhoh")]
+visible = false
 position = Vector2(-6, 0)
 
 [node name="Rforearm" type="RigidBody2D" parent="."]
@@ -142,6 +151,7 @@ script = ExtResource("5_nwbdq")
 shape = ExtResource("3_3nhoh")
 
 [node name="Grabber" parent="Rforearm" instance=ExtResource("5_3nhoh")]
+visible = false
 position = Vector2(7, 0)
 
 [node name="Lcalf" type="RigidBody2D" parent="."]
@@ -156,6 +166,7 @@ script = ExtResource("5_nwbdq")
 shape = SubResource("RectangleShape2D_emysf")
 
 [node name="Grabber" parent="Lcalf" instance=ExtResource("5_3nhoh")]
+visible = false
 position = Vector2(7, 0)
 
 [node name="Rcalf" type="RigidBody2D" parent="."]
@@ -170,6 +181,7 @@ script = ExtResource("5_nwbdq")
 shape = SubResource("RectangleShape2D_emysf")
 
 [node name="Grabber" parent="Rcalf" instance=ExtResource("5_3nhoh")]
+visible = false
 position = Vector2(7, 0)
 
 [node name="AIController2D" type="Node2D" parent="." groups=["AGENT"]]
@@ -178,6 +190,7 @@ control_mode = 2
 metadata/_custom_type_script = "uid://baugigub80dua"
 
 [node name="RaycastBody" type="Node2D" parent="AIController2D"]
+visible = false
 script = ExtResource("4_nwbdq")
 n_rays = 20.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
@@ -185,5 +198,7 @@ metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 [node name="NodeAbove" type="Node2D" parent="AIController2D"]
 
 [node name="RaycastAbove" type="Node2D" parent="AIController2D/NodeAbove"]
+visible = false
 script = ExtResource("4_nwbdq")
+n_rays = 30.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
