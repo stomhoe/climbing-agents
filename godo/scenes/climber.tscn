@@ -96,18 +96,20 @@ next_limb = NodePath("../Rcalf")
 [node name="Lupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-12, -9)
 rotation = -3.1415927
+gravity_scale = 0.0
 next_limb = NodePath("../Lforearm")
 
 [node name="Rupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(12, -9)
 rotation = 0.0
+gravity_scale = 0.0
 next_limb = NodePath("../Rforearm")
 
 [node name="Lforearm" type="RigidBody2D" parent="."]
 position = Vector2(-21.65, -9)
 collision_layer = 0
 collision_mask = 3
-gravity_scale = 0.01
+gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lforearm"]
@@ -119,11 +121,14 @@ position = Vector2(-6, 0)
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Lforearm"]
 mesh = SubResource("BoxMesh_kce74")
 
+[node name="PinJoint2D" type="PinJoint2D" parent="Lforearm"]
+node_a = NodePath("..")
+
 [node name="Rforearm" type="RigidBody2D" parent="."]
 position = Vector2(21.65, -9)
 collision_layer = 0
 collision_mask = 3
-gravity_scale = 0.01
+gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rforearm"]
@@ -140,7 +145,7 @@ position = Vector2(-6, 19.615)
 rotation = 1.5707964
 collision_layer = 0
 collision_mask = 3
-gravity_scale = 0.01
+gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lcalf"]
@@ -157,7 +162,7 @@ position = Vector2(6, 19.615)
 rotation = 1.5707964
 collision_layer = 0
 collision_mask = 3
-gravity_scale = 0.01
+gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rcalf"]

@@ -89,16 +89,12 @@ func _ready():
 
 func _physics_process(delta: float):
     delta *= speed_up
-    _handle_input()
+    #_handle_input()
     _apply_muscle_forces(delta)
-    
-    # Debug: Test joints manually
-    if Input.is_action_just_pressed("ui_accept"):  # Space key
-        test_joint_manually()
 
 # Add any necessary vars here
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
-var swing_boost_strength: float = 1400.0  # Additional strength during the swing boost
+var swing_boost_strength: float = 1700.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
 
 func _apply_muscle_forces(delta: float):
@@ -174,19 +170,15 @@ func set_controlled_grabber(new_controlled: Grabber):
     
     currently_controlled = new_controlled
 
-
 func _on_grab_area_entered(body: Node2D, grabber: Grabber):
     """Automatically grab any valid body if the grabber is not currently controlled."""
     if grabber != currently_controlled:
-        if _is_valid_grab_target(body, grabber):
-            grabber.joint.node_b = body.get_path()
-            # Set the joint position to the grabber's position relative to the parent body part
-            grabber.joint.position = grabber.position
-            # Debug: Check if joint is working
-            print("Grab established - Body: ", body.name, " Grabber: ", grabber.get_parent().name)
-            grabber.debug_joint_status()
+        _attempt_grab(body, grabber)
 
-func _release_all_grabs(): for grabber in joints.keys(): grabber.release()
+
+func _release_all_grabs():
+    for grabber in joints.keys():
+        grabber.release()
 
 
 func _try_auto_grab(grabber: Grabber):
@@ -194,24 +186,23 @@ func _try_auto_grab(grabber: Grabber):
     var bodies = grabber.grab_area.get_overlapping_bodies()
     
     for body in bodies:
-        if _is_valid_grab_target(body, grabber):
-            grabber.joint.node_b = body.get_path()
-            # Set the joint position to the grabber's position relative to the parent body part
-            grabber.joint.position = grabber.position
-            print("Auto-grab established - Body: ", body.name, " Grabber: ", grabber.get_parent().name)
-            grabber.debug_joint_status()
+        if _attempt_grab(body, grabber):
             return
-    
+
+
+func _attempt_grab(body: Node2D, grabber: Grabber) -> bool:
+    """Attempt to grab a body if it is a valid target."""
+    if _is_valid_grab_target(body, grabber):
+        grabber.joint.node_a = grabber.get_parent().get_path()
+        grabber.joint.node_b = body.get_path()
+        return true
+    return false
+
 
 func _is_valid_grab_target(body: Node2D, grabber: Grabber) -> bool:
     """Check if the body is a valid target for grabbing."""
-
     var returned: bool = true
 
-    if body is Boundaries:
-        max_height = 0
-        ai_controller.reward -= 20
-        returned = false
     if body is BodyPart and body.get_parent() == self:
         returned = false
 
@@ -221,15 +212,3 @@ func _is_valid_grab_target(body: Node2D, grabber: Grabber) -> bool:
         grabber.mesh_instance_2d.modulate = Color(1, 0, 0)  # Red for invalid grab target
 
     return returned
-
-func test_joint_manually():
-    """Test function to manually test joint behavior"""
-    print("=== Testing Joints Manually ===")
-    for grabber in [r_hand_grabber, l_hand_grabber, r_foot_grabber, l_foot_grabber]:
-        print("Grabber: ", grabber.get_parent().name)
-        grabber.debug_joint_status()
-        if grabber.is_grabbing():
-            print("Currently grabbing something!")
-        else:
-            print("Not grabbing anything")
-        print("---")
