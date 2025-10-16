@@ -1,17 +1,22 @@
-[gd_scene load_steps=9 format=3 uid="uid://51gjpid7sjyr"]
+[gd_scene load_steps=10 format=3 uid="uid://51gjpid7sjyr"]
 
 [ext_resource type="Script" uid="uid://cbvbaw10r28o3" path="res://scripts/boundaries.gd" id="1_00lvc"]
 [ext_resource type="Script" uid="uid://bm4xivmekhm3w" path="res://scripts/climb_map.gd" id="1_w1vl5"]
 [ext_resource type="Script" uid="uid://bgnch8w7tbswk" path="res://addons/godot_rl_agents/sync.gd" id="4_aymul"]
 [ext_resource type="Script" uid="uid://4fj733q0pjt8" path="res://scripts/camera_2d.gd" id="5_4oapl"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_aymul"]
+friction = 0.0
+bounce = 30.0
+absorbent = true
+
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5nyud"]
 normal = Vector2(1, -0.1)
-distance = -300.0
+distance = -200.0
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xrnny"]
 normal = Vector2(-1, -0.1)
-distance = -300.0
+distance = -200.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_00lvc"]
 size = Vector3(200, 1, 1)
@@ -24,6 +29,7 @@ script = ExtResource("1_w1vl5")
 [node name="Boundaries" type="StaticBody2D" parent="."]
 collision_layer = 2
 collision_mask = 2
+physics_material_override = SubResource("PhysicsMaterial_aymul")
 script = ExtResource("1_00lvc")
 
 [node name="Wall" type="CollisionShape2D" parent="Boundaries"]

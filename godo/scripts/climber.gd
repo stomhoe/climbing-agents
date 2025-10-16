@@ -23,6 +23,8 @@ class_name Climber
 @onready var r_foot_grabber: Grabber = $Rcalf/Grabber
 @onready var l_foot_grabber: Grabber = $Lcalf/Grabber
 
+var speed_up: float = 1.0
+
 var max_height: float = 0.0;
 
 @onready var ai_controller: AIClimbController = $AIController2D
@@ -34,8 +36,9 @@ var target_angle: float:
 var stagnation_timer: float = 0.0
 
 func reset():
-    set_pos(Vector2.ZERO)
     ai_controller.reset()
+    _release_all_grabs()
+    set_pos(Vector2.ZERO)
     stagnation_timer = 0.0
     max_height = 0.0
 
@@ -82,22 +85,21 @@ func _ready():
             joint.angular_limit_lower = -2.5
             joint.angular_limit_upper = 2.5
 
-
-
 func _physics_process(delta: float):
+    delta *= speed_up
     #_handle_input()
     _apply_muscle_forces(delta)
 
 # Add any necessary vars here
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
-var swing_boost_strength: float = 1800.0  # Additional strength during the swing boost
+var swing_boost_strength: float = 1400.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
 
 func _apply_muscle_forces(delta: float):
     if currently_controlled:
         # Apply force to move the controlled limb towards the mouse position
         var limb: RigidBody2D = currently_controlled.get_parent() as RigidBody2D
-        var applied_strength = control_strength
+        var applied_strength: float = control_strength
         
         # Apply swing boost if within the boost timead
         if _at_least_one_grabbed():
@@ -170,6 +172,10 @@ func _on_grab_area_entered(body: Node2D, grabber: Grabber):
         if _is_valid_grab_target(body, grabber):
             grabber.joint.node_b = body.get_path()
             grabber.joint.position = grabber.position
+
+func _release_all_grabs():
+    for grabber in joints.keys():
+        _release_grab(grabber)
 
 func _release_grab(grabber: Grabber):
     """Release the grab by disconnecting the joint."""

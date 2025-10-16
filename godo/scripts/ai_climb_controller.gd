@@ -9,8 +9,10 @@ class_name AIClimbController
 @onready var raycast_left: RaycastSensor2D = $NodeAbove/RaycastLeft
 @onready var label: Label = $NodeAbove/Label
 
-func _process(delta: float):
+func _process(_delta: float):
+    reward = climber.max_height
     label.text = str(int(reward))
+    
 
 func get_obs() -> Dictionary:
     var obs: Array = [

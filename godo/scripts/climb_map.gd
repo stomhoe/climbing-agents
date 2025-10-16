@@ -56,9 +56,15 @@ func _process(delta: float):
     else:
         for i in range(climbers.size()):
             var climber = climbers[i]
+            climber.speed_up = sync.speed_up
 
             # Update max_reached_distance based on the reward direction
-            var projected_distance: float = (climber.get_pos() - Vector2(0, 0)).dot(reward_vec) + OFFSET_DISTANCE
+            
+            var dot: float = (climber.get_pos()).dot(reward_vec)
+            
+            var projected_distance: float = dot + OFFSET_DISTANCE
+            
+            climber.max_height = max(dot, climber.max_height)
             
             # Define a dynamic minimum threshold for distance increase
             var min_distance_threshold: float = 17.0 if max_reached_distance < 100.0 else 22.0
@@ -76,11 +82,13 @@ func _process(delta: float):
             if distance_moved < position_tolerance:
                 # Climber is stagnant, increase climb_round_timer
                 climber.stagnation_timer += delta
+                if climber.stagnation_timer >= 40.0:
+                    climber.reset()
             else:
                 # Climber has moved, reset climb_round_timer and update position
                 climber.stagnation_timer = 0.0
                 climber_positions[i] = current_pos
-                if max_reached_distance - OFFSET_DISTANCE >= 200 and climber.stagnation_timer > stagnation_threshold:
+                if max_reached_distance - OFFSET_DISTANCE >= 0 and climber.stagnation_timer > stagnation_threshold:
                     # Apply stagnation penalty if climber has been still too long and max_reached_distance is at least 120 (without offset)
                     var penalty_time = climber.stagnation_timer - stagnation_threshold
                     var total_penalty_should_be = stagnation_penalty * penalty_time
@@ -97,8 +105,10 @@ func _process(delta: float):
                 continue  # skip the normal reward overwrite below
            
             var base_reward: float = get_dist_reward(climber)
-            climber.ai_controller.reward = max(climber.ai_controller.reward, base_reward)
-            
+            if base_reward > climber.ai_controller.reward:
+                #climber.ai_controller.reward = base_reward
+                pass
+                
             if ! climber_highest_reward or climber.ai_controller.reward > climber_highest_reward.ai_controller.reward:
                 climber_highest_reward = climber
 
