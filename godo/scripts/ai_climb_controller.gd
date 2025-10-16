@@ -4,7 +4,7 @@ class_name AIClimbController
 @onready var climber: Climber = $".."
 @onready var node_above: Node2D = $NodeAbove
 
-@onready var body_sensor: RaycastSensor2D = $RaycastBody
+@onready var body_sensor: RaycastSensor2D = $"../Torso/RaycastBody"
 @onready var raycast_right: RaycastSensor2D = $NodeAbove/RaycastRight
 @onready var raycast_left: RaycastSensor2D = $NodeAbove/RaycastLeft
 
@@ -33,7 +33,6 @@ func get_obs() -> Dictionary:
         climber.l_hand_grabber.is_grabbing(),
         climber.r_hand_grabber.is_grabbing(),
         climber.swing_timer,
-        climber.stagnation_timer
     ] + body_sensor.calculate_raycasts() + raycast_left.calculate_raycasts() + raycast_right.calculate_raycasts()
     return {"obs":obs}
 

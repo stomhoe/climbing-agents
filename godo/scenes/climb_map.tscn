@@ -7,11 +7,11 @@
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5nyud"]
 normal = Vector2(1, -0.1)
-distance = -60.0
+distance = -100.0
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xrnny"]
 normal = Vector2(-1, -0.1)
-distance = -70.0
+distance = -100.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_00lvc"]
 size = Vector3(200, 1, 1)

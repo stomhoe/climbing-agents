@@ -3,9 +3,6 @@ extends RaycastSensor2D
 func calculate_raycasts() -> Array:
     var result = []
     for ray in rays:
-        if ray == null:
-            continue
-        
         ray.set_enabled(true)
         ray.force_raycast_update()
         
@@ -14,7 +11,7 @@ func calculate_raycasts() -> Array:
         if dist == 0:
             dist = 999999999999999.0
         
-        result.append(_get_raycast_distance(ray))
+        result.append(dist)
 
         ray.set_enabled(false)
     return result
