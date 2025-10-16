@@ -15,7 +15,7 @@ var stagnation_penalty: float = 0.1   # Penalty applied per second when stagnant
 # Add tracking for applied stagnation penalty
 var climber_stagnation_penalty_applied: Array[float] = []
 
-@export var N_CLIMBERS = 40
+@export var N_CLIMBERS = 1
 var climber_scene: PackedScene = preload("res://scenes/climber.tscn")
 
 func _ready():
@@ -25,6 +25,7 @@ func _ready():
         climbers_node.add_child(climber)
         climber.name = "Climber_%d" % i  # Set a numbered name for each climber
         climber.target_angle = reward_angle
+        climber.spawn_position = climbers_node.global_position
         climbers.append(climber)
         climber_positions.append(climber.get_pos())
         # In _ready(), initialize:
@@ -132,6 +133,9 @@ func spawn_box(distance: float):
     var random_scale = clamp(abs(randfn(1.3, 0.7)), 0.5, 2.4)  # Normal distribution with mean 1.3 and std dev 0.4
     box.scale = Vector2(random_scale, random_scale)
     box.rotation = randf() * PI * 2  # Random rotation between 0 and 2π
+
+    # Name the box uniquely
+    box.name = "Box%d" % boxes.get_child_count()
 
     boxes.add_child(box)
 

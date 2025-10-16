@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://51gjpid7sjyr"]
+[gd_scene load_steps=11 format=3 uid="uid://51gjpid7sjyr"]
 
 [ext_resource type="Script" uid="uid://cbvbaw10r28o3" path="res://scripts/boundaries.gd" id="1_00lvc"]
 [ext_resource type="Script" uid="uid://bm4xivmekhm3w" path="res://scripts/climb_map.gd" id="1_w1vl5"]
 [ext_resource type="Script" uid="uid://bgnch8w7tbswk" path="res://addons/godot_rl_agents/sync.gd" id="4_aymul"]
 [ext_resource type="Script" uid="uid://4fj733q0pjt8" path="res://scripts/camera_2d.gd" id="5_4oapl"]
+[ext_resource type="PackedScene" uid="uid://dh3naami7rgg6" path="res://scenes/box.tscn" id="5_w1vl5"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_aymul"]
 friction = 0.0
@@ -51,7 +52,6 @@ position = Vector2(33.735, -28.035)
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_aymul")
-speed_up = 10.0
 metadata/_custom_type_script = "uid://bgnch8w7tbswk"
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -60,3 +60,6 @@ zoom = Vector2(2, 2)
 script = ExtResource("5_4oapl")
 
 [node name="Boxes" type="Node2D" parent="."]
+
+[node name="Box" parent="." instance=ExtResource("5_w1vl5")]
+position = Vector2(62, -28)

@@ -17,11 +17,12 @@ class_name Climber
 @onready var l_hip: PinJoint2D = $Torso/Lhip
 @onready var r_hip: PinJoint2D = $Torso/Rhip
 
-# also stores Grab states
 @onready var r_hand_grabber: Grabber = $Rforearm/Grabber
 @onready var l_hand_grabber: Grabber = $Lforearm/Grabber
 @onready var r_foot_grabber: Grabber = $Rcalf/Grabber
 @onready var l_foot_grabber: Grabber = $Lcalf/Grabber
+
+var spawn_position: Vector2 = Vector2.ZERO
 
 var speed_up: float = 1.0
 
@@ -38,9 +39,10 @@ var stagnation_timer: float = 0.0
 func reset():
     ai_controller.reset()
     _release_all_grabs()
-    set_pos(Vector2.ZERO)
+    set_pos(spawn_position)
     stagnation_timer = 0.0
     max_height = 0.0
+    #print("reset")
 
 func set_pos(pos: Vector2) -> void:
     torso.global_position = pos
@@ -87,8 +89,12 @@ func _ready():
 
 func _physics_process(delta: float):
     delta *= speed_up
-    #_handle_input()
+    _handle_input()
     _apply_muscle_forces(delta)
+    
+    # Debug: Test joints manually
+    if Input.is_action_just_pressed("ui_accept"):  # Space key
+        test_joint_manually()
 
 # Add any necessary vars here
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
@@ -157,11 +163,14 @@ func set_controlled_grabber(new_controlled: Grabber):
     """Set the currently controlled grabber and handle grab/release logic."""
     # If we just stopped controlling a grabber, try to grab
     if currently_controlled != null and new_controlled != currently_controlled:
+        currently_controlled.mesh_instance_2d.modulate = Color.WHITE
         _try_auto_grab(currently_controlled)
         
     if new_controlled != null and new_controlled != currently_controlled:
-        _release_grab(new_controlled)
+        new_controlled.release()
         swing_timer = swing_boost_time 
+        new_controlled.mesh_instance_2d.modulate = Color.PURPLE
+    
     
     currently_controlled = new_controlled
 
@@ -171,15 +180,14 @@ func _on_grab_area_entered(body: Node2D, grabber: Grabber):
     if grabber != currently_controlled:
         if _is_valid_grab_target(body, grabber):
             grabber.joint.node_b = body.get_path()
+            # Set the joint position to the grabber's position relative to the parent body part
             grabber.joint.position = grabber.position
+            # Debug: Check if joint is working
+            print("Grab established - Body: ", body.name, " Grabber: ", grabber.get_parent().name)
+            grabber.debug_joint_status()
 
-func _release_all_grabs():
-    for grabber in joints.keys():
-        _release_grab(grabber)
+func _release_all_grabs(): for grabber in joints.keys(): grabber.release()
 
-func _release_grab(grabber: Grabber):
-    """Release the grab by disconnecting the joint."""
-    grabber.release()
 
 func _try_auto_grab(grabber: Grabber):
     """Try to automatically grab whatever this grabber is touching."""
@@ -188,14 +196,40 @@ func _try_auto_grab(grabber: Grabber):
     for body in bodies:
         if _is_valid_grab_target(body, grabber):
             grabber.joint.node_b = body.get_path()
+            # Set the joint position to the grabber's position relative to the parent body part
             grabber.joint.position = grabber.position
+            print("Auto-grab established - Body: ", body.name, " Grabber: ", grabber.get_parent().name)
+            grabber.debug_joint_status()
             return
     
 
 func _is_valid_grab_target(body: Node2D, grabber: Grabber) -> bool:
     """Check if the body is a valid target for grabbing."""
+
+    var returned: bool = true
+
     if body is Boundaries:
-        return false
+        max_height = 0
+        ai_controller.reward -= 20
+        returned = false
     if body is BodyPart and body.get_parent() == self:
-        return false
-    return true
+        returned = false
+
+    if returned:
+        grabber.mesh_instance_2d.modulate = Color(0, 1, 0)  # Green for valid grab target
+    else:
+        grabber.mesh_instance_2d.modulate = Color(1, 0, 0)  # Red for invalid grab target
+
+    return returned
+
+func test_joint_manually():
+    """Test function to manually test joint behavior"""
+    print("=== Testing Joints Manually ===")
+    for grabber in [r_hand_grabber, l_hand_grabber, r_foot_grabber, l_foot_grabber]:
+        print("Grabber: ", grabber.get_parent().name)
+        grabber.debug_joint_status()
+        if grabber.is_grabbing():
+            print("Currently grabbing something!")
+        else:
+            print("Not grabbing anything")
+        print("---")

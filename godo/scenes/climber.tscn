@@ -107,14 +107,13 @@ next_limb = NodePath("../Rforearm")
 position = Vector2(-21.65, -9)
 collision_layer = 0
 collision_mask = 3
-gravity_scale = 0.0
+gravity_scale = 0.01
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lforearm"]
 shape = ExtResource("3_3nhoh")
 
 [node name="Grabber" parent="Lforearm" instance=ExtResource("5_3nhoh")]
-visible = false
 position = Vector2(-6, 0)
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Lforearm"]
@@ -124,7 +123,7 @@ mesh = SubResource("BoxMesh_kce74")
 position = Vector2(21.65, -9)
 collision_layer = 0
 collision_mask = 3
-gravity_scale = 0.0
+gravity_scale = 0.01
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rforearm"]
@@ -134,7 +133,6 @@ shape = ExtResource("3_3nhoh")
 mesh = SubResource("BoxMesh_kce74")
 
 [node name="Grabber" parent="Rforearm" instance=ExtResource("5_3nhoh")]
-visible = false
 position = Vector2(7, 0)
 
 [node name="Lcalf" type="RigidBody2D" parent="."]
@@ -149,7 +147,6 @@ script = ExtResource("5_nwbdq")
 shape = SubResource("RectangleShape2D_emysf")
 
 [node name="Grabber" parent="Lcalf" instance=ExtResource("5_3nhoh")]
-visible = false
 position = Vector2(7, 0)
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Lcalf"]
@@ -167,7 +164,6 @@ script = ExtResource("5_nwbdq")
 shape = SubResource("RectangleShape2D_emysf")
 
 [node name="Grabber" parent="Rcalf" instance=ExtResource("5_3nhoh")]
-visible = false
 position = Vector2(7, 0)
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Rcalf"]
