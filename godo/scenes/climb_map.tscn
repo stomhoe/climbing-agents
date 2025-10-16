@@ -45,6 +45,7 @@ position = Vector2(33.735, -28.035)
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_aymul")
+speed_up = 10.0
 metadata/_custom_type_script = "uid://bgnch8w7tbswk"
 
 [node name="Camera2D" type="Camera2D" parent="."]

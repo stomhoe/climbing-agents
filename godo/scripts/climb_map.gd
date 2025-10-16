@@ -10,11 +10,12 @@ var climber_positions: Array[Vector2] = []
 var stagnation_threshold: float = 5.0  # Time in seconds before penalty kicks in
 var position_tolerance: float = 20.0   # Distance tolerance for considering "same position"
 var stagnation_penalty: float = 0.1   # Penalty applied per second when stagnant
+@onready var sync: Sync = $Sync
 
-# NEW: per-climber flag to know if they've reached >=100 before (for fall penalty)
-var climber_reached_100: Array[bool] = []
+# Add tracking for applied stagnation penalty
+var climber_stagnation_penalty_applied: Array[float] = []
 
-@export var N_CLIMBERS = 50
+@export var N_CLIMBERS = 40
 var climber_scene: PackedScene = preload("res://scenes/climber.tscn")
 
 func _ready():
@@ -26,7 +27,8 @@ func _ready():
         climber.target_angle = reward_angle
         climbers.append(climber)
         climber_positions.append(climber.get_pos())
-        climber_reached_100.append(false) # initialize per-climber flag
+        # In _ready(), initialize:
+        climber_stagnation_penalty_applied.append(0.0)
 
 var round_duration: float = 30.0
 var climb_round_timer: float = round_duration
@@ -39,28 +41,27 @@ const OFFSET_DISTANCE: float = 330.0
 
 var max_reached_distance: float = 0.0
 func _process(delta: float):
+    delta *= sync.speed_up
+    
     climb_round_timer -= delta
     if climb_round_timer < 0:
         for climber in climbers:
-            climber.set_pos(climber.global_position)
-            climber.ai_controller.reset()
-            climber.stagnation_timer = 0.0
+            climber.reset()
         climb_round_timer = round_duration
         round_duration *= 1.13
         # Reset position tracking
         for i in range(climbers.size()):
             climber_positions[i] = climbers[i].get_pos()
-            climber_reached_100[i] = false  # reset tracking each round
+            
     else:
         for i in range(climbers.size()):
             var climber = climbers[i]
 
             # Update max_reached_distance based on the reward direction
-            var reward_direction = Vector2(cos(reward_angle), sin(reward_angle))
-            var projected_distance = (climber.get_pos() - Vector2(0, 0)).dot(reward_direction) + OFFSET_DISTANCE
+            var projected_distance: float = (climber.get_pos() - Vector2(0, 0)).dot(reward_vec) + OFFSET_DISTANCE
             
             # Define a dynamic minimum threshold for distance increase
-            var min_distance_threshold = 17.0 if max_reached_distance < 100.0 else 22.0
+            var min_distance_threshold: float = 17.0 if max_reached_distance < 100.0 else 22.0
             if max_reached_distance >= 100.0:
                 min_distance_threshold += (max_reached_distance - 100.0) * 0.0005  # Gradually increase threshold
             
@@ -69,8 +70,8 @@ func _process(delta: float):
                 spawn_box(max_reached_distance - OFFSET_DISTANCE)  # Adjust for the offset when spawning the box
             
             # Check if climber has moved significantly
-            var current_pos = climber.get_pos()
-            var distance_moved = current_pos.distance_to(climber_positions[i])
+            var current_pos: Vector2 = climber.get_pos()
+            var distance_moved: float = current_pos.distance_to(climber_positions[i])
             
             if distance_moved < position_tolerance:
                 # Climber is stagnant, increase climb_round_timer
@@ -79,30 +80,25 @@ func _process(delta: float):
                 # Climber has moved, reset climb_round_timer and update position
                 climber.stagnation_timer = 0.0
                 climber_positions[i] = current_pos
+                if max_reached_distance - OFFSET_DISTANCE >= 200 and climber.stagnation_timer > stagnation_threshold:
+                    # Apply stagnation penalty if climber has been still too long and max_reached_distance is at least 120 (without offset)
+                    var penalty_time = climber.stagnation_timer - stagnation_threshold
+                    var total_penalty_should_be = stagnation_penalty * penalty_time
+                    var additional_penalty = total_penalty_should_be - climber_stagnation_penalty_applied[i]
+                    climber.ai_controller.reward -= additional_penalty
+                    climber_stagnation_penalty_applied[i] = total_penalty_should_be
+                
             
             # NEW: detect if climber has previously reached >=100, and if so, if they fall back to <=30 apply -10 and reset AI
-            var current_distance = current_pos.length()
-            if current_distance >= 200.0:
-                climber_reached_100[i] = true
-            elif climber_reached_100[i] and current_distance <= 50.0:
+            if climber.max_height >= 200.0 and climber.get_pos().length() <= 50.0:
                 # apply one-time penalty and reset AI controller
-                climber.ai_controller.reward = max(climber.ai_controller.reward - 10.0, 13.)
-                climber.ai_controller.reset()
-                climber_reached_100[i] = false
-                # Continue to next climber (we've already set reward and reset AI)
-                if ! climber_highest_reward or climber.ai_controller.reward > climber_highest_reward.ai_controller.reward:
-                    climber_highest_reward = climber
+                climber.ai_controller.reward = max(climber.ai_controller.reward*0.7, 13.)
+                climber.reset()
                 continue  # skip the normal reward overwrite below
+           
+            var base_reward: float = get_dist_reward(climber)
+            climber.ai_controller.reward = max(climber.ai_controller.reward, base_reward)
             
-            # Apply stagnation penalty if climber has been still too long and max_reached_distance is at least 120 (without offset)
-            if max_reached_distance - OFFSET_DISTANCE >= 200  and climber.stagnation_timer > stagnation_threshold:
-                var penalty_time = climber.stagnation_timer - stagnation_threshold
-                climber.ai_controller.reward -= stagnation_penalty * penalty_time
-               
-            # Normal reward assignment
-            climber.ai_controller.reward = max(get_dist_reward(climber), climber.ai_controller.reward)
-            
-            # Track the climber with the highest reward
             if ! climber_highest_reward or climber.ai_controller.reward > climber_highest_reward.ai_controller.reward:
                 climber_highest_reward = climber
 

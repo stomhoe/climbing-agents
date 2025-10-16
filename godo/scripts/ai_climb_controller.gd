@@ -7,9 +7,10 @@ class_name AIClimbController
 @onready var body_sensor: RaycastSensor2D = $"../Torso/RaycastBody"
 @onready var raycast_right: RaycastSensor2D = $NodeAbove/RaycastRight
 @onready var raycast_left: RaycastSensor2D = $NodeAbove/RaycastLeft
+@onready var label: Label = $NodeAbove/Label
 
 func _process(delta: float):
-    node_above.global_rotation = climber.target_angle + PI/2
+    label.text = str(int(reward))
 
 func get_obs() -> Dictionary:
     var obs: Array = [
@@ -43,7 +44,11 @@ func get_action_space() -> Dictionary:
     return {
         "grabber" : {
             "size": 1,
-            "action_type": "continuous"
+            "action_type": "discrete"
+        },
+        "grabber_2" : {
+            "size": 1,
+            "action_type": "discrete"
         },
         "move" : {
             "size": 2,
@@ -55,24 +60,9 @@ func set_action(action: Dictionary) -> void:
     
     var move: Vector2 = Vector2(action[&"move"][0], action[&"move"][1])
     climber.force_direction = move.normalized()
-    var grabber_i: int = (abs(action[&"grabber"][0]*3)) as int
+
+    var grabber_i: int = (abs(action[&"grabber"]*2) + abs(action[&"grabber_2"])) as int
     
     var new_controlled = (climber.joints.keys())[grabber_i]
     climber.set_controlled_grabber(new_controlled)
         
-        
-    
-    
-# -----------------------------------------------------------------------------#
-
-#-- Methods that can be overridden if needed --#
-
-#func get_obs_space() -> Dictionary:
-# May need overriding if the obs space is complex
-#	var obs = get_obs()
-#	return {
-#		"obs": {
-#			"size": [len(obs["obs"])],
-#			"space": "box"
-#		},
-#	}

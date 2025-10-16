@@ -23,10 +23,21 @@ class_name Climber
 @onready var r_foot_grabber: Grabber = $Rcalf/Grabber
 @onready var l_foot_grabber: Grabber = $Lcalf/Grabber
 
+var max_height: float = 0.0;
+
 @onready var ai_controller: AIClimbController = $AIController2D
-var target_angle: float
+var target_angle: float:
+    set(value):
+        ai_controller.node_above.global_rotation = value + PI/2
+        target_angle = value
 
 var stagnation_timer: float = 0.0
+
+func reset():
+    set_pos(Vector2.ZERO)
+    ai_controller.reset()
+    stagnation_timer = 0.0
+    max_height = 0.0
 
 func set_pos(pos: Vector2) -> void:
     torso.global_position = pos
