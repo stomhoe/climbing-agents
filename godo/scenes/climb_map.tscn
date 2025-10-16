@@ -7,11 +7,11 @@
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5nyud"]
 normal = Vector2(1, -0.1)
-distance = -100.0
+distance = -300.0
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xrnny"]
 normal = Vector2(-1, -0.1)
-distance = -100.0
+distance = -300.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_00lvc"]
 size = Vector3(200, 1, 1)
@@ -45,7 +45,6 @@ position = Vector2(33.735, -28.035)
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_aymul")
-speed_up = 30.0
 metadata/_custom_type_script = "uid://bgnch8w7tbswk"
 
 [node name="Camera2D" type="Camera2D" parent="."]

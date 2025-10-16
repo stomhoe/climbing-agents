@@ -7,7 +7,6 @@ func calculate_raycasts() -> Array:
         ray.force_raycast_update()
         
         var dist: float = _get_raycast_distance(ray)
-        
         if dist == 0:
             dist = 999999999999999.0
         
