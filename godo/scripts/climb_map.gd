@@ -34,38 +34,26 @@ var climber_highest_reward: Climber = null
 const OFFSET_DISTANCE: float = 330.0
 
 var max_reached_distance: float = 0.0
-var top_10_percent: Array[Climber] = []
 
 func _process(delta: float):
     delta *= sync.speed_up
     
     climb_round_timer -= delta
     if climb_round_timer < 0:
-        # Sort climbers by their rewards in descending order
-        climbers.sort_custom(_compare_climbers_by_reward)
-        
-        # Determine the top 10 percent climbers
-        var top_count: int = ceil(climbers.size() * 0.1)
-        top_10_percent = climbers.slice(0, top_count)
-        
         for climber in climbers:
-            if climber != climber_highest_reward and climber not in top_10_percent:
+            if climber != climber_highest_reward:
                 climber.reset()
         climb_round_timer = round_duration
         round_duration *= 1.13
             
     else:
         for i in range(climbers.size()):
-            var climber = climbers[i]
+            var climber: Climber = climbers[i]
             climber.speed_up = sync.speed_up
 
-            # Update max_reached_distance based on the reward direction
-            
             var dot: float = (climber.get_pos()).dot(reward_vec)
             
             var projected_distance: float = dot + OFFSET_DISTANCE
-            
-            climber.max_height = max(dot, climber.max_height)
             
             # Define a dynamic minimum threshold for distance increase
             var min_distance_threshold: float = 17.0 if max_reached_distance < 100.0 else 22.0
@@ -83,7 +71,7 @@ func _process(delta: float):
             if distance_moved < position_tolerance or dot < 40.0:
                 # Climber is stagnant, increase climb_round_timer
                 climber.stagnation_timer += delta
-                if climber.stagnation_timer >= 90.0 and climber != climber_highest_reward:
+                if climber.stagnation_timer >= 7.0:
                     climber.ai_controller.reward *= 0.5
                     climber.reset()
                     continue
@@ -93,25 +81,22 @@ func _process(delta: float):
                 climber_positions[i] = current_pos
                 
             var base_reward: float = get_dist_reward(climber)
-            if base_reward > 60.0:
+            if base_reward > 40.0:
                 climber.ai_controller.reward = base_reward
                 
             if ! climber_highest_reward or climber.ai_controller.reward > climber_highest_reward.ai_controller.reward:
                 climber_highest_reward = climber
 
-func _compare_climbers_by_reward(a: Climber, b: Climber) -> int:
-    return b.ai_controller.reward - a.ai_controller.reward
-
 @onready var boxes: Node2D = $Boxes
-var last_spawned_box: Node2D = null
+var last_spawned_box: Vector2 = Vector2(-1., -1.)
 
 func spawn_box(distance: float):
     var box = box_scene.instantiate()
     var spawn_position: Vector2
 
-    if last_spawned_box:
+    if last_spawned_box != Vector2(-1., -1.):
         # Use the last spawned box's position as a base
-        spawn_position = last_spawned_box.position
+        spawn_position = last_spawned_box
         var random_offset = Vector2(randf() * 100 - 50, randf() * 100 - 50)  # Random offset in both x and y
         spawn_position += random_offset
     else:
@@ -132,7 +117,7 @@ func spawn_box(distance: float):
     box.name = "Box%d" % boxes.get_child_count()
 
     boxes.add_child(box)
-    last_spawned_box = box  # Update the last spawned box
+    last_spawned_box = box.global_position  # Update the last spawned box
 
 var reward_vec: Vector2
 var reward_angle: float:

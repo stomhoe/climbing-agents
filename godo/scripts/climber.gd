@@ -13,15 +13,8 @@ class_name Climber
 @onready var l_calf: RigidBody2D = $Lcalf
 
 @onready var body_parts: Array[RigidBody2D] = [
-    torso,
-    r_forearm,
-    l_forearm,
-    r_upperarm,
-    l_upperarm,
-    r_thigh,
-    l_thigh,
-    r_calf,
-    l_calf
+    torso, r_forearm, l_forearm, r_upperarm, l_upperarm,
+    r_thigh, l_thigh, r_calf, l_calf,
 ]
 
 @onready var l_shoulder: PinJoint2D = $Torso/Lshoulder
@@ -38,8 +31,6 @@ var spawn_position: Vector2 = Vector2.ZERO
 
 var speed_up: float = 1.0
 
-var max_height: float = 0.0;
-
 @onready var ai_controller: AIClimbController = $AIController2D
 var target_angle: float:
     set(value):
@@ -51,20 +42,18 @@ var stagnation_timer: float = 0.0
 func reset():
     ai_controller.reset()
     _release_all_grabs()
-    set_pos(spawn_position)
     stagnation_timer = 0.0
-    max_height = 0.0
     for body_part in body_parts:
         body_part.linear_velocity = Vector2.ZERO
         body_part.angular_velocity = 0.0
+    set_pos(spawn_position)
     #print("reset")
 
 func set_pos(pos: Vector2) -> void:
     for body_part in body_parts:
         body_part.global_position = pos
 
-func get_pos() -> Vector2:
-    return torso.global_position
+func get_pos() -> Vector2: return torso.global_position
 
 @onready var joints: Dictionary[Grabber, Array] = {
     r_hand_grabber: [r_shoulder, r_upperarm.joint],
@@ -84,7 +73,6 @@ var left_bumper_pressed: bool = false
 var right_bumper_pressed: bool = false
 
 func _ready():
-    # Connect grab area signals
     r_hand_grabber.grab_area.body_entered.connect(_on_grab_area_entered.bind(r_hand_grabber))
     l_hand_grabber.grab_area.body_entered.connect(_on_grab_area_entered.bind(l_hand_grabber))
     r_foot_grabber.grab_area.body_entered.connect(_on_grab_area_entered.bind(r_foot_grabber))
@@ -164,8 +152,6 @@ var currently_controlled: Grabber = null
 var force_direction: Vector2 = Vector2.ZERO
 
 func set_controlled_grabber(new_controlled: Grabber):
-    """Set the currently controlled grabber and handle grab/release logic."""
-    # If we just stopped controlling a grabber, try to grab
     if currently_controlled != null and new_controlled != currently_controlled:
         currently_controlled.mesh_instance_2d.modulate = Color.WHITE
         _try_auto_grab(currently_controlled)

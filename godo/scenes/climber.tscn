@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://chsdkprww0adx" path="res://scenes/grabber.tscn" id="5_3nhoh"]
 [ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="5_nwbdq"]
 [ext_resource type="Script" uid="uid://n04gwns6q2lp" path="res://scripts/ai_climb_controller.gd" id="7_7aipt"]
-[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="9_7aipt"]
+[ext_resource type="Texture2D" uid="uid://cwj4rjdkmdsdc" path="res://icon.svg" id="9_7aipt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kce74"]
 

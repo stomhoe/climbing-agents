@@ -25,6 +25,7 @@ size = Vector3(200, 1, 1)
 
 [node name="ClimbMap" type="Node2D"]
 script = ExtResource("1_w1vl5")
+metadata/_edit_vertical_guides_ = [-285.0]
 
 [node name="Boundaries" type="StaticBody2D" parent="."]
 collision_layer = 2
@@ -51,7 +52,6 @@ position = Vector2(33.735, -28.035)
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_aymul")
-speed_up = 10.0
 metadata/_custom_type_script = "uid://bgnch8w7tbswk"
 
 [node name="Camera2D" type="Camera2D" parent="."]
