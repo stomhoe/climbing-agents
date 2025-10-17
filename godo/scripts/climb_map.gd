@@ -10,9 +10,6 @@ var climber_positions: Array[Vector2] = []
 var position_tolerance: float = 15.0   # Distance tolerance for considering "same position"
 @onready var sync: Sync = $Sync
 
-# Add tracking for applied stagnation penalty
-var climber_stagnation_penalty_applied: Array[float] = []
-
 @export var N_CLIMBERS = 49
 var climber_scene: PackedScene = preload("res://scenes/climber.tscn")
 
@@ -26,8 +23,6 @@ func _ready():
         climber.spawn_position = climbers_node.global_position
         climbers.append(climber)
         climber_positions.append(climber.get_pos())
-        # In _ready(), initialize:
-        climber_stagnation_penalty_applied.append(0.0)
 
 var round_duration: float = 30.0
 var climb_round_timer: float = round_duration
@@ -39,13 +34,22 @@ var climber_highest_reward: Climber = null
 const OFFSET_DISTANCE: float = 330.0
 
 var max_reached_distance: float = 0.0
+var top_10_percent: Array[Climber] = []
+
 func _process(delta: float):
     delta *= sync.speed_up
     
     climb_round_timer -= delta
     if climb_round_timer < 0:
+        # Sort climbers by their rewards in descending order
+        climbers.sort_custom(_compare_climbers_by_reward)
+        
+        # Determine the top 10 percent climbers
+        var top_count: int = ceil(climbers.size() * 0.1)
+        top_10_percent = climbers.slice(0, top_count)
+        
         for climber in climbers:
-            if climber != climber_highest_reward:
+            if climber != climber_highest_reward and climber not in top_10_percent:
                 climber.reset()
         climb_round_timer = round_duration
         round_duration *= 1.13
@@ -79,7 +83,7 @@ func _process(delta: float):
             if distance_moved < position_tolerance or dot < 40.0:
                 # Climber is stagnant, increase climb_round_timer
                 climber.stagnation_timer += delta
-                if climber.stagnation_timer >= 60.0 and climber != climber_highest_reward:
+                if climber.stagnation_timer >= 90.0 and climber != climber_highest_reward:
                     climber.ai_controller.reward *= 0.5
                     climber.reset()
                     continue
@@ -89,11 +93,14 @@ func _process(delta: float):
                 climber_positions[i] = current_pos
                 
             var base_reward: float = get_dist_reward(climber)
-            if base_reward > 40.0:
+            if base_reward > 60.0:
                 climber.ai_controller.reward = base_reward
                 
             if ! climber_highest_reward or climber.ai_controller.reward > climber_highest_reward.ai_controller.reward:
                 climber_highest_reward = climber
+
+func _compare_climbers_by_reward(a: Climber, b: Climber) -> int:
+    return b.ai_controller.reward - a.ai_controller.reward
 
 @onready var boxes: Node2D = $Boxes
 var last_spawned_box: Node2D = null

@@ -16,8 +16,6 @@ func _process(_delta: float):
 func get_obs() -> Dictionary:
     var obs: Array = [
         climber.target_angle,
-        climber.get_pos().x,
-        climber.get_pos().y,
         climber.torso.global_rotation,
         climber.torso.angular_velocity,
         climber.torso.linear_velocity.x,
@@ -34,8 +32,6 @@ func get_obs() -> Dictionary:
         climber.r_foot_grabber.is_grabbing(),
         climber.l_hand_grabber.is_grabbing(),
         climber.r_hand_grabber.is_grabbing(),
-        climber.swing_timer,
-        climber.stagnation_timer
     ] + body_sensor.calculate_raycasts() + raycast_left.calculate_raycasts() + raycast_right.calculate_raycasts()
     return {"obs":obs}
 
