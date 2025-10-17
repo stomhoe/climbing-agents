@@ -16,7 +16,6 @@ func is_grabbing() -> bool:
 
 func release():
     """Release the current grab"""
-    print("\nRELEASE: ----", joint.node_b)
     mesh_instance_2d.modulate = Color.WHITE
     joint.node_b = NodePath("")
 

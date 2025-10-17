@@ -10,7 +10,6 @@ class_name AIClimbController
 @onready var label: Label = $NodeAbove/Label
 
 func _process(_delta: float):
-    reward = climber.max_height
     label.text = str(int(reward))
     
 
@@ -36,6 +35,7 @@ func get_obs() -> Dictionary:
         climber.l_hand_grabber.is_grabbing(),
         climber.r_hand_grabber.is_grabbing(),
         climber.swing_timer,
+        climber.stagnation_timer
     ] + body_sensor.calculate_raycasts() + raycast_left.calculate_raycasts() + raycast_right.calculate_raycasts()
     return {"obs":obs}
 

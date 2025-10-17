@@ -7,15 +7,13 @@ var climbers: Array[Climber] = []
 
 # Position tracking for stagnation penalty
 var climber_positions: Array[Vector2] = []
-var stagnation_threshold: float = 5.0  # Time in seconds before penalty kicks in
-var position_tolerance: float = 20.0   # Distance tolerance for considering "same position"
-var stagnation_penalty: float = 0.1   # Penalty applied per second when stagnant
+var position_tolerance: float = 15.0   # Distance tolerance for considering "same position"
 @onready var sync: Sync = $Sync
 
 # Add tracking for applied stagnation penalty
 var climber_stagnation_penalty_applied: Array[float] = []
 
-@export var N_CLIMBERS = 1
+@export var N_CLIMBERS = 49
 var climber_scene: PackedScene = preload("res://scenes/climber.tscn")
 
 func _ready():
@@ -47,12 +45,10 @@ func _process(delta: float):
     climb_round_timer -= delta
     if climb_round_timer < 0:
         for climber in climbers:
-            climber.reset()
+            if climber != climber_highest_reward:
+                climber.reset()
         climb_round_timer = round_duration
         round_duration *= 1.13
-        # Reset position tracking
-        for i in range(climbers.size()):
-            climber_positions[i] = climbers[i].get_pos()
             
     else:
         for i in range(climbers.size()):
@@ -80,49 +76,40 @@ func _process(delta: float):
             var current_pos: Vector2 = climber.get_pos()
             var distance_moved: float = current_pos.distance_to(climber_positions[i])
             
-            if distance_moved < position_tolerance:
+            if distance_moved < position_tolerance or dot < 40.0:
                 # Climber is stagnant, increase climb_round_timer
                 climber.stagnation_timer += delta
-                if climber.stagnation_timer >= 40.0:
+                if climber.stagnation_timer >= 60.0 and climber != climber_highest_reward:
+                    climber.ai_controller.reward *= 0.5
                     climber.reset()
+                    continue
             else:
                 # Climber has moved, reset climb_round_timer and update position
                 climber.stagnation_timer = 0.0
                 climber_positions[i] = current_pos
-                if max_reached_distance - OFFSET_DISTANCE >= 0 and climber.stagnation_timer > stagnation_threshold:
-                    # Apply stagnation penalty if climber has been still too long and max_reached_distance is at least 120 (without offset)
-                    var penalty_time = climber.stagnation_timer - stagnation_threshold
-                    var total_penalty_should_be = stagnation_penalty * penalty_time
-                    var additional_penalty = total_penalty_should_be - climber_stagnation_penalty_applied[i]
-                    climber.ai_controller.reward -= additional_penalty
-                    climber_stagnation_penalty_applied[i] = total_penalty_should_be
                 
-            
-            # NEW: detect if climber has previously reached >=100, and if so, if they fall back to <=30 apply -10 and reset AI
-            if climber.max_height >= 200.0 and climber.get_pos().length() <= 50.0:
-                # apply one-time penalty and reset AI controller
-                climber.ai_controller.reward = max(climber.ai_controller.reward*0.7, 13.)
-                climber.reset()
-                continue  # skip the normal reward overwrite below
-           
             var base_reward: float = get_dist_reward(climber)
-            if base_reward > climber.ai_controller.reward:
-                #climber.ai_controller.reward = base_reward
-                pass
+            if base_reward > 40.0:
+                climber.ai_controller.reward = base_reward
                 
             if ! climber_highest_reward or climber.ai_controller.reward > climber_highest_reward.ai_controller.reward:
                 climber_highest_reward = climber
 
 @onready var boxes: Node2D = $Boxes
+var last_spawned_box: Node2D = null
+
 func spawn_box(distance: float):
     var box = box_scene.instantiate()
-    var spawn_position = reward_vec * (distance + OFFSET_DISTANCE)  # Adjust spawn position to include the offset
+    var spawn_position: Vector2
 
-    # Add a smaller random offset in the direction of the reward for the first 100 meters
-    var random_offset_magnitude = 75 if distance < 100 else 100
-    var random_offset = reward_vec * (randf() * random_offset_magnitude - random_offset_magnitude / 2.0)
-    random_offset += Vector2(randf() * 50 - 25, randf() * 50 - 25)  # Add some perpendicular randomness
-    spawn_position += random_offset
+    if last_spawned_box:
+        # Use the last spawned box's position as a base
+        spawn_position = last_spawned_box.position
+        var random_offset = Vector2(randf() * 100 - 50, randf() * 100 - 50)  # Random offset in both x and y
+        spawn_position += random_offset
+    else:
+        # Default spawn position based on reward vector and distance
+        spawn_position = reward_vec * (distance + OFFSET_DISTANCE)
 
     # Adjust spawn position to be 20 higher
     spawn_position.y -= 40
@@ -138,6 +125,7 @@ func spawn_box(distance: float):
     box.name = "Box%d" % boxes.get_child_count()
 
     boxes.add_child(box)
+    last_spawned_box = box  # Update the last spawned box
 
 var reward_vec: Vector2
 var reward_angle: float:

@@ -12,6 +12,18 @@ class_name Climber
 @onready var r_calf: RigidBody2D = $Rcalf
 @onready var l_calf: RigidBody2D = $Lcalf
 
+@onready var body_parts: Array[RigidBody2D] = [
+    torso,
+    r_forearm,
+    l_forearm,
+    r_upperarm,
+    l_upperarm,
+    r_thigh,
+    l_thigh,
+    r_calf,
+    l_calf
+]
+
 @onready var l_shoulder: PinJoint2D = $Torso/Lshoulder
 @onready var r_shoulder: PinJoint2D = $Torso/Rshoulder
 @onready var l_hip: PinJoint2D = $Torso/Lhip
@@ -42,18 +54,14 @@ func reset():
     set_pos(spawn_position)
     stagnation_timer = 0.0
     max_height = 0.0
+    for body_part in body_parts:
+        body_part.linear_velocity = Vector2.ZERO
+        body_part.angular_velocity = 0.0
     #print("reset")
 
 func set_pos(pos: Vector2) -> void:
-    torso.global_position = pos
-    r_upperarm.global_position = pos
-    l_upperarm.global_position = pos
-    r_thigh.global_position = pos
-    l_thigh.global_position = pos
-    r_forearm.global_position = pos
-    l_forearm.global_position = pos
-    r_calf.global_position = pos
-    l_calf.global_position = pos
+    for body_part in body_parts:
+        body_part.global_position = pos
 
 func get_pos() -> Vector2:
     return torso.global_position
@@ -203,7 +211,10 @@ func _is_valid_grab_target(body: Node2D, grabber: Grabber) -> bool:
     """Check if the body is a valid target for grabbing."""
     var returned: bool = true
 
-    if body is BodyPart and body.get_parent() == self:
+    if body is BodyPart or body.get_parent() == self:
+        returned = false
+    elif body is Boundaries:
+        ai_controller.reward -= 20
         returned = false
 
     if returned:
