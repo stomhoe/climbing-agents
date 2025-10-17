@@ -69,14 +69,6 @@ node_b = NodePath("../../Rthigh")
 enabled = false
 zoom = Vector2(4, 4)
 
-[node name="RaycastBody" type="Node2D" parent="Torso"]
-rotation = -1.5707964
-script = ExtResource("4_nwbdq")
-n_rays = 20.0
-ray_length = 400
-debug_draw = false
-metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
 [node name="RemoteTransform2D2" type="RemoteTransform2D" parent="Torso"]
 remote_path = NodePath("../../AIController2D/NodeAbove")
 update_rotation = false
@@ -180,11 +172,17 @@ control_mode = 2
 
 [node name="NodeAbove" type="Node2D" parent="AIController2D"]
 
+[node name="RaycastBody" type="Node2D" parent="AIController2D/NodeAbove"]
+rotation = -1.5707964
+script = ExtResource("4_nwbdq")
+n_rays = 20.0
+debug_draw = false
+metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
+
 [node name="RaycastLeft" type="Node2D" parent="AIController2D/NodeAbove"]
 position = Vector2(-100, -80)
 script = ExtResource("4_nwbdq")
 n_rays = 10.0
-ray_length = 400
 cone_width = 120.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
@@ -193,7 +191,6 @@ position = Vector2(100, -80)
 rotation = 3.1415927
 script = ExtResource("4_nwbdq")
 n_rays = 10.0
-ray_length = 400
 cone_width = 120.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
