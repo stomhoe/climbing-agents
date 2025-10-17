@@ -4,7 +4,7 @@ class_name AIClimbController
 @onready var climber: Climber = $".."
 @onready var node_above: Node2D = $NodeAbove
 
-@onready var body_sensor: RaycastSensor2D = $"../Torso/RaycastBody"
+@onready var body_sensor: RaycastSensor2D = $NodeAbove/RaycastBody
 @onready var raycast_right: RaycastSensor2D = $NodeAbove/RaycastRight
 @onready var raycast_left: RaycastSensor2D = $NodeAbove/RaycastLeft
 @onready var label: Label = $NodeAbove/Label
