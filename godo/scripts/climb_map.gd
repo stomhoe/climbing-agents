@@ -88,16 +88,16 @@ func _process(delta: float):
                 climber_highest_reward = climber
 
 @onready var boxes: Node2D = $Boxes
-var last_spawned_box: Vector2 = Vector2(-1., -1.)
+var last_spawned_box: StaticBody2D = null
 
 func spawn_box(distance: float):
     var box = box_scene.instantiate()
     var spawn_position: Vector2
 
-    if last_spawned_box != Vector2(-1., -1.):
+    if last_spawned_box != null:
         # Use the last spawned box's position as a base
-        spawn_position = last_spawned_box
-        var random_offset = Vector2(randf() * 100 - 50, randf() * 100 - 50)  # Random offset in both x and y
+        spawn_position = last_spawned_box.global_position
+        var random_offset = Vector2(randf() * 100 - 50, randf() * 10 - 20)  # Random offset in both x and y
         spawn_position += random_offset
     else:
         # Default spawn position based on reward vector and distance
@@ -109,7 +109,7 @@ func spawn_box(distance: float):
     box.position = spawn_position
 
     # Randomize scale and rotation
-    var random_scale = clamp(abs(randfn(1.3, 0.7)), 0.5, 2.4)  # Normal distribution with mean 1.3 and std dev 0.4
+    var random_scale = clamp(abs(randfn(1.7, 0.7)), 0.6, 3.4)  # Normal distribution with mean 1.3 and std dev 0.4
     box.scale = Vector2(random_scale, random_scale)
     box.rotation = randf() * PI * 2  # Random rotation between 0 and 2π
 
@@ -117,7 +117,7 @@ func spawn_box(distance: float):
     box.name = "Box%d" % boxes.get_child_count()
 
     boxes.add_child(box)
-    last_spawned_box = box.global_position  # Update the last spawned box
+    last_spawned_box = box  # Update the last spawned box
 
 var reward_vec: Vector2
 var reward_angle: float:

@@ -11,3 +11,6 @@ https://www.oreilly.com/library/view/godot-engine-game/9781788831505/7fb4274c-5a
 
 
 dotnet add package Microsoft.ML.OnnxRuntime --version 1.23.1
+
+
+python stable_baselines3_example.py --env_path=godo_ --experiment_name=experiment1 --timesteps=2_000_000 --save_checkpoint_frequency=50_000 --speedup=8
