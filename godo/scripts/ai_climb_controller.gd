@@ -40,10 +40,10 @@ func get_reward() -> float:
     
 func get_action_space() -> Dictionary:
     return {
-        "l_hand_lock" : {"size": 1, "action_type": "discrete"},
-        "r_hand_lock" : {"size": 1,"action_type": "discrete"},
-        "l_foot_lock" : {"size": 1,"action_type": "discrete"},
-        "r_foot_lock" : {"size": 1,"action_type": "discrete"},
+        #"l_hand_lock" : {"size": 1, "action_type": "discrete"},
+        #"r_hand_lock" : {"size": 1,"action_type": "discrete"},
+        #"l_foot_lock" : {"size": 1,"action_type": "discrete"},
+        #"r_foot_lock" : {"size": 1,"action_type": "discrete"},
 
         "l_hand_grab" : {"size": 1, "action_type": "discrete"},
         "r_hand_grab" : {"size": 1,"action_type": "discrete"},
@@ -63,18 +63,15 @@ func get_action_space() -> Dictionary:
 var limb_force_multiplier: float = 150.0
 
 func set_action(action: Dictionary) -> void:	
-
-    climber.l_hand_grabber.joint.angular_limit_enabled = action["l_hand_lock"] as bool
-    climber.r_hand_grabber.joint.angular_limit_enabled = action["r_hand_lock"] as bool
-    climber.l_foot_grabber.joint.angular_limit_enabled = action["l_foot_lock"] as bool
-    climber.r_foot_grabber.joint.angular_limit_enabled = action["r_foot_lock"] as bool
+    #climber.l_hand_grabber.joint.angular_limit_enabled = action["l_hand_lock"] as bool
+    #climber.r_hand_grabber.joint.angular_limit_enabled = action["r_hand_lock"] as bool
+    #climber.l_foot_grabber.joint.angular_limit_enabled = action["l_foot_lock"] as bool
+    #climber.r_foot_grabber.joint.angular_limit_enabled = action["r_foot_lock"] as bool
     
     climber.l_hand_grabber.grab_on_contact = action["l_hand_grab"] as bool
     climber.r_hand_grabber.grab_on_contact = action["r_hand_grab"] as bool
     climber.l_foot_grabber.grab_on_contact = action["l_foot_grab"] as bool
     climber.r_foot_grabber.grab_on_contact = action["r_foot_grab"] as bool
-
-    
 
     climber.l_shoulder.motor_target_velocity = action["l_shoulder"][0] * limb_force_multiplier
     climber.l_upperarm.joint.motor_target_velocity = action["l_elbow"][0] * limb_force_multiplier
