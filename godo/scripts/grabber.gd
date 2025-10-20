@@ -5,22 +5,31 @@ class_name Grabber
 @onready var grab_area: Area2D = $GrabArea
 @onready var mesh_instance_2d: MeshInstance2D = $MeshInstance2D
 
+var grab_on_contact: bool = true:
+    set(value):
+        grab_on_contact = value
+        if grab_on_contact:
+            if not grab_area.body_entered.is_connected(_on_grab_area_body_entered):
+                grab_area.body_entered.connect(_on_grab_area_body_entered)
+        else:
+            if grab_area.body_entered.is_connected(_on_grab_area_body_entered):
+                grab_area.body_entered.disconnect(_on_grab_area_body_entered)
+            release()
+
 func _ready():
-    # Set up the joint to connect to the parent body part
     joint.node_a = get_parent().get_path()
+    grab_area.body_entered.connect(_on_grab_area_body_entered)
+    pass
     
 func is_grabbing() -> bool:
-    """Returns true if this grabber is currently grabbing something"""
     return joint.node_b != NodePath("")
 
 func release():
-    """Release the current grab"""
-    var was_grabbing = is_grabbing()
     mesh_instance_2d.modulate = Color.WHITE
     joint.node_b = NodePath("")
-    
-    # Notify the climber that this grabber released
-    if was_grabbing:
-        var climber = get_node("../../") as Climber  # Navigate to climber
-        if climber:
-            climber._on_grabber_released(self)
+
+
+func _on_grab_area_body_entered(body):
+    joint.node_a = get_parent().get_path()
+    joint.node_b = body.get_path()
+    mesh_instance_2d.modulate = Color.GREEN

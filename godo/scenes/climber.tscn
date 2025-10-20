@@ -54,24 +54,28 @@ visible = false
 position = Vector2(-7, -9)
 node_a = NodePath("..")
 node_b = NodePath("../../Lupperarm")
+motor_enabled = true
 
 [node name="Rshoulder" type="PinJoint2D" parent="Torso"]
 visible = false
 position = Vector2(7.465, -9)
 node_a = NodePath("..")
 node_b = NodePath("../../Rupperarm")
+motor_enabled = true
 
 [node name="Lhip" type="PinJoint2D" parent="Torso"]
 visible = false
 position = Vector2(-6, 9)
 node_a = NodePath("..")
 node_b = NodePath("../../Lthigh")
+motor_enabled = true
 
 [node name="Rhip" type="PinJoint2D" parent="Torso"]
 visible = false
 position = Vector2(6, 9)
 node_a = NodePath("..")
 node_b = NodePath("../../Rthigh")
+motor_enabled = true
 
 [node name="Camera2D" type="Camera2D" parent="Torso"]
 enabled = false
@@ -95,10 +99,12 @@ mesh = SubResource("CapsuleMesh_qjkbj")
 
 [node name="Lthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-6, 12.585)
+rotation = 0.0
 next_limb = NodePath("../Lcalf")
 
 [node name="Rthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(6, 12.585)
+rotation = 0.0
 next_limb = NodePath("../Rcalf")
 
 [node name="Lupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]

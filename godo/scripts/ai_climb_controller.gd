@@ -40,26 +40,48 @@ func get_reward() -> float:
     
 func get_action_space() -> Dictionary:
     return {
-        "grabber" : {
-            "size": 1,
-            "action_type": "discrete"
-        },
-        "grabber_2" : {
-            "size": 1,
-            "action_type": "discrete"
-        },
-        "move" : {
-            "size": 2,
-            "action_type": "continuous"
-        },
-        }
+        "control" : {"size": 1, "action_type": "discrete"},
+        "control_2" : {"size": 1, "action_type": "discrete"},
+        "move" : {"size": 2, "action_type": "continuous"},
+
+        "l_shoulder": {"size": 1, "action_type": "continuous"},
+        "r_shoulder": {"size": 1, "action_type": "continuous"},
+        "l_hip": {"size": 1, "action_type": "continuous"},
+        "r_hip": {"size": 1, "action_type": "continuous"},
+        "l_knee": {"size": 1, "action_type": "continuous"},
+        "r_knee": {"size": 1, "action_type": "continuous"},
+        "l_elbow": {"size": 1, "action_type": "continuous"},
+        "r_elbow": {"size": 1, "action_type": "continuous"},
+
+        "left_hand_grab_on_contact": {"size": 1, "action_type": "discrete"},
+        "right_hand_grab_on_contact": {"size": 1, "action_type": "discrete"},
+        "left_foot_grab_on_contact": {"size": 1, "action_type": "discrete"},
+        "right_foot_grab_on_contact": {"size": 1, "action_type": "discrete"}
+
+    }
     
+var rotor_speed: float = 15
+
 func set_action(action: Dictionary) -> void:	
     
     var move: Vector2 = Vector2(action[&"move"][0], action[&"move"][1])
     climber.force_direction = move.normalized()
 
-    var grabber_i: int = (abs(action[&"grabber"]*2) + abs(action[&"grabber_2"])) as int
+    var grabber_i: int = (abs(action[&"control"]*2) + abs(action[&"control_2"])) as int
+
+    climber.l_hand_grabber.grab_on_contact = action[&"left_hand_grab_on_contact"]
+    climber.r_hand_grabber.grab_on_contact = action[&"right_hand_grab_on_contact"]
+    climber.l_foot_grabber.grab_on_contact = action[&"left_foot_grab_on_contact"]
+    climber.r_foot_grabber.grab_on_contact = action[&"right_foot_grab_on_contact"]
+
+    climber.l_shoulder.motor_target_velocity = action[&"l_shoulder"][0]*rotor_speed
+    climber.r_shoulder.motor_target_velocity = action[&"r_shoulder"][0]*rotor_speed
+    climber.l_hip.motor_target_velocity = action[&"l_hip"][0]*rotor_speed
+    climber.r_hip.motor_target_velocity = action[&"r_hip"][0]*rotor_speed
+    climber.l_thigh.joint.motor_target_velocity = action[&"l_knee"][0]*rotor_speed
+    climber.r_thigh.joint.motor_target_velocity = action[&"r_knee"][0]*rotor_speed
+    climber.l_upperarm.joint.motor_target_velocity = action[&"l_elbow"][0]*rotor_speed
+    climber.r_upperarm.joint.motor_target_velocity = action[&"r_elbow"][0]*rotor_speed
     
     var new_controlled = (climber.joints.keys())[grabber_i]
     climber.set_controlled_grabber(new_controlled)

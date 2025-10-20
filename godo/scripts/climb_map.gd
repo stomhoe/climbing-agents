@@ -10,7 +10,7 @@ var climber_positions: Array[Vector2] = []
 var position_tolerance: float = 15.0   # Distance tolerance for considering "same position"
 @onready var sync: Sync = $Sync
 
-@export var N_CLIMBERS = 1
+@export var N_CLIMBERS = 40
 var climber_scene: PackedScene = preload("res://scenes/climber.tscn")
 
 func _ready():
