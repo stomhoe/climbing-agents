@@ -44,14 +44,19 @@ func get_action_space() -> Dictionary:
         "control_2" : {"size": 1, "action_type": "discrete"},
         "move" : {"size": 2, "action_type": "continuous"},
 
-        "l_shoulder": {"size": 1, "action_type": "continuous"},
-        "r_shoulder": {"size": 1, "action_type": "continuous"},
-        "l_hip": {"size": 1, "action_type": "continuous"},
-        "r_hip": {"size": 1, "action_type": "continuous"},
-        "l_knee": {"size": 1, "action_type": "continuous"},
-        "r_knee": {"size": 1, "action_type": "continuous"},
-        "l_elbow": {"size": 1, "action_type": "continuous"},
-        "r_elbow": {"size": 1, "action_type": "continuous"},
+        # "l_shoulder": {"size": 1, "action_type": "continuous"},
+        # "r_shoulder": {"size": 1, "action_type": "continuous"},
+        # "l_hip": {"size": 1, "action_type": "continuous"},
+        # "r_hip": {"size": 1, "action_type": "continuous"},
+        # "l_knee": {"size": 1, "action_type": "continuous"},
+        # "r_knee": {"size": 1, "action_type": "continuous"},
+        # "l_elbow": {"size": 1, "action_type": "continuous"},
+        # "r_elbow": {"size": 1, "action_type": "continuous"},
+
+        #"lock_l_arm": {"size": 1, "action_type": "discrete"},
+        #"lock_r_arm": {"size": 1, "action_type": "discrete"},
+        #"lock_l_leg": {"size": 1, "action_type": "discrete"},
+        #"lock_r_leg": {"size": 1, "action_type": "discrete"},
 
         "left_hand_grab_on_contact": {"size": 1, "action_type": "discrete"},
         "right_hand_grab_on_contact": {"size": 1, "action_type": "discrete"},
@@ -74,15 +79,23 @@ func set_action(action: Dictionary) -> void:
     climber.l_foot_grabber.grab_on_contact = action[&"left_foot_grab_on_contact"]
     climber.r_foot_grabber.grab_on_contact = action[&"right_foot_grab_on_contact"]
 
-    climber.l_shoulder.motor_target_velocity = action[&"l_shoulder"][0]*rotor_speed
-    climber.r_shoulder.motor_target_velocity = action[&"r_shoulder"][0]*rotor_speed
-    climber.l_hip.motor_target_velocity = action[&"l_hip"][0]*rotor_speed
-    climber.r_hip.motor_target_velocity = action[&"r_hip"][0]*rotor_speed
-    climber.l_thigh.joint.motor_target_velocity = action[&"l_knee"][0]*rotor_speed
-    climber.r_thigh.joint.motor_target_velocity = action[&"r_knee"][0]*rotor_speed
-    climber.l_upperarm.joint.motor_target_velocity = action[&"l_elbow"][0]*rotor_speed
-    climber.r_upperarm.joint.motor_target_velocity = action[&"r_elbow"][0]*rotor_speed
-    
-    var new_controlled = (climber.joints.keys())[grabber_i]
-    climber.set_controlled_grabber(new_controlled)
+    #for joint in climber.joints[climber.r_hand_grabber]:
+        #joint.angular_limit_enabled = action[&"lock_r_arm"] as bool
+    #for joint in climber.joints[climber.l_hand_grabber]:
+        #joint.angular_limit_enabled = action[&"lock_l_arm"] as bool
+    #for joint in climber.joints[climber.r_foot_grabber]:
+        #joint.angular_limit_enabled = action[&"lock_r_leg"] as bool
+    #for joint in climber.joints[climber.l_foot_grabber]:
+        #joint.angular_limit_enabled = action[&"lock_l_leg"] as bool
+
+    # climber.l_shoulder.motor_target_velocity = action[&"l_shoulder"][0]*rotor_speed
+    # climber.r_shoulder.motor_target_velocity = action[&"r_shoulder"][0]*rotor_speed
+    # climber.l_hip.motor_target_velocity = action[&"l_hip"][0]*rotor_speed
+    # climber.r_hip.motor_target_velocity = action[&"r_hip"][0]*rotor_speed
+    # climber.l_thigh.joint.motor_target_velocity = action[&"l_knee"][0]*rotor_speed
+    # climber.r_thigh.joint.motor_target_velocity = action[&"r_knee"][0]*rotor_speed
+    # climber.l_upperarm.joint.motor_target_velocity = action[&"l_elbow"][0]*rotor_speed
+    # climber.r_upperarm.joint.motor_target_velocity = action[&"r_elbow"][0]*rotor_speed
+    var new_controlled: Grabber = (climber.joints.keys())[grabber_i]
+    climber.currently_controlled = new_controlled
         

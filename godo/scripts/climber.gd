@@ -70,12 +70,13 @@ var control_strength: float = 1000.0
 func _ready():
     for joints_arr in joints.values():
         for joint: PinJoint2D in joints_arr:
-            joint.softness = 0.01
-            joint.motor_enabled = true
+            joint.motor_enabled = false
+            joint.angular_limit_enabled = false
+            joint.angular_limit_lower = deg_to_rad(-1)
+            joint.angular_limit_upper = deg_to_rad(1)
 
 func _physics_process(delta: float):
     delta *= speed_up
-    _handle_input()
     _apply_muscle_forces(delta)
 
 # Add any necessary vars here
@@ -120,29 +121,28 @@ func _handle_input():
             new_controlled = l_hand_grabber
     
     # Use the helper method to set the controlled grabber
-    set_controlled_grabber(new_controlled)
+    currently_controlled = new_controlled
+    
+    print("CONTROLANDO A MANO")
 
     if currently_controlled:
         force_direction = (get_global_mouse_position() - currently_controlled.global_position).normalized()
 
 
-var currently_controlled: Grabber = null
+var currently_controlled: Grabber = null:
+    set(value):
+        if currently_controlled != value:
+            if currently_controlled:
+                #for joint in joints[currently_controlled]: joint.motor_enabled = true
+                currently_controlled.mesh_instance_2d.modulate = Color.WHITE
+                currently_controlled.is_currently_controlled = false
+            currently_controlled = value
+            if currently_controlled:
+                currently_controlled.is_currently_controlled = true
+                currently_controlled.mesh_instance_2d.modulate = Color.PURPLE                
+                swing_timer = swing_boost_time 
 
 var force_direction: Vector2 = Vector2.ZERO
-
-func set_controlled_grabber(new_controlled: Grabber):
-    var previous_controlled = currently_controlled
-    
-    if currently_controlled != null and new_controlled != currently_controlled:
-        currently_controlled.mesh_instance_2d.modulate = Color.WHITE
-        
-    if new_controlled != null and new_controlled != currently_controlled:
-        new_controlled.release()
-        swing_timer = swing_boost_time 
-        new_controlled.mesh_instance_2d.modulate = Color.PURPLE
-    
-    currently_controlled = new_controlled
-    
 
 func _release_all_grabs():
     for grabber in joints.keys():
