@@ -16,6 +16,7 @@ disable_collision = false
 softness = 0.5
 
 [node name="GrabArea" type="Area2D" parent="."]
+collision_layer = 0
 priority = 100
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GrabArea"]

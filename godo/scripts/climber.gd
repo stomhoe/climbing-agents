@@ -22,10 +22,10 @@ class_name Climber
 @onready var l_hip: PinJoint2D = $Torso/Lhip
 @onready var r_hip: PinJoint2D = $Torso/Rhip
 
-@onready var r_hand_grabber: Grabber = $Rforearm/Grabber
-@onready var l_hand_grabber: Grabber = $Lforearm/Grabber
-@onready var r_foot_grabber: Grabber = $Rcalf/Grabber
-@onready var l_foot_grabber: Grabber = $Lcalf/Grabber
+@onready var r_hand_grabber: Grabber = $Rforearm/RightHand
+@onready var l_hand_grabber: Grabber = $Lforearm/LeftHand
+@onready var r_foot_grabber: Grabber = $Rcalf/RightFoot
+@onready var l_foot_grabber: Grabber = $Lcalf/LeftFoot
 
 var spawn_position: Vector2 = Vector2.ZERO
 
@@ -64,6 +64,24 @@ func get_pos() -> Vector2: return torso.global_position
 func _at_least_one_grabbed() -> bool:
     return r_hand_grabber.is_grabbing() or l_hand_grabber.is_grabbing() or r_foot_grabber.is_grabbing() or l_foot_grabber.is_grabbing()
 
+func _set_grabber_joints_angular_limit(grabber: Grabber, unlock: bool):
+    """Set the angular limit for joints associated with a grabber"""
+    if grabber in joints:
+        var joint_list = joints[grabber]
+        for joint: PinJoint2D in joint_list:
+            joint.angular_limit_enabled = !unlock
+
+func _update_grabber_joint_state(grabber: Grabber):
+    var is_controlled = (grabber == currently_controlled)
+    var is_grabbing = grabber.is_grabbing()
+    var should_unlock = is_controlled or is_grabbing
+    
+    _set_grabber_joints_angular_limit(grabber, should_unlock)
+
+
+func _on_grabber_released(grabber: Grabber):
+    _update_grabber_joint_state(grabber)
+
 # Control variables
 var control_strength: float = 1000.0
 # Input states
@@ -79,19 +97,22 @@ func _ready():
     l_foot_grabber.grab_area.body_entered.connect(_on_grab_area_entered.bind(l_foot_grabber))
     
     for joints_arr in joints.values():
-        for joint in joints_arr:
+        for joint: PinJoint2D in joints_arr:
             joint.angular_limit_lower = -2.5
             joint.angular_limit_upper = 2.5
+            joint.softness = 0.01
 
 func _physics_process(delta: float):
     delta *= speed_up
-    #_handle_input()
+    _handle_input()
     _apply_muscle_forces(delta)
 
 # Add any necessary vars here
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
 var swing_boost_strength: float = 1700.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
+
+
 
 func _apply_muscle_forces(delta: float):
     if currently_controlled:
@@ -107,17 +128,6 @@ func _apply_muscle_forces(delta: float):
             applied_strength += 1500.
         
         limb.apply_force(force_direction * applied_strength, currently_controlled.global_position - limb.global_position)
-    
-    # Lock joints for uncontrolled limbs that aren't grabbing anything
-
-    for grabber in joints:
-        var joint_list = joints[grabber]
-        if grabber != currently_controlled and not grabber.is_grabbing():
-            for joint in joint_list:
-                joint.angular_limit_enabled = true
-        else:
-            for joint in joint_list:
-                joint.angular_limit_enabled = false
 
 
 func _handle_input():
@@ -152,6 +162,8 @@ var currently_controlled: Grabber = null
 var force_direction: Vector2 = Vector2.ZERO
 
 func set_controlled_grabber(new_controlled: Grabber):
+    var previous_controlled = currently_controlled
+    
     if currently_controlled != null and new_controlled != currently_controlled:
         currently_controlled.mesh_instance_2d.modulate = Color.WHITE
         _try_auto_grab(currently_controlled)
@@ -161,8 +173,18 @@ func set_controlled_grabber(new_controlled: Grabber):
         swing_timer = swing_boost_time 
         new_controlled.mesh_instance_2d.modulate = Color.PURPLE
     
-    
     currently_controlled = new_controlled
+    
+    # Update joint states for affected grabbers
+    if previous_controlled != null and previous_controlled != new_controlled:
+        print("Previous controlled grabber lost control: ", previous_controlled.name)
+        _update_grabber_joint_state(previous_controlled)
+    
+    if new_controlled != null and new_controlled != previous_controlled:
+        print("New controlled grabber gained control: ", new_controlled.name)
+        _update_grabber_joint_state(new_controlled)
+    
+    
 
 func _on_grab_area_entered(body: Node2D, grabber: Grabber):
     """Automatically grab any valid body if the grabber is not currently controlled."""
@@ -187,8 +209,15 @@ func _try_auto_grab(grabber: Grabber):
 func _attempt_grab(body: Node2D, grabber: Grabber) -> bool:
     """Attempt to grab a body if it is a valid target."""
     if _is_valid_grab_target(body, grabber):
+        var was_grabbing = grabber.is_grabbing()
         grabber.joint.node_a = grabber.get_parent().get_path()
         grabber.joint.node_b = body.get_path()
+        
+        # If the grabber wasn't already grabbing something, update joint state
+        if not was_grabbing:
+            print("Grabber started grabbing: ", grabber.name)
+            _update_grabber_joint_state(grabber)
+        
         return true
     return false
 

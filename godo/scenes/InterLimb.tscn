@@ -4,7 +4,7 @@
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_50pj0"]
 radius = 1.4
-height = 9.0
+height = 10.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_v2l4i"]
 
@@ -19,12 +19,13 @@ metadata/_custom_type_script = "uid://beuvwkft1666w"
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_50pj0")
 
-[node name="Joint" type="PinJoint2D" parent="."]
+[node name="InterLimbJoint" type="PinJoint2D" parent="."]
 visible = false
 position = Vector2(3.415, 0)
 rotation = -1.5707964
 node_a = NodePath("..")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-scale = Vector2(9.052049, 1.668372)
+position = Vector2(0, 8.881784e-16)
+scale = Vector2(9.639185, 1.668372)
 mesh = SubResource("CapsuleMesh_v2l4i")

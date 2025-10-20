@@ -1,3 +1,14 @@
 #!/usr/bin/env bash
 source /home/stefan/Documents/robotica/venv/bin/activate
-python stable_baselines3_example.py --env_path=/home/stefan/Documents/robotica/godo.x86_64 --experiment_name=nase --timesteps=400_000 --viz --resume_model_path=/home/stefan/Documents/robotica/logs/sb3/experiment1_checkpoints/experiment1_1999200_steps.zip
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <resume_model_path>"
+    exit 1
+fi
+
+RESUME_PATH=$1
+
+# Generate experiment name based on the current date and time
+EXPERIMENT_NAME="$(date +'%B%d-%H:%M')"
+
+python stable_baselines3_example.py --env_path=/home/stefan/Documents/robotica/godo.x86_64 --experiment_name=$EXPERIMENT_NAME --timesteps=400_000 --viz --resume_model_path=$RESUME_PATH

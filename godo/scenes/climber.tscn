@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://du810krjernvh"]
+[gd_scene load_steps=18 format=3 uid="uid://du810krjernvh"]
 
 [ext_resource type="Script" uid="uid://csywm5ogyueew" path="res://scripts/climber.gd" id="1_7e176"]
 [ext_resource type="Shape2D" uid="uid://cr7ppqcms2hw4" path="res://colliders/body.tres" id="2_ygfqx"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://chsdkprww0adx" path="res://scenes/grabber.tscn" id="5_3nhoh"]
 [ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="5_nwbdq"]
 [ext_resource type="Script" uid="uid://n04gwns6q2lp" path="res://scripts/ai_climb_controller.gd" id="7_7aipt"]
-[ext_resource type="Texture2D" uid="uid://cwj4rjdkmdsdc" path="res://icon.svg" id="9_7aipt"]
+[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="9_7aipt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kce74"]
 
@@ -16,6 +16,14 @@
 material = SubResource("StandardMaterial3D_kce74")
 radius = 10.096
 height = 24.737
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7aipt"]
+radius = 4.0
+height = 10.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_qjkbj"]
+radius = 4.0
+height = 10.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_kce74"]
 size = Vector3(12, 3, 1)
@@ -77,6 +85,14 @@ update_scale = false
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Torso"]
 mesh = SubResource("CapsuleMesh_7aipt")
 
+[node name="HeadColli" type="CollisionShape2D" parent="Torso"]
+position = Vector2(0, -15.05)
+shape = SubResource("CapsuleShape2D_7aipt")
+
+[node name="HeadMesh" type="MeshInstance2D" parent="Torso"]
+position = Vector2(0, -14.925)
+mesh = SubResource("CapsuleMesh_qjkbj")
+
 [node name="Lthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-6, 12.585)
 next_limb = NodePath("../Lcalf")
@@ -107,14 +123,11 @@ script = ExtResource("5_nwbdq")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lforearm"]
 shape = ExtResource("3_3nhoh")
 
-[node name="Grabber" parent="Lforearm" instance=ExtResource("5_3nhoh")]
+[node name="LeftHand" parent="Lforearm" instance=ExtResource("5_3nhoh")]
 position = Vector2(-6, 0)
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Lforearm"]
 mesh = SubResource("BoxMesh_kce74")
-
-[node name="PinJoint2D" type="PinJoint2D" parent="Lforearm"]
-node_a = NodePath("..")
 
 [node name="Rforearm" type="RigidBody2D" parent="."]
 position = Vector2(21.65, -9)
@@ -129,7 +142,7 @@ shape = ExtResource("3_3nhoh")
 [node name="MeshInstance2D2" type="MeshInstance2D" parent="Rforearm"]
 mesh = SubResource("BoxMesh_kce74")
 
-[node name="Grabber" parent="Rforearm" instance=ExtResource("5_3nhoh")]
+[node name="RightHand" parent="Rforearm" instance=ExtResource("5_3nhoh")]
 position = Vector2(7, 0)
 
 [node name="Lcalf" type="RigidBody2D" parent="."]
@@ -143,7 +156,7 @@ script = ExtResource("5_nwbdq")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lcalf"]
 shape = SubResource("RectangleShape2D_emysf")
 
-[node name="Grabber" parent="Lcalf" instance=ExtResource("5_3nhoh")]
+[node name="LeftFoot" parent="Lcalf" instance=ExtResource("5_3nhoh")]
 position = Vector2(7, 0)
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Lcalf"]
@@ -160,7 +173,7 @@ script = ExtResource("5_nwbdq")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rcalf"]
 shape = SubResource("RectangleShape2D_emysf")
 
-[node name="Grabber" parent="Rcalf" instance=ExtResource("5_3nhoh")]
+[node name="RightFoot" parent="Rcalf" instance=ExtResource("5_3nhoh")]
 position = Vector2(7, 0)
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Rcalf"]
@@ -201,11 +214,10 @@ scale = Vector2(0.1171875, 0.15625)
 texture = ExtResource("9_7aipt")
 
 [node name="Label" type="Label" parent="AIController2D/NodeAbove"]
-offset_left = -6.0
-offset_top = -22.0
-offset_right = 34.0
-offset_bottom = 1.0
+offset_left = -10.0
+offset_top = -29.0
+offset_right = 30.0
+offset_bottom = -6.0
 scale = Vector2(0.5, 0.5)
 theme_override_font_sizes/font_size = 20
-text = "test"
 label_settings = SubResource("LabelSettings_7aipt")

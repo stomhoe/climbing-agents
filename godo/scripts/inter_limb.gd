@@ -13,7 +13,7 @@ class_name InterLimb
         
 @export var joint_displacement: float = 3.415
 
-@onready var joint: PinJoint2D = $Joint
+@onready var joint: PinJoint2D = $InterLimbJoint
 @onready var collision_shape_2d = $CollisionShape2D
 @onready var mesh_instance_2d = $MeshInstance2D
 

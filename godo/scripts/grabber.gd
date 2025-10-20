@@ -15,5 +15,12 @@ func is_grabbing() -> bool:
 
 func release():
     """Release the current grab"""
+    var was_grabbing = is_grabbing()
     mesh_instance_2d.modulate = Color.WHITE
     joint.node_b = NodePath("")
+    
+    # Notify the climber that this grabber released
+    if was_grabbing:
+        var climber = get_node("../../") as Climber  # Navigate to climber
+        if climber:
+            climber._on_grabber_released(self)
