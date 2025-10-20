@@ -145,7 +145,8 @@ func get_dist_reward(climber: Climber) -> float:
 func _on_sync_ready():
     await self.ready
     
-    if sync.args.has("n_climbers") && sync.args["n_climbers"] > 0:
-        n_climbers = sync.args["n_climbers"]
+    if sync.args.has("n_climbers"):
+        var n: int = int(sync.args[&"n_climbers"])
+        n_climbers = n
     else:
         n_climbers = 40
