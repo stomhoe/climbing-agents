@@ -70,8 +70,6 @@ var control_strength: float = 1000.0
 func _ready():
     for joints_arr in joints.values():
         for joint: PinJoint2D in joints_arr:
-            joint.angular_limit_lower = -2.5
-            joint.angular_limit_upper = 2.5
             joint.softness = 0.01
             joint.motor_enabled = true
 
@@ -84,8 +82,6 @@ func _physics_process(delta: float):
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
 var swing_boost_strength: float = 1700.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
-
-
 
 func _apply_muscle_forces(delta: float):
     if currently_controlled:

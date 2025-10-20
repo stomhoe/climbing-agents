@@ -60,3 +60,5 @@ zoom = Vector2(2, 2)
 script = ExtResource("5_4oapl")
 
 [node name="Boxes" type="Node2D" parent="."]
+
+[connection signal="ready" from="Sync" to="." method="_on_sync_ready"]

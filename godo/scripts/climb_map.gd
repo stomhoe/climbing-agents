@@ -10,19 +10,29 @@ var climber_positions: Array[Vector2] = []
 var position_tolerance: float = 15.0   # Distance tolerance for considering "same position"
 @onready var sync: Sync = $Sync
 
-@export var N_CLIMBERS = 40
+@export var n_climbers: int = 1:
+    set(value):
+        climbers.clear()
+        climber_positions.clear()
+        for child in climbers_node.get_children():
+            child.queue_free()
+        
+        n_climbers = value
+        for i in range(n_climbers):
+            var climber: Climber = climber_scene.instantiate()
+            climbers_node.add_child(climber)
+            climber.name = "Climber_%d" % i  # Set a numbered name for each climber
+            climber.target_angle = reward_angle
+            climber.spawn_position = climbers_node.global_position
+            climbers.append(climber)
+            climber_positions.append(climber.get_pos())
+
+
 var climber_scene: PackedScene = preload("res://scenes/climber.tscn")
 
 func _ready():
     reward_angle = -PI/2 #DEJARLO SETTEADO ACÁ
-    for i in range(N_CLIMBERS):
-        var climber: Climber = climber_scene.instantiate(PackedScene.GEN_EDIT_STATE_DISABLED)
-        climbers_node.add_child(climber)
-        climber.name = "Climber_%d" % i  # Set a numbered name for each climber
-        climber.target_angle = reward_angle
-        climber.spawn_position = climbers_node.global_position
-        climbers.append(climber)
-        climber_positions.append(climber.get_pos())
+    n_climbers = 1
 
 var round_duration: float = 300.0
 var climb_round_timer: float = round_duration
@@ -130,3 +140,12 @@ var reward_angle: float:
 func get_dist_reward(climber: Climber) -> float:
     var distance_reward_vec = climber.get_pos() - Vector2(0, 0)
     return distance_reward_vec.dot(reward_vec)
+
+
+func _on_sync_ready():
+    await self.ready
+    
+    if sync.args.has("n_climbers") && sync.args["n_climbers"] > 0:
+        n_climbers = sync.args["n_climbers"]
+    else:
+        n_climbers = 40

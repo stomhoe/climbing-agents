@@ -106,6 +106,13 @@ parser.add_argument(
     type=int,
     help="How many instances of the environment executable to " "launch - requires --env_path to be set if > 1.",
 )
+parser.add_argument(
+    "--n_climbers",
+    default=50,
+    type=int,
+    help="How many climbers to spawn in the environment.",
+)
+
 args, extras = parser.parse_known_args()
 
 

@@ -99,12 +99,10 @@ mesh = SubResource("CapsuleMesh_qjkbj")
 
 [node name="Lthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-6, 12.585)
-rotation = 0.0
 next_limb = NodePath("../Lcalf")
 
 [node name="Rthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(6, 12.585)
-rotation = 0.0
 next_limb = NodePath("../Rcalf")
 
 [node name="Lupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
