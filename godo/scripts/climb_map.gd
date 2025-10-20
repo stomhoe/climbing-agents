@@ -10,7 +10,7 @@ var climber_positions: Array[Vector2] = []
 var position_tolerance: float = 15.0   # Distance tolerance for considering "same position"
 @onready var sync: Sync = $Sync
 
-@export var n_climbers: int = 1:
+@export var n_climbers: int = 0:
     set(value):
         climbers.clear()
         climber_positions.clear()
@@ -26,13 +26,13 @@ var position_tolerance: float = 15.0   # Distance tolerance for considering "sam
             climber.spawn_position = climbers_node.global_position
             climbers.append(climber)
             climber_positions.append(climber.get_pos())
+        sync._initialize()
 
 
 var climber_scene: PackedScene = preload("res://scenes/climber.tscn")
 
 func _ready():
     reward_angle = -PI/2 #DEJARLO SETTEADO ACÁ
-    n_climbers = 1
 
 var round_duration: float = 300.0
 var climb_round_timer: float = round_duration

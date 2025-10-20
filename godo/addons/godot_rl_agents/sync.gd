@@ -64,14 +64,10 @@ var _obs_space_training: Array[Dictionary] = []
 func _ready():
     await get_parent().ready
     get_tree().set_pause(true)
-    _initialize()
-    await get_tree().create_timer(1.0).timeout
-    get_tree().set_pause(false)
-
+    args = _get_args()
 
 func _initialize():
     _get_agents()
-    args = _get_args()
     Engine.physics_ticks_per_second = _get_speedup() * 60  # Replace with function body.
     Engine.time_scale = _get_speedup() * 1.0
     prints(
@@ -91,6 +87,8 @@ func _initialize():
     _set_seed()
     _set_action_repeat()
     initialized = true
+    await get_tree().create_timer(1.0).timeout
+    get_tree().set_pause(false)
 
 
 func _initialize_training_agents():
