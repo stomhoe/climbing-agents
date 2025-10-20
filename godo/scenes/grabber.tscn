@@ -13,7 +13,6 @@ script = ExtResource("1_snmkx")
 [node name="Joint" type="PinJoint2D" parent="."]
 rotation = 1.5707964
 disable_collision = false
-softness = 0.5
 
 [node name="GrabArea" type="Area2D" parent="."]
 collision_layer = 0

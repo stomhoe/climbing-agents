@@ -44,34 +44,42 @@ script = ExtResource("1_7e176")
 [node name="Torso" type="RigidBody2D" parent="."]
 collision_layer = 0
 collision_mask = 3
+mass = 50.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Torso"]
 shape = ExtResource("2_ygfqx")
 
 [node name="Lshoulder" type="PinJoint2D" parent="Torso"]
-visible = false
 position = Vector2(-7, -9)
 node_a = NodePath("..")
 node_b = NodePath("../../Lupperarm")
+angular_limit_enabled = true
+angular_limit_lower = -1.7453293
+angular_limit_upper = 1.7453293
 
 [node name="Rshoulder" type="PinJoint2D" parent="Torso"]
-visible = false
 position = Vector2(7.465, -9)
 node_a = NodePath("..")
 node_b = NodePath("../../Rupperarm")
 
 [node name="Lhip" type="PinJoint2D" parent="Torso"]
-visible = false
 position = Vector2(-6, 9)
 node_a = NodePath("..")
 node_b = NodePath("../../Lthigh")
+angular_limit_lower = 1.0471976
+angular_limit_upper = 2.8797932
+motor_enabled = true
+motor_target_velocity = 2.5968754
 
 [node name="Rhip" type="PinJoint2D" parent="Torso"]
-visible = false
 position = Vector2(6, 9)
 node_a = NodePath("..")
 node_b = NodePath("../../Rthigh")
+angular_limit_lower = 0.17453292
+angular_limit_upper = 2.0071287
+motor_enabled = true
+motor_target_velocity = -3.4906585
 
 [node name="Camera2D" type="Camera2D" parent="Torso"]
 enabled = false
@@ -94,29 +102,39 @@ position = Vector2(0, -14.925)
 mesh = SubResource("CapsuleMesh_qjkbj")
 
 [node name="Lthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
+modulate = Color(0, 0.5137255, 1, 1)
 position = Vector2(-6, 12.585)
+rotation = 1.5707964
+mass = 10.0
 next_limb = NodePath("../Lcalf")
 
 [node name="Rthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
+modulate = Color(1, 0.29803923, 0.22745098, 1)
 position = Vector2(6, 12.585)
+rotation = 1.5707964
+mass = 10.0
 next_limb = NodePath("../Rcalf")
 
 [node name="Lupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
+modulate = Color(1, 0.27450982, 0.28235295, 1)
 position = Vector2(-12, -9)
-rotation = -3.1415927
+mass = 3.0
 gravity_scale = 0.0
 next_limb = NodePath("../Lforearm")
+joint_displacement = -3.415
 
 [node name="Rupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
+modulate = Color(1, 0.16470589, 1, 1)
 position = Vector2(12, -9)
-rotation = 0.0
+mass = 3.0
 gravity_scale = 0.0
 next_limb = NodePath("../Rforearm")
 
 [node name="Lforearm" type="RigidBody2D" parent="."]
-position = Vector2(-21.65, -9)
+position = Vector2(-22, -9)
 collision_layer = 0
 collision_mask = 3
+mass = 2.3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -133,7 +151,7 @@ mesh = SubResource("BoxMesh_kce74")
 position = Vector2(21.65, -9)
 collision_layer = 0
 collision_mask = 3
-gravity_scale = 0.0
+mass = 2.3
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rforearm"]
@@ -150,7 +168,7 @@ position = Vector2(-6, 19.615)
 rotation = 1.5707964
 collision_layer = 0
 collision_mask = 3
-gravity_scale = 0.0
+mass = 5.9
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lcalf"]
@@ -167,7 +185,7 @@ position = Vector2(6, 19.615)
 rotation = 1.5707964
 collision_layer = 0
 collision_mask = 3
-gravity_scale = 0.0
+mass = 5.9
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rcalf"]

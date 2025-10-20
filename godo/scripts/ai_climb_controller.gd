@@ -40,27 +40,47 @@ func get_reward() -> float:
     
 func get_action_space() -> Dictionary:
     return {
-        "grabber" : {
-            "size": 1,
-            "action_type": "discrete"
-        },
-        "grabber_2" : {
-            "size": 1,
-            "action_type": "discrete"
-        },
-        "move" : {
-            "size": 2,
-            "action_type": "continuous"
-        },
-        }
-    
-func set_action(action: Dictionary) -> void:	
-    
-    var move: Vector2 = Vector2(action[&"move"][0], action[&"move"][1])
-    climber.force_direction = move.normalized()
+        "l_hand_lock" : {"size": 1, "action_type": "discrete"},
+        "r_hand_lock" : {"size": 1,"action_type": "discrete"},
+        "l_foot_lock" : {"size": 1,"action_type": "discrete"},
+        "r_foot_lock" : {"size": 1,"action_type": "discrete"},
 
-    var grabber_i: int = (abs(action[&"grabber"]*2) + abs(action[&"grabber_2"])) as int
+        "l_hand_grab" : {"size": 1, "action_type": "discrete"},
+        "r_hand_grab" : {"size": 1,"action_type": "discrete"},
+        "l_foot_grab" : {"size": 1,"action_type": "discrete"},
+        "r_foot_grab" : {"size": 1,"action_type": "discrete"},
+        #rotorization:
+        "l_shoulder" : {"size": 1, "action_type": "continuous"},
+        "l_elbow" : {"size": 1, "action_type": "continuous"},
+        "r_shoulder" : {"size": 1, "action_type": "continuous"},
+        "r_elbow" : {"size": 1, "action_type": "continuous"},
+        "l_hip" : {"size": 1, "action_type": "continuous"},
+        "l_knee" : {"size": 1, "action_type": "continuous"},
+        "r_hip" : {"size": 1, "action_type": "continuous"},
+        "r_knee" : {"size": 1, "action_type": "continuous"},
+    }
+
+var limb_force_multiplier: float = 150.0
+
+func set_action(action: Dictionary) -> void:	
+
+    climber.l_hand_grabber.joint.angular_limit_enabled = action["l_hand_lock"] as bool
+    climber.r_hand_grabber.joint.angular_limit_enabled = action["r_hand_lock"] as bool
+    climber.l_foot_grabber.joint.angular_limit_enabled = action["l_foot_lock"] as bool
+    climber.r_foot_grabber.joint.angular_limit_enabled = action["r_foot_lock"] as bool
     
-    var new_controlled = (climber.joints.keys())[grabber_i]
-    climber.set_controlled_grabber(new_controlled)
-        
+    climber.l_hand_grabber.grab_on_contact = action["l_hand_grab"] as bool
+    climber.r_hand_grabber.grab_on_contact = action["r_hand_grab"] as bool
+    climber.l_foot_grabber.grab_on_contact = action["l_foot_grab"] as bool
+    climber.r_foot_grabber.grab_on_contact = action["r_foot_grab"] as bool
+
+    
+
+    climber.l_shoulder.motor_target_velocity = action["l_shoulder"][0] * limb_force_multiplier
+    climber.l_upperarm.joint.motor_target_velocity = action["l_elbow"][0] * limb_force_multiplier
+    climber.r_shoulder.motor_target_velocity = action["r_shoulder"][0] * limb_force_multiplier
+    climber.r_upperarm.joint.motor_target_velocity = action["r_elbow"][0] * limb_force_multiplier
+    climber.l_hip.motor_target_velocity = action["l_hip"][0] * limb_force_multiplier
+    climber.l_thigh.joint.motor_target_velocity = action["l_knee"][0] * limb_force_multiplier
+    climber.r_hip.motor_target_velocity = action["r_hip"][0] * limb_force_multiplier
+    climber.r_thigh.joint.motor_target_velocity = action["r_knee"][0] * limb_force_multiplier

@@ -20,7 +20,6 @@ func _ready():
         climbers_node.add_child(climber)
         climber.name = "Climber_%d" % i  # Set a numbered name for each climber
         climber.target_angle = reward_angle
-        climber.spawn_position = climbers_node.global_position
         climbers.append(climber)
         climber_positions.append(climber.get_pos())
 
@@ -70,7 +69,7 @@ func _process(delta: float):
             if distance_moved < position_tolerance or dot < 40.0:
                 # Climber is stagnant, increase climb_round_timer
                 climber.stagnation_timer += delta
-                if climber.stagnation_timer >= 7.0:
+                if climber.stagnation_timer >= 30.0:
                     climber.ai_controller.reward *= 0.5
                     climber.reset()
                     continue
@@ -79,9 +78,7 @@ func _process(delta: float):
                 climber.stagnation_timer = 0.0
                 climber_positions[i] = current_pos
                 
-            var base_reward: float = get_dist_reward(climber)
-            if base_reward > 40.0:
-                climber.ai_controller.reward = base_reward
+            climber.ai_controller.reward = get_dist_reward(climber)
                 
             if ! climber_highest_reward or climber.ai_controller.reward > climber_highest_reward.ai_controller.reward:
                 climber_highest_reward = climber

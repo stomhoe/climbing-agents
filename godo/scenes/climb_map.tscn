@@ -12,11 +12,11 @@ absorbent = true
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5nyud"]
 normal = Vector2(1, -0.1)
-distance = -200.0
+distance = -80.0
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xrnny"]
 normal = Vector2(-1, -0.1)
-distance = -200.0
+distance = -80.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_00lvc"]
 size = Vector3(200, 1, 1)
@@ -48,7 +48,7 @@ mesh = SubResource("BoxMesh_00lvc")
 shape = SubResource("WorldBoundaryShape2D_gpkft")
 
 [node name="Climbers" type="Node2D" parent="."]
-position = Vector2(33.735, -28.035)
+position = Vector2(41, -41)
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_aymul")
