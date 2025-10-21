@@ -1,0 +1,109 @@
+[gd_scene load_steps=10 format=3 uid="uid://b0xd8taep62x1"]
+
+[ext_resource type="Script" uid="uid://jxhhl3bp3ovx" path="res://addons/godot_rl_agents/controller/ai_controller_3d.gd" id="1_dil0n"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wymg3"]
+top_radius = 0.4
+bottom_radius = 0.4
+height = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_wymg3"]
+size = Vector3(0.8, 0.3, 1.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_knnud"]
+size = Vector3(0.8, 0.3, 2)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_dil0n"]
+height = 0.01
+radius = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_knnud"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1r4ts"]
+material = SubResource("StandardMaterial3D_knnud")
+top_radius = 0.2
+bottom_radius = 0.3
+height = 0.05
+
+[sub_resource type="BoxMesh" id="BoxMesh_umx5g"]
+size = Vector3(0.04, 0.4, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_k1p8w"]
+
+[node name="car" type="VehicleBody3D"]
+transform = Transform3D(1, 0, 0, 0, 0.99999905, 0.0013613563, 0, -0.0013613563, 0.99999905, 0, 0, 0)
+
+[node name="fl_wheel" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0.55, -7.390807e-05, 0.63929003)
+wheel_radius = 0.4
+suspension_travel = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="fl_wheel"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_wymg3")
+
+[node name="fr_wheel" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, -0.55, -7.390807e-05, 0.63929003)
+wheel_radius = 0.4
+suspension_travel = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="fr_wheel"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_wymg3")
+
+[node name="bl_wheel" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0.55, -7.390807e-05, -0.639)
+wheel_radius = 0.4
+suspension_travel = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="bl_wheel"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_wymg3")
+
+[node name="br_wheel" type="VehicleWheel3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, -0.55, -7.390807e-05, -0.639)
+wheel_radius = 0.4
+suspension_travel = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="br_wheel"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_wymg3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_wymg3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_knnud")
+
+[node name="AIController3D" type="Node3D" parent="."]
+script = ExtResource("1_dil0n")
+control_mode = 2
+metadata/_custom_type_script = "uid://jxhhl3bp3ovx"
+
+[node name="PinJoint3D" type="PinJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.0000002, 0, 0, 0, 1.0000002, 0, 0.15, 0)
+node_a = NodePath("..")
+node_b = NodePath("rigid")
+
+[node name="rigid" type="RigidBody3D" parent="PinJoint3D"]
+transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0.15558867, 0.0002118119)
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PinJoint3D/rigid"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
+shape = SubResource("CylinderShape3D_dil0n")
+
+[node name="mesh_base" type="MeshInstance3D" parent="PinJoint3D"]
+mesh = SubResource("CylinderMesh_1r4ts")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="PinJoint3D"]
+transform = Transform3D(1, 0, 0, 0, 0.99999964, 2.3283064e-10, 0, -2.3283064e-10, 0.99999964, 0.17452857, 0.20672788, 0.00028143078)
+mesh = SubResource("BoxMesh_umx5g")
+
+[node name="PinJoint3D" type="PinJoint3D" parent="PinJoint3D"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0.4044549, 0.0005506077)
+node_a = NodePath("../rigid")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PinJoint3D/PinJoint3D"]
+mesh = SubResource("BoxMesh_k1p8w")
