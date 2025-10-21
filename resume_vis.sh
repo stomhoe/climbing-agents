@@ -6,6 +6,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 RESUME_MODEL_PATH=$1
+source /home/stefan/Documents/robotica/venv/bin/activate
 
 EXPERIMENT_NAME="resvis-$(date +'%B%d-%H:%M')"
 
