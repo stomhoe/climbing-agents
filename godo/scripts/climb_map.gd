@@ -41,7 +41,7 @@ var box_scene: PackedScene = preload("res://scenes/box.tscn")
 
 var climber_highest_reward: Climber = null
 
-const OFFSET_DISTANCE: float = 330.0
+const OFFSET_DISTANCE: float = 200.0
 
 var max_reached_distance: float = 0.0
 
@@ -65,13 +65,11 @@ func _process(delta: float):
             var projected_distance: float = dot + OFFSET_DISTANCE
             
             # Define a dynamic minimum threshold for distance increase
-            var min_distance_threshold: float = 17.0 if max_reached_distance < 100.0 else 22.0
-            if max_reached_distance >= 100.0:
-                min_distance_threshold += (max_reached_distance - 100.0) * 0.0005  # Gradually increase threshold
+            var min_distance_threshold: float = 24.0
             
             if projected_distance > max_reached_distance + min_distance_threshold:
                 max_reached_distance += min_distance_threshold
-                spawn_box(max_reached_distance - OFFSET_DISTANCE)  # Adjust for the offset when spawning the box
+                spawn_box(max_reached_distance)  # Adjust for the offset when spawning the box
             
             # Check if climber has moved significantly
             var current_pos: Vector2 = climber.get_pos()
@@ -106,11 +104,15 @@ func spawn_box(distance: float):
     if last_spawned_box != null:
         # Use the last spawned box's position as a base
         spawn_position = last_spawned_box.global_position
+        var min_distance = 30.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
         var random_offset = Vector2(randf() * 100 - 50, randf() * 10 - 20)  # Random offset in both x and y
+        # Ensure minimum distance from last box
+        if random_offset.length() < min_distance:
+            random_offset = random_offset.normalized() * min_distance
         spawn_position += random_offset
     else:
         # Default spawn position based on reward vector and distance
-        spawn_position = reward_vec * (distance + OFFSET_DISTANCE)
+        spawn_position = reward_vec * (distance)
 
     # Adjust spawn position to be 20 higher
     spawn_position.y -= 40
