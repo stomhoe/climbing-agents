@@ -60,7 +60,7 @@ func _new_round():
     reward_angle = -PI/2 + randf_range(-PI/2., PI/2.)
     # Also randomize gravity
     gravity_angle = reward_angle + randf_range(-PI/2.2, PI/2.2)
-    gravity_strength = randf_range(300.0, 5000.0)
+    gravity_strength = randf_range(100.0, 2000.0)
     ProjectSettings.set_setting("physics/2d/default_gravity_vector", Vector2(cos(gravity_angle), sin(gravity_angle)))
     ProjectSettings.set_setting("physics/2d/default_gravity", gravity_strength)
 
@@ -82,7 +82,7 @@ func _process(delta: float):
         _new_round()
     else:
         var gravity_vec: Vector2 = Vector2(cos(gravity_angle), sin(gravity_angle))
-        var out_of_bounds_threshold: float = 1000.0  # Adjust as needed
+        var out_of_bounds_threshold: float = 300.0  # Adjust as needed
 
         for i in range(climbers.size()):
             var climber: Climber = climbers[i]

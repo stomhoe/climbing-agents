@@ -114,7 +114,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--round_duration",
-    default=300,
+    default=100,
     type=float,
     help="How long each round lasts in seconds.",
 )
