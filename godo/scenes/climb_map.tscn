@@ -1,52 +1,43 @@
-[gd_scene load_steps=9 format=3 uid="uid://51gjpid7sjyr"]
+[gd_scene load_steps=8 format=3 uid="uid://51gjpid7sjyr"]
 
 [ext_resource type="Script" uid="uid://bm4xivmekhm3w" path="res://scripts/climb_map.gd" id="1_w1vl5"]
 [ext_resource type="Script" uid="uid://bgnch8w7tbswk" path="res://addons/godot_rl_agents/sync.gd" id="4_aymul"]
 [ext_resource type="Script" uid="uid://4fj733q0pjt8" path="res://scripts/camera_2d.gd" id="5_4oapl"]
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_aymul"]
-friction = 0.0
-bounce = 30.0
-absorbent = true
-
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_5nyud"]
-normal = Vector2(1, -0.1)
-distance = -100.0
-
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_xrnny"]
-normal = Vector2(-1, -0.1)
-distance = -100.0
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4oapl"]
+friction = 20.0
+rough = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_00lvc"]
-size = Vector3(200, 1, 1)
+size = Vector3(400, 1, 1)
 
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_gpkft"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qsneh"]
+size = Vector2(400, 40)
+
+[sub_resource type="SphereMesh" id="SphereMesh_qsneh"]
+radius = 4.0
+height = 8.0
 
 [node name="ClimbMap" type="Node2D"]
 script = ExtResource("1_w1vl5")
 metadata/_edit_vertical_guides_ = [-285.0]
 
-[node name="Boundaries" type="StaticBody2D" parent="."]
-collision_layer = 2
-collision_mask = 2
-physics_material_override = SubResource("PhysicsMaterial_aymul")
+[node name="Floor" type="StaticBody2D" parent="."]
+physics_material_override = SubResource("PhysicsMaterial_4oapl")
 
-[node name="Wall" type="CollisionShape2D" parent="Boundaries"]
-shape = SubResource("WorldBoundaryShape2D_5nyud")
-
-[node name="Wall2" type="CollisionShape2D" parent="Boundaries"]
-shape = SubResource("WorldBoundaryShape2D_xrnny")
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="Boundaries"]
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Floor"]
 mesh = SubResource("BoxMesh_00lvc")
 
-[node name="Floor" type="StaticBody2D" parent="."]
-
 [node name="Floor" type="CollisionShape2D" parent="Floor"]
-shape = SubResource("WorldBoundaryShape2D_gpkft")
+position = Vector2(0, 20)
+shape = SubResource("RectangleShape2D_qsneh")
 
 [node name="Climbers" type="Node2D" parent="."]
-position = Vector2(33.735, -28.035)
+position = Vector2(40, -29)
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Climbers"]
+modulate = Color(0.13153076, 0.75149053, 0, 1)
+mesh = SubResource("SphereMesh_qsneh")
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("4_aymul")
@@ -56,6 +47,11 @@ metadata/_custom_type_script = "uid://bgnch8w7tbswk"
 position = Vector2(0, -160)
 zoom = Vector2(2, 2)
 script = ExtResource("5_4oapl")
+
+[node name="Label" type="Label" parent="Camera2D"]
+offset_top = 160.0
+offset_right = 40.0
+offset_bottom = 183.0
 
 [node name="Boxes" type="Node2D" parent="."]
 

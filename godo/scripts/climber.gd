@@ -39,7 +39,9 @@ var target_angle: float:
 
 var stagnation_timer: float = 0.0
 
-func reset():
+func reset(punish: bool = false):
+    if punish and ai_controller.reward > 0.0:
+        ai_controller.reward *= 0.5
     ai_controller.reset()
     _release_all_grabs()
     stagnation_timer = 0.0
@@ -47,7 +49,9 @@ func reset():
         body_part.linear_velocity = Vector2.ZERO
         body_part.angular_velocity = 0.0
     set_pos(spawn_position)
-    #print("reset")
+    for body_part in body_parts:
+        body_part.linear_velocity = Vector2.ZERO
+        body_part.angular_velocity = 0.0
 
 func set_pos(pos: Vector2) -> void:
     for body_part in body_parts:
@@ -78,6 +82,15 @@ func _ready():
 func _physics_process(delta: float):
     delta *= speed_up
     _apply_muscle_forces(delta)
+    
+    var max_distance := 40.0  # Adjust as needed
+    for body_part in body_parts:
+        if body_part == torso:
+            continue
+        if body_part.global_position.distance_to(torso.global_position) > max_distance:
+            body_part.global_position = torso.global_position
+            body_part.linear_velocity = Vector2.ZERO
+            body_part.angular_velocity = 0.0
 
 # Add any necessary vars here
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
@@ -98,35 +111,6 @@ func _apply_muscle_forces(delta: float):
             applied_strength += 1500.
         
         limb.apply_force(force_direction * applied_strength, currently_controlled.global_position - limb.global_position)
-
-
-func _handle_input():
-    var left_hand_pressed: bool = Input.is_action_pressed(&"left_hand_control")
-    var right_hand_pressed: bool = Input.is_action_pressed(&"right_hand_control")
-    var left_foot_pressed: bool = Input.is_action_pressed(&"left_foot_control")
-    var right_foot_pressed: bool = Input.is_action_pressed(&"right_foot_control")
-
-    var new_controlled: Grabber = null
-    
-    match [left_hand_pressed, right_hand_pressed, left_foot_pressed, right_foot_pressed]:
-        [false, true, false, false]:
-            new_controlled = r_hand_grabber
-        [false, false, true, false]:
-            new_controlled = l_foot_grabber
-        [false, false, false, true]:
-            new_controlled = r_foot_grabber
-        [false, false, false, false]:
-            new_controlled = null
-        [true, _, _, _]:
-            new_controlled = l_hand_grabber
-    
-    # Use the helper method to set the controlled grabber
-    currently_controlled = new_controlled
-    
-    print("CONTROLANDO A MANO")
-
-    if currently_controlled:
-        force_direction = (get_global_mouse_position() - currently_controlled.global_position).normalized()
 
 
 var currently_controlled: Grabber = null:

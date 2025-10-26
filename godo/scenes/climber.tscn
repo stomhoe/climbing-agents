@@ -97,6 +97,11 @@ shape = SubResource("CapsuleShape2D_7aipt")
 position = Vector2(0, -14.925)
 mesh = SubResource("CapsuleMesh_qjkbj")
 
+[node name="LabelRemoteTransform" type="RemoteTransform2D" parent="Torso"]
+remote_path = NodePath("../../Label2")
+update_rotation = false
+update_scale = false
+
 [node name="Lthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-6, 12.585)
 next_limb = NodePath("../Lcalf")
@@ -211,7 +216,9 @@ position = Vector2(-3.8146973e-06, -82)
 scale = Vector2(0.1171875, 0.15625)
 texture = ExtResource("9_7aipt")
 
-[node name="Label" type="Label" parent="AIController2D/NodeAbove"]
+[node name="Label2" type="Node2D" parent="."]
+
+[node name="Label" type="Label" parent="Label2"]
 offset_left = -10.0
 offset_top = -29.0
 offset_right = 30.0

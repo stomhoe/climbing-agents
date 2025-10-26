@@ -3,11 +3,13 @@ class_name AIClimbController
 
 @onready var climber: Climber = $".."
 @onready var node_above: Node2D = $NodeAbove
+@onready var map: ClimbMap = get_tree().root.get_child(0)
 
 @onready var body_sensor: RaycastSensor2D = $NodeAbove/RaycastBody
 @onready var raycast_right: RaycastSensor2D = $NodeAbove/RaycastRight
 @onready var raycast_left: RaycastSensor2D = $NodeAbove/RaycastLeft
-@onready var label: Label = $NodeAbove/Label
+@onready var label: Label = $"../Label2/Label"
+
 
 func _process(_delta: float):
     label.text = str(int(reward))
@@ -32,6 +34,8 @@ func get_obs() -> Dictionary:
         climber.r_foot_grabber.is_grabbing(),
         climber.l_hand_grabber.is_grabbing(),
         climber.r_hand_grabber.is_grabbing(),
+        map.gravity_strength/4000.,
+        map.gravity_angle/(2.*PI)
     ] + body_sensor.calculate_raycasts() + raycast_left.calculate_raycasts() + raycast_right.calculate_raycasts()
     return {"obs":obs}
 
