@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 source "venv/bin/activate"
 
-EXPERIMENT_NAME="editor-$(date +'%B%d-%H:%M:%S')"
+EXPERIMENT_NAME="editor_$(date +'%B%d-%H:%M:%S')"
 
-python stable_baselines3_example.py  --experiment_name="$EXPERIMENT_NAME" --timesteps=100_000_000_000 --save_checkpoint_frequency=200_000 --viz --n_climbers=10
+python stable_baselines3_example.py  --experiment_name="$EXPERIMENT_NAME" --timesteps=100_000_000_000 --viz --n_climbers=10 --round_duration=10
+

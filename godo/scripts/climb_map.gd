@@ -45,7 +45,7 @@ const OFFSET_DISTANCE: float = 200.0
 
 var max_reached_distance: float = 0.0
 
-@onready var floor = $Floor
+@onready var floor_rect: StaticBody2D = $Floor
 
 var gravity_angle: float = ProjectSettings.get_setting("physics/2d/default_gravity_vector", Vector2(0, 1)).angle()
 var gravity_strength: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
@@ -54,21 +54,22 @@ func _new_round():
     climb_round_timer = round_duration
     max_reached_distance = 0.0
     last_spawned_box = null
-    for climber in climbers:
-        climber.reset()
     climber_highest_reward = null
     for box in boxes.get_children():
         box.queue_free()
     reward_angle = -PI/2 + randf_range(-PI/2., PI/2.)
     # Also randomize gravity
-    gravity_angle = reward_angle + randf_range(-PI/3, PI/3)
+    gravity_angle = reward_angle + randf_range(-PI/2.2, PI/2.2)
     gravity_strength = randf_range(300.0, 5000.0)
     ProjectSettings.set_setting("physics/2d/default_gravity_vector", Vector2(cos(gravity_angle), sin(gravity_angle)))
     ProjectSettings.set_setting("physics/2d/default_gravity", gravity_strength)
 
     var nodes_angle: float = reward_angle + PI/2
+    for climber in climbers:
+        climber.spawn_position = reward_vec * 20.0
+        climber.reset()
 
-    floor.rotation = nodes_angle
+    floor_rect.rotation = nodes_angle
 
 
     print("New round! Reward angle: %.2f, Gravity angle: %.2f, Strength: %.2f" % [rad_to_deg(reward_angle), rad_to_deg(gravity_angle), gravity_strength])
@@ -101,7 +102,7 @@ func _process(delta: float):
 
             if projected_distance > max_reached_distance + min_distance_threshold:
                 max_reached_distance += min_distance_threshold
-                spawn_box(max_reached_distance, reward_angle)  # Adjust for the offset when spawning the box
+                spawn_box(reward_angle)  # Adjust for the offset when spawning the box
 
             # Check if climber has moved significantly
             var current_pos: Vector2 = climber.get_pos()
@@ -125,36 +126,41 @@ func _process(delta: float):
 
 @onready var boxes: Node2D = $Boxes
 var last_spawned_box: StaticBody2D = null
+var angle_between_boxes_sum: float = 0.0
+var box_count: int = 0
 
-func spawn_box(distance: float, angle_from_previous: float = 0.0) -> void:
+func spawn_box(angle_from_previous: float = 0.0) -> void:
     var box: StaticBody2D = box_scene.instantiate()
     var spawn_position: Vector2 = Vector2.ZERO
-    spawn_position.y -= 50
-    box.rotation = randf() * PI * 2  # Random rotation between 0 and 2π
+    spawn_position += 40 * reward_vec.normalized()
 
     if last_spawned_box != null:
+        box.rotation = randf() * PI * 2  # Random rotation between 0 and 2π
         # Use the last spawned box's position as a base
         spawn_position += last_spawned_box.global_position
-        var min_distance = 10.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
+        var min_distance: float = 10.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
 
+        var noisy_direction: Vector2 = reward_vec.rotated(randf_range(-PI/1.6, PI/1.6))
+        var offset_length: float = min_distance + randf() * 40.0  # Add some randomness to distance
+        var random_offset: Vector2 = noisy_direction * offset_length
 
-        var base_direction = Vector2(cos(angle_from_previous), sin(angle_from_previous))
-        var noisy_direction = base_direction.rotated(randf_range(-PI/8, PI/8))
-        var offset_length = min_distance + randf() * 40.0  # Add some randomness to distance
-        var random_offset = noisy_direction * offset_length
-
-        var perp = noisy_direction.orthogonal().normalized()
+        var perp: Vector2 = noisy_direction.orthogonal().normalized()
         random_offset += perp * randf_range(-20.0, 20.0)
-        var random_scale = clamp(abs(randfn(1.7, 0.7)), 0.6, 3.4)  # Normal distribution with mean 1.7 and std dev 0.7
+        var random_scale: float = clamp(abs(randfn(1.7, 0.7)), 0.6, 3.4)  # Normal distribution with mean 1.7 and std dev 0.7
         box.scale = Vector2(random_scale, random_scale)
 
         spawn_position += random_offset
+        angle_between_boxes_sum += last_spawned_box.global_position.angle_to_point(spawn_position)
+        box_count += 1
+
     else:
-        spawn_position += reward_vec.normalized() * distance
         box.scale = Vector2(2.2, 2.2)
+        spawn_position *= 1.6
+        box.rotation = reward_angle
+        climbers_node.global_position = spawn_position * 1.2
+        for climber in climbers:
+            climber.spawn_position = climbers_node.global_position
 
-
-        climbers_node.global_position = spawn_position + Vector2(0, 40)
 
 
     # Adjust spawn position to be 40 higher
@@ -187,8 +193,12 @@ func get_dist_reward(climber: Climber) -> float:
 func _on_sync_ready():
     await self.ready
     
-    if sync.args.has("n_climbers"):
-        var n: int = int(sync.args[&"n_climbers"])
-        n_climbers = n
+    if sync.args.has(&"n_climbers"):
+        n_climbers = int(sync.args[&"n_climbers"])
     else:
         n_climbers = 40
+        
+    if sync.args.has(&"round_duration"):
+        round_duration = float(sync.args[&"round_duration"])
+    else:
+        round_duration = 300.
