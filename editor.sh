@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-source /home/stefan/Documents/robotica/venv/bin/activate
-
+source "venv/bin/activate"
 
 EXPERIMENT_NAME="editor-$(date +'%B%d-%H:%M:%S')"
 

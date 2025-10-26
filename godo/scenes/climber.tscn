@@ -190,7 +190,6 @@ mesh = SubResource("BoxMesh_7aipt")
 
 [node name="AIController2D" type="Node2D" parent="." groups=["AGENT"]]
 script = ExtResource("7_7aipt")
-control_mode = 2
 
 [node name="NodeAbove" type="Node2D" parent="AIController2D"]
 
