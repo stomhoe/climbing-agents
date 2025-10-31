@@ -34,7 +34,7 @@ func get_obs() -> Dictionary:
         climber.r_foot_grabber.is_grabbing(),
         climber.l_hand_grabber.is_grabbing(),
         climber.r_hand_grabber.is_grabbing(),
-        map.gravity_strength/4000.,
+        map.gravity_strength/1400.,
         map.gravity_angle/(2.*PI)
     ] + body_sensor.calculate_raycasts() + raycast_left.calculate_raycasts() + raycast_right.calculate_raycasts()
     return {"obs":obs}

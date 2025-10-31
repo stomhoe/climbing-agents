@@ -11,4 +11,4 @@ RESUME_PATH=$1
 # Generate experiment name based on the current date and time
 EXPERIMENT_NAME="$(date +'%B%d-%H:%M')"
 
-python stable_baselines3_example.py --onnx_export_path=model.onnx --env_path=godo.x86_64 --experiment_name="$EXPERIMENT_NAME" --timesteps=100_000_000_000 --save_checkpoint_frequency=200_000 --speedup=10 --n_parallel=8 --resume_model_path="$RESUME_PATH"
+python stable_baselines3_example.py --n_climbers=40 --onnx_export_path=model.onnx --env_path=godo.x86_64 --experiment_name="$EXPERIMENT_NAME" --timesteps=100_000_000_000 --save_checkpoint_frequency=200_000 --speedup=10 --n_parallel=6 --resume_model_path="$RESUME_PATH"

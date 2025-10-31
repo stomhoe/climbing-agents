@@ -34,7 +34,7 @@ var climber_scene: PackedScene = preload("res://scenes/climber.tscn")
 func _ready():
     reward_angle = -PI/2 #DEJARLO SETTEADO ACÁ
 
-var round_duration: float = 10.0
+var round_duration: float = 300.0
 var climb_round_timer: float = round_duration
 
 var box_scene: PackedScene = preload("res://scenes/box.tscn")
@@ -60,7 +60,7 @@ func _new_round():
     reward_angle = -PI/2 + randf_range(-PI/2., PI/2.)
     # Also randomize gravity
     gravity_angle = reward_angle + randf_range(-PI/2.2, PI/2.2)
-    gravity_strength = randf_range(100.0, 2000.0)
+    gravity_strength = randf_range(100.0, 1500.0)
     ProjectSettings.set_setting("physics/2d/default_gravity_vector", Vector2(cos(gravity_angle), sin(gravity_angle)))
     ProjectSettings.set_setting("physics/2d/default_gravity", gravity_strength)
 
