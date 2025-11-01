@@ -25,6 +25,7 @@ var position_tolerance: float = 15.0   # Distance tolerance for considering "sam
             climber.name = "Climber_%d" % i  # Set a numbered name for each climber
             climber.target_angle = reward_angle
             climber.spawn_position = climbers_node.global_position
+            climber.map = self
             climbers.append(climber)
             climber_positions.append(climber.get_pos())
         sync._initialize()
@@ -35,7 +36,7 @@ func _ready():
     reward_angle = -PI/2 #DEJARLO SETTEADO ACÁ
 
 var round_duration: float = 300.0
-var climb_round_timer: float = round_duration
+var climb_round_timer: float = -1
 
 var box_scene: PackedScene = preload("res://scenes/box.tscn")
 
@@ -59,7 +60,7 @@ func _new_round():
         box.queue_free()
     reward_angle = -PI/2 + randf_range(-PI/2., PI/2.)
     # Also randomize gravity
-    gravity_angle = reward_angle + randf_range(-PI/2.2, PI/2.2)
+    gravity_angle = reward_angle + randf_range(-PI/3.5, PI/3.5)
     gravity_strength = randf_range(100.0, 1500.0)
     ProjectSettings.set_setting("physics/2d/default_gravity_vector", Vector2(cos(gravity_angle), sin(gravity_angle)))
     ProjectSettings.set_setting("physics/2d/default_gravity", gravity_strength)
@@ -82,7 +83,7 @@ func _process(delta: float):
         _new_round()
     else:
         var gravity_vec: Vector2 = Vector2(cos(gravity_angle), sin(gravity_angle))
-        var out_of_bounds_threshold: float = 300.0  # Adjust as needed
+        var out_of_bounds_threshold: float = 3000.0  # Adjust as needed
 
         for i in range(climbers.size()):
             var climber: Climber = climbers[i]
@@ -102,7 +103,7 @@ func _process(delta: float):
 
             if projected_distance > max_reached_distance + min_distance_threshold:
                 max_reached_distance += min_distance_threshold
-                spawn_box(reward_angle)  # Adjust for the offset when spawning the box
+                spawn_box()  # Adjust for the offset when spawning the box
 
             # Check if climber has moved significantly
             var current_pos: Vector2 = climber.get_pos()
@@ -126,15 +127,18 @@ func _process(delta: float):
 
 @onready var boxes: Node2D = $Boxes
 var last_spawned_box: StaticBody2D = null
-var angle_between_boxes_sum: float = 0.0
-var box_count: int = 0
 
-func spawn_box(angle_from_previous: float = 0.0) -> void:
+var powerup_scenes: Dictionary[float, PackedScene] = {
+    #0.8: preload("res://scenes/powerup/grenade.tscn")
+}
+
+func spawn_box() -> void:
     var box: StaticBody2D = box_scene.instantiate()
     var spawn_position: Vector2 = Vector2.ZERO
     spawn_position += 40 * reward_vec.normalized()
 
     if last_spawned_box != null:
+      
         box.rotation = randf() * PI * 2  # Random rotation between 0 and 2π
         # Use the last spawned box's position as a base
         spawn_position += last_spawned_box.global_position
@@ -150,8 +154,6 @@ func spawn_box(angle_from_previous: float = 0.0) -> void:
         box.scale = Vector2(random_scale, random_scale)
 
         spawn_position += random_offset
-        angle_between_boxes_sum += last_spawned_box.global_position.angle_to_point(spawn_position)
-        box_count += 1
 
     else:
         box.scale = Vector2(2.2, 2.2)
@@ -161,13 +163,7 @@ func spawn_box(angle_from_previous: float = 0.0) -> void:
         for climber in climbers:
             climber.spawn_position = climbers_node.global_position
 
-
-
-    # Adjust spawn position to be 40 higher
-
     box.global_position = spawn_position
-
-    # Randomize scale and rotation
 
     box.name = "Box%d" % boxes.get_child_count()
 
@@ -196,7 +192,7 @@ func _on_sync_ready():
     if sync.args.has(&"n_climbers"):
         n_climbers = int(sync.args[&"n_climbers"])
     else:
-        n_climbers = 40
+        n_climbers = 30
         
     if sync.args.has(&"round_duration"):
         round_duration = float(sync.args[&"round_duration"])

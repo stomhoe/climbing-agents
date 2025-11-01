@@ -108,13 +108,13 @@ parser.add_argument(
 )
 parser.add_argument(
     "--n_climbers",
-    default=50,
+    default=30,
     type=int,
     help="How many climbers to spawn in the environment.",
 )
 parser.add_argument(
     "--round_duration",
-    default=100,
+    default=60,
     type=float,
     help="How long each round lasts in seconds.",
 )

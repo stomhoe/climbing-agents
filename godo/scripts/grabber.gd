@@ -4,6 +4,8 @@ class_name Grabber
 @onready var joint: PinJoint2D = $Joint
 @onready var grab_area: Area2D = $GrabArea
 @onready var mesh_instance_2d: MeshInstance2D = $MeshInstance2D
+@onready var climber: Climber = get_parent().get_parent()
+var grabbing_wall: bool = false
 
 var is_currently_controlled: bool = false:
     set(value):
@@ -27,18 +29,28 @@ func _ready():
     grab_area.body_entered.connect(_on_grab_area_body_entered)
     pass
     
-func is_grabbing() -> bool:
-    return joint.node_b != NodePath("")
+func is_grabbing_wall() -> bool:
+    return grabbing_wall
 
 func release():
     mesh_instance_2d.modulate = Color.GRAY
     joint.node_b = NodePath("")
+    grabbing_wall = false
 
 
-func _on_grab_area_body_entered(body):
+func _on_grab_area_body_entered(body: Node):
     if is_currently_controlled:
         return
 
-    joint.node_a = get_parent().get_path()
+    if joint.node_b != NodePath(""):
+        return
+
+    if body is BodyPart and body.climber == climber:
+        return
+    if not body is BodyPart:
+        grabbing_wall = true
+    else:
+        grabbing_wall = false
+
     joint.node_b = body.get_path()
     mesh_instance_2d.modulate = Color.GREEN

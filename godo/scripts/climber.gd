@@ -12,7 +12,7 @@ class_name Climber
 @onready var r_calf: RigidBody2D = $Rcalf
 @onready var l_calf: RigidBody2D = $Lcalf
 
-@onready var body_parts: Array[RigidBody2D] = [
+@onready var body_parts: Array[BodyPart] = [
     torso, r_forearm, l_forearm, r_upperarm, l_upperarm,
     r_thigh, l_thigh, r_calf, l_calf,
 ]
@@ -26,6 +26,8 @@ class_name Climber
 @onready var l_hand_grabber: Grabber = $Lforearm/LeftHand
 @onready var r_foot_grabber: Grabber = $Rcalf/RightFoot
 @onready var l_foot_grabber: Grabber = $Lcalf/LeftFoot
+
+var map: ClimbMap
 
 var spawn_position: Vector2 = Vector2.ZERO
 
@@ -45,17 +47,21 @@ func reset(punish: bool = false):
     ai_controller.reset()
     _release_all_grabs()
     stagnation_timer = 0.0
-    for body_part in body_parts:
-        body_part.linear_velocity = Vector2.ZERO
-        body_part.angular_velocity = 0.0
-    set_pos(spawn_position)
+    reset_velocity()
+    var spawn_offset_range: float = 30.0
+    var rand_offset = Vector2(randf_range(-spawn_offset_range, spawn_offset_range), randf_range(-spawn_offset_range, spawn_offset_range))
+    set_pos(spawn_position + rand_offset)
+    
+    spawning_rem_timer = 1.0
+        
+var spawning_rem_timer: float = 0.0
+
+func reset_velocity() -> void:
     for body_part in body_parts:
         body_part.linear_velocity = Vector2.ZERO
         body_part.angular_velocity = 0.0
 
-func set_pos(pos: Vector2) -> void:
-    for body_part in body_parts:
-        body_part.global_position = pos
+func set_pos(pos: Vector2) -> void: for body_part in body_parts: body_part.global_position = pos
 
 func get_pos() -> Vector2: return torso.global_position
 
@@ -66,12 +72,14 @@ func get_pos() -> Vector2: return torso.global_position
     l_foot_grabber: [l_hip, l_thigh.joint]
 }
 func _at_least_one_grabbed() -> bool:
-    return r_hand_grabber.is_grabbing() or l_hand_grabber.is_grabbing() or r_foot_grabber.is_grabbing() or l_foot_grabber.is_grabbing()
+    return r_hand_grabber.is_grabbing_wall() or l_hand_grabber.is_grabbing_wall() or r_foot_grabber.is_grabbing_wall() or l_foot_grabber.is_grabbing_wall()
 
 # Control variables
 var control_strength: float = 1000.0
 
 func _ready():
+
+
     for joints_arr in joints.values():
         for joint: PinJoint2D in joints_arr:
             joint.motor_enabled = false
@@ -81,6 +89,10 @@ func _ready():
 
 func _physics_process(delta: float):
     delta *= speed_up
+    if spawning_rem_timer >= 0.0:
+        spawning_rem_timer -= delta
+        reset_velocity()
+
     _apply_muscle_forces(delta)
     
     var max_distance := 40.0  # Adjust as needed
