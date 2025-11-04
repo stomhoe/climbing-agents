@@ -50,9 +50,18 @@ class_name RaycastSensor2D
         debug_draw = value
         _update()
 
-var _angles = []
-var rays := []
+var _angles: Array[float] = []; var rays: Array[RayCast2D] = []
+var exceptions: Array[Node2D] = []: 
+    set(value):
+        exceptions = value
+        for ray in rays:
+            for exception in exceptions:
+                ray.add_exception(exception)
 
+func add_exception(node: Node2D) -> void:
+    exceptions.append(node)
+    for ray in rays:
+        ray.add_exception(node)
 
 func _update():
     if Engine.is_editor_hint():
@@ -63,10 +72,7 @@ func _update():
                 if ray is RayCast2D:
                     remove_child(ray)
 
-
-func _ready() -> void:
-    _spawn_nodes()
-
+func _ready() -> void: _spawn_nodes()
 
 func _spawn_nodes():
     for ray in rays:
@@ -88,14 +94,17 @@ func _spawn_nodes():
         ray.collide_with_areas = collide_with_areas
         ray.collide_with_bodies = collide_with_bodies
         ray.collision_mask = collision_mask
+        for exception in exceptions:
+            ray.add_exception(exception)
+
         add_child(ray)
         rays.append(ray)
 
         _angles.append(start + i * step)
+    
 
 
-func get_observation() -> Array:
-    return self.calculate_raycasts()
+func get_observation() -> Array: return self.calculate_raycasts()
 
 
 func calculate_raycasts() -> Array:
@@ -108,11 +117,10 @@ func calculate_raycasts() -> Array:
         ray.enabled = false
     return result
 
-
 func _get_raycast_distance(ray: RayCast2D) -> float:
     if !ray.is_colliding():
         return 0.0
 
-    var distance = (global_position - ray.get_collision_point()).length()
+    var distance: float = (global_position - ray.get_collision_point()).length()
     distance = clamp(distance, 0.0, ray_length)
     return (ray_length - distance) / ray_length

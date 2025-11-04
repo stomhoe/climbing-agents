@@ -26,10 +26,10 @@ var position_tolerance: float = 15.0   # Distance tolerance for considering "sam
         for i in range(n_climbers):
             var climber: Climber = CLIMBER_SCENE.instantiate()
             climbers_node.add_child(climber)
+            climber.set_pos(get_parent().global_position)
             climber.name = "Climber_%d" % i  # Set a numbered name for each climber
             climber.target_angle = reward_angle
             climber.map = self
-            climber.set_pos(get_parent().global_position)
             climbers.append(climber)
             climber_positions.append(climber.get_pos())
         
@@ -98,7 +98,7 @@ func _new_infection_tag_round():
 
         var climber: Climber = climbers[i]
         climber.spawn_position = Vector2(randf_range(-enclosure.size+20, enclosure.size -20), enclosure.size - 20)
-        climber.role = Climber.Role.PREY
+        climber.role = Climber.Role.SURVIVOR
         climber.reset()
 
     grace_active = true
@@ -163,11 +163,10 @@ func _process(delta: float):
         for i in range(climbers.size()):
             var climber: Climber = climbers[i]
 
-            var dot: float = (climber.get_pos()).dot(reward_vec)
-            var projected_distance: float = dot + OFFSET_DISTANCE
+            var projected_distance: float = get_dist_reward(climber) + OFFSET_DISTANCE
 
             # Out of bounds detection
-            var gravity_projection: float = climber.get_pos().dot(gravity_vec)
+            var gravity_projection: float = (climber.get_pos() - global_position).dot(gravity_vec)
             if gravity_projection > OUT_OF_BOUNDS_THRESHOLD:
                 climber.reset(true)
                 continue
@@ -182,7 +181,7 @@ func _process(delta: float):
             var current_pos: Vector2 = climber.get_pos()
             var distance_moved: float = current_pos.distance_to(climber_positions[i])
 
-            if distance_moved < position_tolerance or dot < 40.0:
+            if distance_moved < position_tolerance:
                 climber.stagnation_timer += delta
                 if climber.stagnation_timer >= 10.0:
                     climber.reset(true)
@@ -225,7 +224,6 @@ func spawn_box() -> void:
         var perp: Vector2 = noisy_direction.orthogonal().normalized()
         random_offset += perp * randf_range(-20.0, 20.0)
         box.scale = Vector2(clamp(abs(randfn(1.7, 0.7)), 0.6, 3.4), clamp(abs(randfn(1.7, 0.7)), 0.6, 3.4))
-
         spawn_position += random_offset
 
     else:

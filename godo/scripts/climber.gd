@@ -43,9 +43,8 @@ class_name Climber
 
 var map: ClimbMap
 var spawn_position: Vector2 = Vector2.ZERO
-var speed_up: float = 1.0
 var bitten_count: int = 0
-enum Role {CLIMBER, PREY, INFECTED}
+enum Role {CLIMBER, SURVIVOR, INFECTED}
 
 var role: Role = Role.CLIMBER:
     set(value):
@@ -65,7 +64,7 @@ var role: Role = Role.CLIMBER:
             #for part in body_parts:
                 #part.collision_layer = 1
 
-        if role != Role.PREY:
+        if role != Role.SURVIVOR:
             closest_infected_dist_vec = Vector2.ZERO
         else:
             map.non_infected.append(self)
@@ -88,7 +87,6 @@ func reset(punish: bool = false):
     nullify_velocity()
     set_pos(spawn_position)
     bitten_count = 0
-    speed_up = map.speed_up
     if role == Role.CLIMBER:
         spawning_rem_timer = 0.5
         
@@ -105,7 +103,7 @@ func get_pos() -> Vector2: return torso.global_position
 
 
 func _at_least_one_grabbed() -> bool:
-    return r_hand_grabber.is_attached() or l_hand_grabber.is_attached() or r_foot_grabber.is_attached() or l_foot_grabber.is_attached()
+    return r_hand_grabber.is_attached_to_wall() or l_hand_grabber.is_attached_to_wall() or r_foot_grabber.is_attached_to_wall() or l_foot_grabber.is_attached_to_wall()
 
 # Control variables
 
@@ -120,9 +118,10 @@ func _ready():
     for part in body_parts:
         for part2 in body_parts:
             part.add_collision_exception_with(part2)
+        ai_controller.body_sensor.add_exception(part)
 
 func _physics_process(delta: float):
-    delta *= speed_up
+    delta *= Config.speed_up
     if spawning_rem_timer >= 0.0:
         spawning_rem_timer -= delta
         nullify_velocity()
@@ -139,10 +138,10 @@ func _physics_process(delta: float):
 var closest_infected_dist_vec: Vector2 = Vector2.ZERO
 
 func _process(delta: float):
-    delta *= speed_up
+    delta *= Config.speed_up
 
     var min_dist: float = INF
-    if role == Role.PREY:
+    if role == Role.SURVIVOR:
         for climber in map.infected:
             var dist: float = get_pos().distance_to(climber.get_pos())
             if dist < min_dist:

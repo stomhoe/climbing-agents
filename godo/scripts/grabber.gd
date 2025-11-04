@@ -32,13 +32,15 @@ func _ready():
     hold_area.collision_layer = grab_area.collision_layer
     hold_area.collision_mask = grab_area.collision_mask
     
+var grabbing_static: bool = false
 
-func is_attached() -> bool: return joint.node_b != NodePath("")
+func is_attached_to_wall() -> bool: return grabbing_static
 
 
 func release():
     mesh_instance_2d.modulate = Color.GRAY
     joint.node_b = NodePath("")
+    grabbing_static = false
 
 
 func _on_grab_area_body_entered(body: Node):
@@ -53,9 +55,12 @@ func _on_grab_area_body_entered(body: Node):
         joint.node_a = climber.corresponding_body_part[self].get_path()#DEJAR ACÁ
         joint.node_b = body.get_path()
         mesh_instance_2d.modulate = Color.GREEN
+        grabbing_static = true
     else:
+        grabbing_static = false
+        joint.node_b = body.get_path()
 
-        if body is BodyPart  and climber.role == Climber.Role.INFECTED and body.climber.role == Climber.Role.PREY and not climber.map.grace_active:
+        if body is BodyPart  and climber.role == Climber.Role.INFECTED and body.climber.role == Climber.Role.SURVIVOR and not climber.map.grace_active:
             body.climber.role = Climber.Role.INFECTED
             climber.bitten_count += 1
 

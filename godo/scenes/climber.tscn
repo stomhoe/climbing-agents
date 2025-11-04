@@ -55,6 +55,7 @@ position = Vector2(5.9999995, 26.615)
 rotation = 1.5707964
 
 [node name="Torso" type="RigidBody2D" parent="."]
+collision_layer = 3
 mass = 4.0
 script = ExtResource("5_nwbdq")
 
@@ -116,20 +117,20 @@ update_scale = false
 
 [node name="Lthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-6, 12.585)
-collision_layer = 1
+collision_layer = 3
 collision_mask = 1
 next_limb = NodePath("../Lcalf")
 
 [node name="Rthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(6, 12.585)
-collision_layer = 1
+collision_layer = 3
 collision_mask = 1
 next_limb = NodePath("../Rcalf")
 
 [node name="Lupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-12, -9)
 rotation = -3.1415927
-collision_layer = 1
+collision_layer = 3
 collision_mask = 1
 gravity_scale = 0.0
 next_limb = NodePath("../Lforearm")
@@ -137,13 +138,14 @@ next_limb = NodePath("../Lforearm")
 [node name="Rupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(12, -9)
 rotation = 0.0
-collision_layer = 1
+collision_layer = 3
 collision_mask = 1
 gravity_scale = 0.0
 next_limb = NodePath("../Rforearm")
 
 [node name="Lforearm" type="RigidBody2D" parent="."]
 position = Vector2(-21.65, -9)
+collision_layer = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -159,6 +161,7 @@ remote_path = NodePath("../../LeftHand")
 
 [node name="Rforearm" type="RigidBody2D" parent="."]
 position = Vector2(21.65, -9)
+collision_layer = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -175,6 +178,7 @@ remote_path = NodePath("../../RightHand")
 [node name="Lcalf" type="RigidBody2D" parent="."]
 position = Vector2(-6, 19.615)
 rotation = 1.5707964
+collision_layer = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -191,6 +195,7 @@ remote_path = NodePath("../../LeftFoot")
 [node name="Rcalf" type="RigidBody2D" parent="."]
 position = Vector2(6, 19.615)
 rotation = 1.5707964
+collision_layer = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -210,32 +215,6 @@ script = ExtResource("7_7aipt")
 [node name="NodeAbove" type="Node2D" parent="AIController2D"]
 
 [node name="RaycastBody" type="Node2D" parent="AIController2D/NodeAbove"]
-rotation = -1.5707964
-script = ExtResource("8_7aipt")
-ray_length = 300
-metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="SeparatedRaycasts" type="Node2D" parent="AIController2D/NodeAbove"]
-
-[node name="Raycast2" type="Node2D" parent="AIController2D/NodeAbove/SeparatedRaycasts"]
-rotation = -1.5707964
-script = ExtResource("8_7aipt")
-ray_length = 300
-metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="RaycastBody3" type="Node2D" parent="AIController2D/NodeAbove/SeparatedRaycasts"]
-rotation = -1.5707964
-script = ExtResource("8_7aipt")
-ray_length = 300
-metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="RaycastBody4" type="Node2D" parent="AIController2D/NodeAbove/SeparatedRaycasts"]
-rotation = -1.5707964
-script = ExtResource("8_7aipt")
-ray_length = 300
-metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="RaycastBody5" type="Node2D" parent="AIController2D/NodeAbove/SeparatedRaycasts"]
 rotation = -1.5707964
 script = ExtResource("8_7aipt")
 ray_length = 300

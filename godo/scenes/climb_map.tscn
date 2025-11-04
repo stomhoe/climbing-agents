@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://f5a30kyv07mc"]
+[gd_scene load_steps=3 format=3 uid="uid://f5a30kyv07mc"]
 
 [ext_resource type="Script" uid="uid://bm4xivmekhm3w" path="res://scripts/climb_map.gd" id="1_aeawd"]
-[ext_resource type="PackedScene" uid="uid://do0ht7io5qk1r" path="res://scenes/infection_training.tscn" id="2_tkjw4"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_qsneh"]
 radius = 4.0
@@ -20,5 +19,3 @@ modulate = Color(0.13153076, 0.75149053, 0, 1)
 mesh = SubResource("SphereMesh_qsneh")
 
 [node name="Boxes" type="Node2D" parent="."]
-
-[node name="StaticBody2D" parent="." instance=ExtResource("2_tkjw4")]

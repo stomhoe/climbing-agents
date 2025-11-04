@@ -3,7 +3,6 @@ class_name AIClimbController
 
 @onready var climber: Climber = $".."
 @onready var node_above: Node2D = $NodeAbove
-@onready var map: ClimbMap = get_tree().root.get_child(0)
 
 @onready var body_sensor: BodySensor = $NodeAbove/RaycastBody
 @onready var label: Label = $"../Label2/Label"
@@ -31,10 +30,10 @@ func get_obs() -> Dictionary:
     obs.append(climber.r_thigh.global_rotation / TAU)
     obs.append(climber.l_calf.global_rotation / TAU)
     obs.append(climber.r_calf.global_rotation / TAU)
-    obs.append(float(climber.l_foot_grabber.is_attached()))
-    obs.append(float(climber.r_foot_grabber.is_attached()))
-    obs.append(float(climber.l_hand_grabber.is_attached()))
-    obs.append(float(climber.r_hand_grabber.is_attached()))
+    obs.append(float(climber.l_foot_grabber.is_attached_to_wall()))
+    obs.append(float(climber.r_foot_grabber.is_attached_to_wall()))
+    obs.append(float(climber.l_hand_grabber.is_attached_to_wall()))
+    obs.append(float(climber.r_hand_grabber.is_attached_to_wall()))
     obs.append(climber.closest_infected_dist_vec.x / (POS_DIV * 0.5))
     obs.append(climber.closest_infected_dist_vec.y / (POS_DIV * 0.5))
     obs.append(climber.get_pos().x / POS_DIV)
