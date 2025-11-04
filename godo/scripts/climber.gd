@@ -58,6 +58,13 @@ var role: Role = Role.CLIMBER:
             for part in body_parts:
                 part.modulate = Color.WHITE
 
+        if role == Role.CLIMBER:
+            for part in body_parts:
+                part.collision_layer = 0
+        else:
+            for part in body_parts:
+                part.collision_layer = 1
+
         if role != Role.PREY:
             closest_infected_dist_vec = Vector2.ZERO
         else:
@@ -81,7 +88,7 @@ func reset(punish: bool = false):
     nullify_velocity()
     set_pos(spawn_position)
     bitten_count = 0
-    speed_up = map.sync.speed_up
+    speed_up = map.speed_up
     if role == Role.CLIMBER:
         spawning_rem_timer = 0.5
         
@@ -170,7 +177,7 @@ func _apply_muscle_forces(delta: float):
             if swing_timer > 0.0:
                 final_strength += swing_boost_strength * swing_boost_time
                 swing_timer -= delta
-            final_strength += 1500.
+            final_strength += 3000.
         
         limb.apply_force(force_direction * final_strength, currently_controlled.global_position - limb.global_position)
 

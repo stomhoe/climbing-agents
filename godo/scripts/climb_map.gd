@@ -4,6 +4,7 @@ class_name ClimbMap
 const climber_scene: PackedScene = preload("res://scenes/climber.tscn")
 const box_scene: PackedScene = preload("res://scenes/box.tscn")
 const floor_scene: PackedScene = preload("res://scenes/floor.tscn")
+const ENCLOSURE_SCENE: PackedScene = preload("res://scenes/enclosure.tscn")
 
 @onready var climbers_node: Node2D = $Climbers
 
@@ -12,9 +13,9 @@ var climbers: Array[Climber] = []
 # Position tracking for stagnation penalty
 var climber_positions: PackedVector2Array = PackedVector2Array()
 var position_tolerance: float = 15.0   # Distance tolerance for considering "same position"
-@onready var sync: Sync = $Sync
+var speed_up = 1.0
 
-@export var n_climbers: int = 0:
+@export var n_climbers: int:
     set(value):
         climbers.clear()
         climber_positions.clear()
@@ -29,11 +30,13 @@ var position_tolerance: float = 15.0   # Distance tolerance for considering "sam
             climber.name = "Climber_%d" % i  # Set a numbered name for each climber
             climber.target_angle = reward_angle
             climber.map = self
+            climber.set_pos(get_parent().global_position)
             climbers.append(climber)
             climber_positions.append(climber.get_pos())
-        sync._initialize()
+        
+        climbers_initialized.emit()
 
-
+signal climbers_initialized
 
 func _ready():
     reward_angle = -PI/2 #DEJARLO SETTEADO ACÁ
@@ -65,7 +68,6 @@ func _new_round():
 var infected: Array[Climber] = []
 var non_infected: Array[Climber] = []
 
-const ENCLOSURE_SCENE: PackedScene = preload("res://scenes/enclosure.tscn")
 var enclosure: Enclosure = null
 
 func _calc_round_duration() -> float:
@@ -83,7 +85,7 @@ func _new_infection_tag_round():
     ProjectSettings.set_setting("physics/2d/default_gravity_vector", Vector2(0, 1))
     ProjectSettings.set_setting("physics/2d/default_gravity", 980.0)
     enclosure = ENCLOSURE_SCENE.instantiate()
-    add_child(enclosure)
+    self.add_child(enclosure)
     rand_size_mult = randf_range(0.75, 1.5)
     enclosure.size = 1000 * rand_size_mult
     climb_round_timer = _calc_round_duration()
@@ -111,24 +113,23 @@ func _new_climb_round():
     if enclosure != null:
         enclosure.queue_free()
         enclosure = null
-        
     if floor == null:
         floor = floor_scene.instantiate()
-        add_child(floor)
+        self.add_child(floor)
     max_reached_distance = 0.0
     last_spawned_box = null
     climber_highest_reward = null
-    reward_angle = -PI/2 + randf_range(-PI/2., PI/2.)
-    gravity_angle = reward_angle + randf_range(-PI/3.5, PI/3.5)
-    gravity_strength = randf_range(100.0, 1500.0)
-    ProjectSettings.set_setting("physics/2d/default_gravity_vector", Vector2(cos(gravity_angle), sin(gravity_angle)))
-    ProjectSettings.set_setting("physics/2d/default_gravity", gravity_strength)
+    reward_angle = -PI/2 + randf_range(-PI/2., PI/2.) * random_range
+    # gravity_angle = reward_angle + randf_range(-PI/3.5, PI/3.5) * random_range
+    # gravity_strength = 980.0 + randf_range(-500., 500.0) * random_range
+    # ProjectSettings.set_setting("physics/2d/default_gravity_vector", Vector2(cos(gravity_angle), sin(gravity_angle)))
+    # ProjectSettings.set_setting("physics/2d/default_gravity", gravity_strength)
 
     var nodes_angle: float = reward_angle + PI/2
     for climber in climbers:
         # Add randomness to climber spawn position
         var random_offset = Vector2(randf_range(-30.0, 30.0), randf_range(-30.0, 30.0))
-        climber.spawn_position = reward_vec * 40.0 + random_offset
+        climber.spawn_position = global_position + reward_vec * 40.0 + random_offset
         climber.role = Climber.Role.CLIMBER
         climber.reset()
 
@@ -149,7 +150,7 @@ var grace_period: float = 5.0
 var grace_active: bool = true
 const OUT_OF_BOUNDS_THRESHOLD: float = 3000.0
 func _process(delta: float):
-    delta *= sync.speed_up
+    delta *= speed_up
     climb_round_timer -= delta
 
     if climb_round_timer < 0 or (current_game_mode == GameMode.INFECTION_TAG and infected.size() == climbers.size()):
@@ -187,7 +188,7 @@ func _process(delta: float):
 
             if distance_moved < position_tolerance or dot < 40.0:
                 climber.stagnation_timer += delta
-                if climber.stagnation_timer >= 7.0:
+                if climber.stagnation_timer >= 10.0:
                     climber.reset(true)
                     continue
             else:
@@ -218,7 +219,7 @@ func spawn_box() -> void:
     if last_spawned_box != null:
       
         box.rotation = randf() * PI * 2 
-        spawn_position += last_spawned_box.global_position
+        spawn_position += last_spawned_box.position
         var min_distance: float = 10.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
 
         var noisy_direction: Vector2 = reward_vec.rotated(randf_range(-PI/1.6, PI/1.6))
@@ -235,9 +236,8 @@ func spawn_box() -> void:
         box.scale = Vector2(2.2, 2.2)
         spawn_position *= 1.6
         box.rotation = reward_angle
-        climbers_node.global_position = spawn_position * 1.2
 
-    box.global_position = spawn_position
+    box.position = spawn_position
 
     box.name = "Box%d" % boxes.get_child_count()
 
@@ -254,23 +254,14 @@ var reward_angle: float:
             climber.target_angle = reward_angle
 
 func add_new_infected(climber: Climber) -> void:
-    infected.append(climber)
-    non_infected.erase(climber)
+    infected.append(climber); non_infected.erase(climber)
 
 func get_dist_reward(climber: Climber) -> float:
     var distance_reward_vec = climber.get_pos() - Vector2(0, 0)
     return distance_reward_vec.dot(reward_vec)
 
+var random_range: float = 0.0
 
-func _on_sync_ready():
-    await self.ready
     
-    if sync.args.has(&"n_climbers"):
-        n_climbers = int(sync.args[&"n_climbers"])
-    else:
-        n_climbers = 30
-        
-    if sync.args.has(&"round_duration"):
-        round_duration = float(sync.args[&"round_duration"])
-    else:
-        round_duration = 60.
+
+    

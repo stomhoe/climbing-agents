@@ -3,7 +3,6 @@ class_name AIClimbController
 
 @onready var climber: Climber = $".."
 @onready var node_above: Node2D = $NodeAbove
-@onready var map: ClimbMap = get_tree().root.get_child(0)
 
 @onready var body_sensor: BodySensor = $NodeAbove/RaycastBody
 @onready var label: Label = $"../Label2/Label"
@@ -15,7 +14,7 @@ func _process(_delta: float):
 
 const POS_DIV: float = 2000.0
 
-var obs: PackedFloat64Array = PackedFloat64Array()
+var obs: Array[float] = []
 func get_obs() -> Dictionary:
     obs.clear()
     obs.append(climber.target_angle / TAU)
@@ -37,8 +36,8 @@ func get_obs() -> Dictionary:
     obs.append(float(climber.r_hand_grabber.is_attached()))
     obs.append(climber.closest_infected_dist_vec.x / (POS_DIV * 0.5))
     obs.append(climber.closest_infected_dist_vec.y / (POS_DIV * 0.5))
-    obs.append(map.gravity_strength / 1400.0)
-    obs.append(map.gravity_angle / TAU)
+    obs.append(climber.map.gravity_strength / 1400.0)
+    obs.append(climber.map.gravity_angle / TAU)
     obs.append(climber.get_pos().x / POS_DIV)
     obs.append(climber.get_pos().y / POS_DIV)
     obs.append_array(body_sensor.get_raycasts())

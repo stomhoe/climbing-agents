@@ -3,8 +3,11 @@ class_name Grabber
 
 @onready var joint: PinJoint2D = $Joint
 @onready var grab_area: Area2D = $GrabArea
+@onready var hold_area: Area2D = $HoldArea
 @onready var mesh_instance_2d: MeshInstance2D = $MeshInstance2D
 @onready var climber: Climber = get_parent()
+
+var raycasts: Array[RayCast2D]
 
 var is_currently_controlled: bool = false:
     set(value):
@@ -25,7 +28,9 @@ var grab_on_contact: bool = true:
 
 func _ready():
     grab_area.body_entered.connect(_on_grab_area_body_entered)
-    pass
+    hold_area.body_exited.connect(_on_hold_area_body_exited)
+    hold_area.collision_layer = grab_area.collision_layer
+    hold_area.collision_mask = grab_area.collision_mask
     
 
 func is_attached() -> bool: return joint.node_b != NodePath("")
@@ -53,4 +58,7 @@ func _on_grab_area_body_entered(body: Node):
         if body is BodyPart  and climber.role == Climber.Role.INFECTED and body.climber.role == Climber.Role.PREY and not climber.map.grace_active:
             body.climber.role = Climber.Role.INFECTED
             climber.bitten_count += 1
-            
+
+func _on_hold_area_body_exited(body: Node2D):
+    if body.get_path() == joint.node_b:
+        release()

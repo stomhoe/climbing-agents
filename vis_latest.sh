@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 source "venv/bin/activate"
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <path_to_resume_model>"
-    exit 1
-fi
-
-RESUME_MODEL_PATH=$1
+RESUME_PATH=$(find "$(pwd)/logs" -name "*.zip" -print0 | xargs -0 ls -lt | head -n 1 | awk '{print $9}')
+echo "RESUME_PATH: $RESUME_PATH"
 
 EXPERIMENT_NAME="resvis-$(date +'%B%d-%H:%M')"
 
@@ -18,4 +14,4 @@ python stable_baselines3_example.py \
     --experiment_name="$EXPERIMENT_NAME" \
     --timesteps=2_000_000 \
     --save_checkpoint_frequency=100_000 \
-    --resume_model_path="$RESUME_MODEL_PATH"
+    --resume_model_path="$RESUME_PATH"

@@ -45,17 +45,17 @@ position = Vector2(-28.65, -9)
 
 [node name="RightHand" parent="." instance=ExtResource("5_3nhoh")]
 position = Vector2(28.65, -9)
-rotation = 3.1415927
 
 [node name="LeftFoot" parent="." instance=ExtResource("5_3nhoh")]
 position = Vector2(-6.0000005, 26.615)
+rotation = 1.5707964
 
 [node name="RightFoot" parent="." instance=ExtResource("5_3nhoh")]
 position = Vector2(5.9999995, 26.615)
-rotation = 3.1415927
+rotation = 1.5707964
 
 [node name="Torso" type="RigidBody2D" parent="."]
-mass = 8.0
+mass = 4.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Torso"]

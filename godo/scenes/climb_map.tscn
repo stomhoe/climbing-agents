@@ -1,15 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://51gjpid7sjyr"]
+[gd_scene load_steps=3 format=3 uid="uid://f5a30kyv07mc"]
 
-[ext_resource type="Script" uid="uid://bm4xivmekhm3w" path="res://scripts/climb_map.gd" id="1_w1vl5"]
-[ext_resource type="Script" uid="uid://bgnch8w7tbswk" path="res://addons/godot_rl_agents/sync.gd" id="4_aymul"]
-[ext_resource type="Script" uid="uid://4fj733q0pjt8" path="res://scripts/camera_2d.gd" id="5_4oapl"]
+[ext_resource type="Script" uid="uid://bm4xivmekhm3w" path="res://scripts/climb_map.gd" id="1_aeawd"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_qsneh"]
 radius = 4.0
 height = 8.0
 
 [node name="ClimbMap" type="Node2D"]
-script = ExtResource("1_w1vl5")
+script = ExtResource("1_aeawd")
 metadata/_custom_type_script = "uid://bm4xivmekhm3w"
 metadata/_edit_vertical_guides_ = [-285.0]
 
@@ -20,21 +18,4 @@ position = Vector2(40, -29)
 modulate = Color(0.13153076, 0.75149053, 0, 1)
 mesh = SubResource("SphereMesh_qsneh")
 
-[node name="Sync" type="Node" parent="."]
-script = ExtResource("4_aymul")
-metadata/_custom_type_script = "uid://bgnch8w7tbswk"
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(0, -160)
-zoom = Vector2(2, 2)
-script = ExtResource("5_4oapl")
-
-[node name="Label" type="Label" parent="Camera2D"]
-offset_left = -279.0
-offset_top = -159.0
-offset_right = -199.0
-offset_bottom = -136.0
-
 [node name="Boxes" type="Node2D" parent="."]
-
-[connection signal="ready" from="Sync" to="." method="_on_sync_ready"]

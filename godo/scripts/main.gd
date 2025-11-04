@@ -1,0 +1,80 @@
+extends Node2D
+
+const MAP_SCENE: PackedScene = preload("res://scenes/climb_map.tscn")
+
+var instantiated_maps: Array[ClimbMap] = []
+@onready var sync = $Sync
+
+var n_arenas: int:
+    set(value):
+        n_arenas = value
+        for child in get_children():
+            if child is ClimbMap:
+                child.queue_free()
+        for i in range(n_arenas):
+            var map_instance: ClimbMap = MAP_SCENE.instantiate()
+            map_instance.name = "ClimbMap_%d" % i
+            self.add_child(map_instance)
+            instantiated_maps.append(map_instance)
+            
+            var sep: float = 3000. if (sync.args.has("show_window") or not sync.args.has("env_path")) else 100000.
+            
+            
+            map_instance.position = Vector2( i * sep, 0)
+            map_instance.climbers_initialized.connect(on_climbers_initialized)
+
+var n_climbers: int:
+    set(value):
+        n_climbers = value
+        for map_instance in instantiated_maps:
+            map_instance.n_climbers = n_climbers
+var round_duration: float:
+    set(value):
+        round_duration = value
+        for map_instance in instantiated_maps:
+            map_instance.round_duration = round_duration
+
+var random_range: float:
+    set(value):
+        random_range = value
+        for map_instance in instantiated_maps:
+            map_instance.random_range = random_range
+
+var speed_up: float:
+    set(value):
+        speed_up = value
+        for map_instance in instantiated_maps:
+            map_instance.speed_up = speed_up
+
+func _ready():
+
+    if sync.args.has(&"n_arenas"):
+        n_arenas = int(sync.args[&"n_arenas"])
+    else:
+        n_arenas = 4
+    
+    if sync.args.has(&"n_climbers"):
+        n_climbers = int(sync.args[&"n_climbers"])
+    else:
+        n_climbers = 5
+        
+    if sync.args.has(&"round_duration"):
+        round_duration = float(sync.args[&"round_duration"])
+    else:
+        round_duration = 60.
+
+    if sync.args.has(&"random"):
+        random_range = float(sync.args[&"random"])
+    else:
+        random_range = 0.0
+
+    speed_up = sync.speed_up
+
+    
+
+var climbers_initialized_count: int = 0
+func on_climbers_initialized():
+    climbers_initialized_count += 1
+    print(climbers_initialized_count)
+    if climbers_initialized_count == n_arenas:
+        sync._initialize()

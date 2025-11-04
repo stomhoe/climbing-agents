@@ -1,6 +1,21 @@
-
-EXPERIMENT_NAME="vis-$(date +'%B%d-%H:%M')"
-
+#!/usr/bin/env bash
 source "venv/bin/activate"
-python stable_baselines3_example.py --viz --env_path=godo.x86_64 --experiment_name="$EXPERIMENT_NAME" --timesteps=2_000_000 --save_checkpoint_frequency=100_000 --speedup=1  --n_climbers=10
 
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <path_to_resume_model>"
+    exit 1
+fi
+
+RESUME_PATH=$1
+
+EXPERIMENT_NAME="resvis-$(date +'%B%d-%H:%M')"
+
+python stable_baselines3_example.py \
+    --viz \
+    --n_climbers=5 \
+    --round_duration=30 \
+    --env_path=godo.x86_64 \
+    --experiment_name="$EXPERIMENT_NAME" \
+    --timesteps=2_000_000 \
+    --save_checkpoint_frequency=100_000 \
+    --resume_model_path="$RESUME_PATH"

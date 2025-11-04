@@ -118,6 +118,12 @@ parser.add_argument(
     type=float,
     help="How long each round lasts in seconds.",
 )
+parser.add_argument(
+    "--random",
+    default=0.0,
+    type=float,
+    help="randomness range",
+)
 
 args, extras = parser.parse_known_args()
 
@@ -174,7 +180,7 @@ elif args.env_path is not None and not os.path.isabs(args.env_path):
     args.env_path = os.path.join(script_dir, args.env_path)
 
 env = StableBaselinesGodotEnv(
-    env_path=args.env_path, show_window=args.viz, seed=args.seed, n_parallel=args.n_parallel, speedup=args.speedup, n_climbers=args.n_climbers, round_duration=args.round_duration, 
+    env_path=args.env_path, show_window=args.viz, seed=args.seed, n_parallel=args.n_parallel, speedup=args.speedup, n_climbers=args.n_climbers, round_duration=args.round_duration, random=args.random, 
 )
 env = VecMonitor(env)
 
