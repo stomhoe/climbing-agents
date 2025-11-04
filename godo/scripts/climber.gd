@@ -27,16 +27,51 @@ class_name Climber
 @onready var r_foot_grabber: Grabber = $Rcalf/RightFoot
 @onready var l_foot_grabber: Grabber = $Lcalf/LeftFoot
 
+@onready var joints: Dictionary[Grabber, Array] = {
+    r_hand_grabber: [r_shoulder, r_upperarm.joint],
+    l_hand_grabber: [l_shoulder, l_upperarm.joint],
+    r_foot_grabber: [r_hip, r_thigh.joint],
+    l_foot_grabber: [l_hip, l_thigh.joint]
+}
+
+@onready var corresponding_body_part: Dictionary[Grabber, RigidBody2D] = {
+    r_hand_grabber: r_forearm,
+    l_hand_grabber: l_forearm,
+    r_foot_grabber: r_calf,
+    l_foot_grabber: l_calf
+}
+
 var map: ClimbMap
 
 var spawn_position: Vector2 = Vector2.ZERO
 
 var speed_up: float = 1.0
 
+var bitten_count: int = 0
+
+enum Role {CLIMBER, PREY, INFECTED}
+
+var role: Role = Role.CLIMBER:
+    set(value):
+        role = value
+        if role == Role.INFECTED:
+            map.add_new_infected(self)
+            for part in body_parts:
+                part.modulate = Color.GREEN
+        else:
+            for part in body_parts:
+                part.modulate = Color.WHITE
+
+        if role != Role.PREY:
+            closest_infected_dist_vec = Vector2.ZERO
+        else:
+            map.non_infected.append(self)
+            target_angle = TAU + 0.5
+
 @onready var ai_controller: AIClimbController = $AIController2D
 var target_angle: float:
     set(value):
-        ai_controller.node_above.global_rotation = value + PI/2
+        #ai_controller.node_above.global_rotation = value + PI/2
         target_angle = value
 
 var stagnation_timer: float = 0.0
@@ -47,16 +82,16 @@ func reset(punish: bool = false):
     ai_controller.reset()
     _release_all_grabs()
     stagnation_timer = 0.0
-    reset_velocity()
-    var spawn_offset_range: float = 30.0
-    var rand_offset = Vector2(randf_range(-spawn_offset_range, spawn_offset_range), randf_range(-spawn_offset_range, spawn_offset_range))
-    set_pos(spawn_position + rand_offset)
-    
-    spawning_rem_timer = 1.0
+    nullify_velocity()
+    set_pos(spawn_position)
+    bitten_count = 0
+    speed_up = map.sync.speed_up
+    if role == Role.CLIMBER:
+        spawning_rem_timer = 0.5
         
 var spawning_rem_timer: float = 0.0
 
-func reset_velocity() -> void:
+func nullify_velocity() -> void:
     for body_part in body_parts:
         body_part.linear_velocity = Vector2.ZERO
         body_part.angular_velocity = 0.0
@@ -65,64 +100,83 @@ func set_pos(pos: Vector2) -> void: for body_part in body_parts: body_part.globa
 
 func get_pos() -> Vector2: return torso.global_position
 
-@onready var joints: Dictionary[Grabber, Array] = {
-    r_hand_grabber: [r_shoulder, r_upperarm.joint],
-    l_hand_grabber: [l_shoulder, l_upperarm.joint],
-    r_foot_grabber: [r_hip, r_thigh.joint],
-    l_foot_grabber: [l_hip, l_thigh.joint]
-}
+
 func _at_least_one_grabbed() -> bool:
     return r_hand_grabber.is_grabbing_wall() or l_hand_grabber.is_grabbing_wall() or r_foot_grabber.is_grabbing_wall() or l_foot_grabber.is_grabbing_wall()
 
 # Control variables
-var control_strength: float = 1000.0
+var control_strength: float = 2000.0
 
 func _ready():
-
-
     for joints_arr in joints.values():
         for joint: PinJoint2D in joints_arr:
-            joint.motor_enabled = false
+            joint.motor_enabled = true
             joint.angular_limit_enabled = false
             joint.angular_limit_lower = deg_to_rad(-1)
             joint.angular_limit_upper = deg_to_rad(1)
+
+    for part in body_parts:
+        for part2 in body_parts:
+            part.add_collision_exception_with(part2)
 
 func _physics_process(delta: float):
     delta *= speed_up
     if spawning_rem_timer >= 0.0:
         spawning_rem_timer -= delta
-        reset_velocity()
+        nullify_velocity()
 
     _apply_muscle_forces(delta)
     
-    var max_distance := 40.0  # Adjust as needed
+    var max_distance := 40.0  
     for body_part in body_parts:
-        if body_part == torso:
-            continue
         if body_part.global_position.distance_to(torso.global_position) > max_distance:
             body_part.global_position = torso.global_position
             body_part.linear_velocity = Vector2.ZERO
             body_part.angular_velocity = 0.0
 
-# Add any necessary vars here
+var closest_infected_dist_vec: Vector2 = Vector2.ZERO
+
+func _process(delta: float):
+    delta *= speed_up
+
+    var min_dist: float = INF
+    if role == Role.PREY:
+        for climber in map.infected:
+            var dist: float = get_pos().distance_to(climber.get_pos())
+            if dist < min_dist:
+                min_dist = dist
+                closest_infected_dist_vec = (climber.get_pos() - get_pos())
+
+        ai_controller.reward = 6000. + min(min_dist, 2000.0)
+    elif role == Role.INFECTED:
+        for prey in map.non_infected:
+            var dist: float = get_pos().distance_to(prey.get_pos())
+            if dist < min_dist:
+                min_dist = dist
+                target_angle = (prey.get_pos() - get_pos()).angle()
+        ai_controller.reward = 3000. -min(min_dist, 2000.0) + bitten_count * 1500
+    
+    
+
+
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
-var swing_boost_strength: float = 1700.0  # Additional strength during the swing boost
+var swing_boost_strength: float = 4700.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
 
 func _apply_muscle_forces(delta: float):
     if currently_controlled:
         # Apply force to move the controlled limb towards the mouse position
-        var limb: RigidBody2D = currently_controlled.get_parent() as RigidBody2D
-        var applied_strength: float = control_strength
+        var limb: RigidBody2D = corresponding_body_part[currently_controlled]
+        var final_strength: float = control_strength
         
         # Apply swing boost if within the boost timead
         if _at_least_one_grabbed():
             if swing_timer > 0.0:
-                applied_strength += swing_boost_strength * swing_boost_time
+                final_strength += swing_boost_strength * swing_boost_time
                 swing_timer -= delta
-            applied_strength += 1500.
+            final_strength += 1500.
         
-        limb.apply_force(force_direction * applied_strength, currently_controlled.global_position - limb.global_position)
+        limb.apply_force(force_direction * final_strength, currently_controlled.global_position - limb.global_position)
 
 
 var currently_controlled: Grabber = null:

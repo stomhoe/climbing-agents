@@ -1,4 +1,4 @@
 extends RigidBody2D
 class_name BodyPart
 
-var climber: Climber
+@onready var climber: Climber = get_parent()

@@ -42,8 +42,7 @@ outline_color = Color(0, 0, 0, 1)
 script = ExtResource("1_7e176")
 
 [node name="Torso" type="RigidBody2D" parent="."]
-collision_layer = 0
-collision_mask = 3
+mass = 8.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Torso"]
@@ -104,44 +103,48 @@ update_scale = false
 
 [node name="Lthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-6, 12.585)
+collision_layer = 1
+collision_mask = 1
 next_limb = NodePath("../Lcalf")
 
 [node name="Rthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(6, 12.585)
+collision_layer = 1
+collision_mask = 1
 next_limb = NodePath("../Rcalf")
 
 [node name="Lupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(-12, -9)
 rotation = -3.1415927
+collision_layer = 1
+collision_mask = 1
 gravity_scale = 0.0
 next_limb = NodePath("../Lforearm")
 
 [node name="Rupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(12, -9)
 rotation = 0.0
+collision_layer = 1
+collision_mask = 1
 gravity_scale = 0.0
 next_limb = NodePath("../Rforearm")
 
 [node name="Lforearm" type="RigidBody2D" parent="."]
 position = Vector2(-21.65, -9)
-collision_layer = 0
-collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lforearm"]
 shape = ExtResource("3_3nhoh")
 
-[node name="LeftHand" parent="Lforearm" instance=ExtResource("5_3nhoh")]
-position = Vector2(-6, 0)
-
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Lforearm"]
 mesh = SubResource("BoxMesh_kce74")
 
+[node name="LeftHand" parent="Lforearm" instance=ExtResource("5_3nhoh")]
+position = Vector2(-7, 0)
+
 [node name="Rforearm" type="RigidBody2D" parent="."]
 position = Vector2(21.65, -9)
-collision_layer = 0
-collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -157,36 +160,32 @@ position = Vector2(7, 0)
 [node name="Lcalf" type="RigidBody2D" parent="."]
 position = Vector2(-6, 19.615)
 rotation = 1.5707964
-collision_layer = 0
-collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lcalf"]
 shape = SubResource("RectangleShape2D_emysf")
 
-[node name="LeftFoot" parent="Lcalf" instance=ExtResource("5_3nhoh")]
-position = Vector2(7, 0)
-
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Lcalf"]
 mesh = SubResource("BoxMesh_7aipt")
+
+[node name="LeftFoot" parent="Lcalf" instance=ExtResource("5_3nhoh")]
+position = Vector2(7, 4.7683716e-07)
 
 [node name="Rcalf" type="RigidBody2D" parent="."]
 position = Vector2(6, 19.615)
 rotation = 1.5707964
-collision_layer = 0
-collision_mask = 3
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Rcalf"]
 shape = SubResource("RectangleShape2D_emysf")
 
-[node name="RightFoot" parent="Rcalf" instance=ExtResource("5_3nhoh")]
-position = Vector2(7, 0)
-
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Rcalf"]
 mesh = SubResource("BoxMesh_7aipt")
+
+[node name="RightFoot" parent="Rcalf" instance=ExtResource("5_3nhoh")]
+position = Vector2(7, 4.7683716e-07)
 
 [node name="AIController2D" type="Node2D" parent="." groups=["AGENT"]]
 script = ExtResource("7_7aipt")
@@ -198,20 +197,15 @@ rotation = -1.5707964
 script = ExtResource("8_7aipt")
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
-[node name="RaycastLeft" type="Node2D" parent="AIController2D/NodeAbove"]
-position = Vector2(-100, -80)
+[node name="RaycastAhead" type="Node2D" parent="AIController2D/NodeAbove"]
+rotation = -1.5707964
 script = ExtResource("8_7aipt")
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
-[node name="RaycastRight" type="Node2D" parent="AIController2D/NodeAbove"]
-position = Vector2(100, -80)
-rotation = 3.1415927
-script = ExtResource("8_7aipt")
-metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="Sprite2D" type="Sprite2D" parent="AIController2D/NodeAbove"]
+[node name="Sprite2D" type="Sprite2D" parent="AIController2D/NodeAbove/RaycastAhead"]
 visible = false
-position = Vector2(-3.8146973e-06, -82)
+position = Vector2(-68, -6.7870715e-06)
+rotation = 1.5707964
 scale = Vector2(0.1171875, 0.15625)
 texture = ExtResource("9_7aipt")
 
