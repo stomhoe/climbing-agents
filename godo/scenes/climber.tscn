@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://chsdkprww0adx" path="res://scenes/grabber.tscn" id="5_3nhoh"]
 [ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="5_nwbdq"]
 [ext_resource type="Script" uid="uid://n04gwns6q2lp" path="res://scripts/ai_climb_controller.gd" id="7_7aipt"]
-[ext_resource type="Script" uid="uid://c3ox4b85c5hd1" path="res://addons/godot_rl_agents/sensors/sensors_2d/RaycastSensor2D.gd" id="8_7aipt"]
+[ext_resource type="Script" uid="uid://bi0dbi4mseps2" path="res://scripts/body_sensor.gd" id="8_7aipt"]
 [ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="9_7aipt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kce74"]
@@ -28,11 +28,11 @@ height = 10.0
 [sub_resource type="BoxMesh" id="BoxMesh_kce74"]
 size = Vector3(12, 3, 1)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_emysf"]
-size = Vector2(9, 3)
-
 [sub_resource type="BoxMesh" id="BoxMesh_7aipt"]
 size = Vector3(10, 3, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_emysf"]
+size = Vector2(9, 3)
 
 [sub_resource type="LabelSettings" id="LabelSettings_7aipt"]
 outline_size = 8
@@ -40,6 +40,20 @@ outline_color = Color(0, 0, 0, 1)
 
 [node name="Climber" type="Node2D"]
 script = ExtResource("1_7e176")
+
+[node name="LeftHand" parent="." instance=ExtResource("5_3nhoh")]
+position = Vector2(-28.65, -9)
+
+[node name="RightHand" parent="." instance=ExtResource("5_3nhoh")]
+position = Vector2(28.65, -9)
+
+[node name="LeftFoot" parent="." instance=ExtResource("5_3nhoh")]
+position = Vector2(-6.0000005, 26.615)
+rotation = 1.5707964
+
+[node name="RightFoot" parent="." instance=ExtResource("5_3nhoh")]
+position = Vector2(5.9999995, 26.615)
+rotation = 1.5707964
 
 [node name="Torso" type="RigidBody2D" parent="."]
 mass = 8.0
@@ -134,28 +148,30 @@ position = Vector2(-21.65, -9)
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Lforearm"]
-shape = ExtResource("3_3nhoh")
-
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Lforearm"]
 mesh = SubResource("BoxMesh_kce74")
 
-[node name="LeftHand" parent="Lforearm" instance=ExtResource("5_3nhoh")]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Lforearm"]
+shape = ExtResource("3_3nhoh")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Lforearm"]
 position = Vector2(-7, 0)
+remote_path = NodePath("../../LeftHand")
 
 [node name="Rforearm" type="RigidBody2D" parent="."]
 position = Vector2(21.65, -9)
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rforearm"]
-shape = ExtResource("3_3nhoh")
-
 [node name="MeshInstance2D2" type="MeshInstance2D" parent="Rforearm"]
 mesh = SubResource("BoxMesh_kce74")
 
-[node name="RightHand" parent="Rforearm" instance=ExtResource("5_3nhoh")]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rforearm"]
+shape = ExtResource("3_3nhoh")
+
+[node name="RemoteTransform2D2" type="RemoteTransform2D" parent="Rforearm"]
 position = Vector2(7, 0)
+remote_path = NodePath("../../RightHand")
 
 [node name="Lcalf" type="RigidBody2D" parent="."]
 position = Vector2(-6, 19.615)
@@ -163,14 +179,15 @@ rotation = 1.5707964
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Lcalf"]
-shape = SubResource("RectangleShape2D_emysf")
-
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Lcalf"]
 mesh = SubResource("BoxMesh_7aipt")
 
-[node name="LeftFoot" parent="Lcalf" instance=ExtResource("5_3nhoh")]
-position = Vector2(7, 4.7683716e-07)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Lcalf"]
+shape = SubResource("RectangleShape2D_emysf")
+
+[node name="RemoteTransform2D2" type="RemoteTransform2D" parent="Lcalf"]
+position = Vector2(7, 0)
+remote_path = NodePath("../../LeftFoot")
 
 [node name="Rcalf" type="RigidBody2D" parent="."]
 position = Vector2(6, 19.615)
@@ -184,8 +201,9 @@ shape = SubResource("RectangleShape2D_emysf")
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Rcalf"]
 mesh = SubResource("BoxMesh_7aipt")
 
-[node name="RightFoot" parent="Rcalf" instance=ExtResource("5_3nhoh")]
-position = Vector2(7, 4.7683716e-07)
+[node name="RemoteTransform2D2" type="RemoteTransform2D" parent="Rcalf"]
+position = Vector2(7, 0)
+remote_path = NodePath("../../RightFoot")
 
 [node name="AIController2D" type="Node2D" parent="." groups=["AGENT"]]
 script = ExtResource("7_7aipt")
@@ -195,11 +213,13 @@ script = ExtResource("7_7aipt")
 [node name="RaycastBody" type="Node2D" parent="AIController2D/NodeAbove"]
 rotation = -1.5707964
 script = ExtResource("8_7aipt")
+ray_length = 300
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
 [node name="RaycastAhead" type="Node2D" parent="AIController2D/NodeAbove"]
 rotation = -1.5707964
 script = ExtResource("8_7aipt")
+ray_length = 300
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
 [node name="Sprite2D" type="Sprite2D" parent="AIController2D/NodeAbove/RaycastAhead"]

@@ -4,8 +4,7 @@ class_name Grabber
 @onready var joint: PinJoint2D = $Joint
 @onready var grab_area: Area2D = $GrabArea
 @onready var mesh_instance_2d: MeshInstance2D = $MeshInstance2D
-@onready var climber: Climber = get_parent().get_parent()
-var grabbing_wall: bool = false
+@onready var climber: Climber = get_parent()
 
 var is_currently_controlled: bool = false:
     set(value):
@@ -25,20 +24,16 @@ var grab_on_contact: bool = true:
             release()
 
 func _ready():
-    
     grab_area.body_entered.connect(_on_grab_area_body_entered)
     pass
     
-func is_grabbing_wall() -> bool: return grabbing_wall
 
-func is_grabbing() -> bool: return joint.node_b != NodePath("")
+func is_attached() -> bool: return joint.node_b != NodePath("")
 
 
 func release():
     mesh_instance_2d.modulate = Color.GRAY
     joint.node_b = NodePath("")
-    grabbing_wall = false
-    return
 
 
 func _on_grab_area_body_entered(body: Node):
@@ -46,15 +41,16 @@ func _on_grab_area_body_entered(body: Node):
         return
     if joint.node_b != NodePath(""):
         return
+    if body is BodyPart and body.get_parent() == climber:
+        return
 
     if body is StaticBody2D:
-        grabbing_wall = true
         joint.node_a = climber.corresponding_body_part[self].get_path()#DEJAR ACÁ
         joint.node_b = body.get_path()
         mesh_instance_2d.modulate = Color.GREEN
     else:
-        grabbing_wall = false
-        if body is BodyPart and climber.map.grace_active and climber.role == Climber.Role.INFECTED and body.climber.role == Climber.Role.PREY:
+
+        if body is BodyPart  and climber.role == Climber.Role.INFECTED and body.climber.role == Climber.Role.PREY and !climber.map.grace_active:
             body.climber.role = Climber.Role.INFECTED
             climber.bitten_count += 1
             

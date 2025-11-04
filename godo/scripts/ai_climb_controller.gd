@@ -5,9 +5,9 @@ class_name AIClimbController
 @onready var node_above: Node2D = $NodeAbove
 @onready var map: ClimbMap = get_tree().root.get_child(0)
 
-@onready var body_sensor: RaycastSensor2D = $NodeAbove/RaycastBody
+@onready var body_sensor: BodySensor = $NodeAbove/RaycastBody
 @onready var label: Label = $"../Label2/Label"
-@onready var raycast_ahead: RaycastSensor2D = $NodeAbove/RaycastAhead
+@onready var raycast_ahead: BodySensor = $NodeAbove/RaycastAhead
 
 
 func _process(_delta: float):
@@ -31,18 +31,18 @@ func get_obs() -> Dictionary:
     obs.append(climber.r_thigh.global_rotation / TAU)
     obs.append(climber.l_calf.global_rotation / TAU)
     obs.append(climber.r_calf.global_rotation / TAU)
-    obs.append(float(climber.l_foot_grabber.is_grabbing()))
-    obs.append(float(climber.r_foot_grabber.is_grabbing()))
-    obs.append(float(climber.l_hand_grabber.is_grabbing()))
-    obs.append(float(climber.r_hand_grabber.is_grabbing()))
+    obs.append(float(climber.l_foot_grabber.is_attached()))
+    obs.append(float(climber.r_foot_grabber.is_attached()))
+    obs.append(float(climber.l_hand_grabber.is_attached()))
+    obs.append(float(climber.r_hand_grabber.is_attached()))
     obs.append(climber.closest_infected_dist_vec.x / (POS_DIV * 0.5))
     obs.append(climber.closest_infected_dist_vec.y / (POS_DIV * 0.5))
     obs.append(map.gravity_strength / 1400.0)
     obs.append(map.gravity_angle / TAU)
     obs.append(climber.get_pos().x / POS_DIV)
     obs.append(climber.get_pos().y / POS_DIV)
-    obs.append_array(body_sensor.calculate_raycasts())
-    obs.append_array(raycast_ahead.calculate_raycasts())
+    obs.append_array(body_sensor.get_raycasts())
+    obs.append_array(raycast_ahead.get_raycasts())
 
     return {"obs":obs}
 
@@ -77,7 +77,7 @@ func get_action_space() -> Dictionary:
         "raycast_pos": {"size": 2, "action_type": "continuous"},
     }
     
-var rotor_speed: float = 15
+var rotor_speed: float = 40
 
 func set_action(action: Dictionary) -> void:	
     

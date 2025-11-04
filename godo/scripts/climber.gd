@@ -22,10 +22,10 @@ class_name Climber
 @onready var l_hip: PinJoint2D = $Torso/Lhip
 @onready var r_hip: PinJoint2D = $Torso/Rhip
 
-@onready var r_hand_grabber: Grabber = $Rforearm/RightHand
-@onready var l_hand_grabber: Grabber = $Lforearm/LeftHand
-@onready var r_foot_grabber: Grabber = $Rcalf/RightFoot
-@onready var l_foot_grabber: Grabber = $Lcalf/LeftFoot
+@onready var r_hand_grabber: Grabber = $RightHand
+@onready var l_hand_grabber: Grabber = $LeftHand
+@onready var r_foot_grabber: Grabber = $RightFoot
+@onready var l_foot_grabber: Grabber = $LeftFoot
 
 @onready var joints: Dictionary[Grabber, Array] = {
     r_hand_grabber: [r_shoulder, r_upperarm.joint],
@@ -56,7 +56,7 @@ var role: Role = Role.CLIMBER:
         role = value
         if role == Role.INFECTED:
             map.add_new_infected(self)
-            for part in body_parts:
+            for part: BodyPart in body_parts:
                 part.modulate = Color.GREEN
         else:
             for part in body_parts:
@@ -102,7 +102,7 @@ func get_pos() -> Vector2: return torso.global_position
 
 
 func _at_least_one_grabbed() -> bool:
-    return r_hand_grabber.is_grabbing_wall() or l_hand_grabber.is_grabbing_wall() or r_foot_grabber.is_grabbing_wall() or l_foot_grabber.is_grabbing_wall()
+    return r_hand_grabber.is_attached() or l_hand_grabber.is_attached() or r_foot_grabber.is_attached() or l_foot_grabber.is_attached()
 
 # Control variables
 var control_strength: float = 2000.0
@@ -154,6 +154,7 @@ func _process(delta: float):
             if dist < min_dist:
                 min_dist = dist
                 target_angle = (prey.get_pos() - get_pos()).angle()
+                closest_infected_dist_vec = (prey.get_pos() - get_pos())
         ai_controller.reward = 3000. -min(min_dist, 2000.0) + bitten_count * 1500
     
     
