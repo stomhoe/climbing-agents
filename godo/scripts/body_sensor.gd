@@ -18,8 +18,7 @@ func get_raycasts() -> PackedFloat64Array:
             if (object as BodyPart).climber.role == Climber.Role.INFECTED:
                 result[classf_i] = 1.0
             else:
-                result[classf_i] = 0.0
-        else:
-            result[classf_i] = -1.0
+                result[classf_i] = 0.5
+                
         ray.enabled = false
     return result

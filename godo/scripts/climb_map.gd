@@ -60,7 +60,7 @@ func _new_round():
     
     for box in boxes.get_children(): box.queue_free()
 
-    current_game_mode = GameMode.values()[randi() % GameMode.values().size()]
+    current_game_mode = GameMode.INFECTION_TAG#GameMode.values()[randi() % GameMode.values().size()]
 
 
 var infected: Array[Climber] = []
