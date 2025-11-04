@@ -1,4 +1,5 @@
 extends Node2D
+class_name Config
 
 const MAP_SCENE: PackedScene = preload("res://scenes/climb_map.tscn")
 
@@ -28,23 +29,16 @@ var n_climbers: int:
         n_climbers = value
         for map_instance in instantiated_maps:
             map_instance.n_climbers = n_climbers
-var round_duration: float:
-    set(value):
-        round_duration = value
-        for map_instance in instantiated_maps:
-            map_instance.round_duration = round_duration
 
-var random_range: float:
-    set(value):
-        random_range = value
-        for map_instance in instantiated_maps:
-            map_instance.random_range = random_range
+static var round_duration: float = 120.
 
-var speed_up: float:
-    set(value):
-        speed_up = value
-        for map_instance in instantiated_maps:
-            map_instance.speed_up = speed_up
+static var init_rand_mult: float = 0.0
+
+static var speed_up: float = 1.0
+static var infection_ratio: float = 0.2
+
+static var rand_incr: float = 0.01
+static var rand_cap: float = 1.50
 
 func _ready():
 
@@ -60,13 +54,18 @@ func _ready():
         
     if sync.args.has(&"round_duration"):
         round_duration = float(sync.args[&"round_duration"])
-    else:
-        round_duration = 60.
 
     if sync.args.has(&"random"):
-        random_range = float(sync.args[&"random"])
-    else:
-        random_range = 0.0
+        init_rand_mult = float(sync.args[&"random"])
+
+    if sync.args.has(&"infection_ratio"):
+        infection_ratio = float(sync.args[&"infection_ratio"])
+
+    if sync.args.has(&"rand_incr"):
+        rand_incr = float(sync.args[&"rand_incr"])
+
+    if sync.args.has(&"rand_cap"):
+        rand_cap = float(sync.args[&"rand_cap"])
 
     speed_up = sync.speed_up
 

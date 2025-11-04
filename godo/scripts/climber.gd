@@ -58,12 +58,12 @@ var role: Role = Role.CLIMBER:
             for part in body_parts:
                 part.modulate = Color.WHITE
 
-        if role == Role.CLIMBER:
-            for part in body_parts:
-                part.collision_layer = 0
-        else:
-            for part in body_parts:
-                part.collision_layer = 1
+        #if role == Role.CLIMBER:
+            #for part in body_parts:
+                #part.collision_layer = 0
+        #else:
+            #for part in body_parts:
+                #part.collision_layer = 1
 
         if role != Role.PREY:
             closest_infected_dist_vec = Vector2.ZERO

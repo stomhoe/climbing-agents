@@ -108,9 +108,15 @@ parser.add_argument(
 )
 parser.add_argument(
     "--n_climbers",
-    default=30,
+    default=10,
     type=int,
-    help="How many climbers to spawn in the environment.",
+    help="How many climbers to spawn per arena",
+)
+parser.add_argument(
+    "--n_arenas",
+    default=20,
+    type=int,
+    help="How many arenas to spawn in the environment.",
 )
 parser.add_argument(
     "--round_duration",
@@ -123,6 +129,25 @@ parser.add_argument(
     default=0.0,
     type=float,
     help="randomness range",
+)
+parser.add_argument(
+    "--infection_ratio",
+    default=0.2,
+    type=float,
+    help="Ratio of games that will be infection tag mode",
+)
+parser.add_argument(
+    "--rand_incr",
+    default=0.01,
+    type=float,
+    help="Randomness increment for each round",
+)
+
+parser.add_argument(
+    "--rand_cap",
+    default=1.00,
+    type=float,
+    help="Randomness increase cap",
 )
 
 args, extras = parser.parse_known_args()
@@ -180,7 +205,18 @@ elif args.env_path is not None and not os.path.isabs(args.env_path):
     args.env_path = os.path.join(script_dir, args.env_path)
 
 env = StableBaselinesGodotEnv(
-    env_path=args.env_path, show_window=args.viz, seed=args.seed, n_parallel=args.n_parallel, speedup=args.speedup, n_climbers=args.n_climbers, round_duration=args.round_duration, random=args.random, 
+    env_path=args.env_path,
+    show_window=args.viz,
+    seed=args.seed,
+    n_parallel=args.n_parallel,
+    speedup=args.speedup,
+    n_climbers=args.n_climbers,
+    round_duration=args.round_duration,
+    random=args.random,
+    n_arenas=args.n_arenas,
+    infection_ratio=args.infection_ratio,
+    rand_incr=args.rand_incr,
+    rand_cap=args.rand_cap,
 )
 env = VecMonitor(env)
 
