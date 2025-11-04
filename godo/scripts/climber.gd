@@ -42,13 +42,9 @@ class_name Climber
 }
 
 var map: ClimbMap
-
 var spawn_position: Vector2 = Vector2.ZERO
-
 var speed_up: float = 1.0
-
 var bitten_count: int = 0
-
 enum Role {CLIMBER, PREY, INFECTED}
 
 var role: Role = Role.CLIMBER:
@@ -71,7 +67,7 @@ var role: Role = Role.CLIMBER:
 @onready var ai_controller: AIClimbController = $AIController2D
 var target_angle: float:
     set(value):
-        #ai_controller.node_above.global_rotation = value + PI/2
+        ai_controller.node_above.global_rotation = value + PI/2
         target_angle = value
 
 var stagnation_timer: float = 0.0
@@ -105,7 +101,6 @@ func _at_least_one_grabbed() -> bool:
     return r_hand_grabber.is_attached() or l_hand_grabber.is_attached() or r_foot_grabber.is_attached() or l_foot_grabber.is_attached()
 
 # Control variables
-var control_strength: float = 2000.0
 
 func _ready():
     for joints_arr in joints.values():
@@ -147,15 +142,14 @@ func _process(delta: float):
                 min_dist = dist
                 closest_infected_dist_vec = (climber.get_pos() - get_pos())
 
-        ai_controller.reward = 6000. + min(min_dist, 2000.0)
+        ai_controller.reward = 8000. + min(min_dist, 2000.0)
     elif role == Role.INFECTED:
         for prey in map.non_infected:
             var dist: float = get_pos().distance_to(prey.get_pos())
             if dist < min_dist:
                 min_dist = dist
                 target_angle = (prey.get_pos() - get_pos()).angle()
-                closest_infected_dist_vec = (prey.get_pos() - get_pos())
-        ai_controller.reward = 3000. -min(min_dist, 2000.0) + bitten_count * 1500
+        ai_controller.reward = 1000. -min(min_dist, 2000.0) + bitten_count * 1500
     
     
 
@@ -163,6 +157,7 @@ func _process(delta: float):
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
 var swing_boost_strength: float = 4700.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
+var control_strength: float = 2000.0
 
 func _apply_muscle_forces(delta: float):
     if currently_controlled:

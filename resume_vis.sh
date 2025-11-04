@@ -12,7 +12,7 @@ EXPERIMENT_NAME="resvis-$(date +'%B%d-%H:%M')"
 
 python stable_baselines3_example.py \
     --viz \
-    --n_climbers=20 \
+    --n_climbers=5 \
     --round_duration=30 \
     --env_path=godo.x86_64 \
     --experiment_name="$EXPERIMENT_NAME" \

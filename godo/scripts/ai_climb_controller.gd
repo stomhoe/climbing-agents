@@ -7,7 +7,7 @@ class_name AIClimbController
 
 @onready var body_sensor: BodySensor = $NodeAbove/RaycastBody
 @onready var label: Label = $"../Label2/Label"
-@onready var raycast_ahead: BodySensor = $NodeAbove/RaycastAhead
+#@onready var raycast_ahead: BodySensor = $NodeAbove/RaycastAhead
 
 
 func _process(_delta: float):
@@ -42,7 +42,6 @@ func get_obs() -> Dictionary:
     obs.append(climber.get_pos().x / POS_DIV)
     obs.append(climber.get_pos().y / POS_DIV)
     obs.append_array(body_sensor.get_raycasts())
-    obs.append_array(raycast_ahead.get_raycasts())
 
     return {"obs":obs}
 
@@ -74,10 +73,9 @@ func get_action_space() -> Dictionary:
         "left_foot_grab_on_contact": {"size": 1, "action_type": "discrete"},
         "right_foot_grab_on_contact": {"size": 1, "action_type": "discrete"},
 
-        "raycast_pos": {"size": 2, "action_type": "continuous"},
     }
     
-var rotor_speed: float = 40
+var rotor_speed: float = 30
 
 func set_action(action: Dictionary) -> void:	
     
@@ -109,7 +107,6 @@ func set_action(action: Dictionary) -> void:
     climber.l_upperarm.joint.motor_target_velocity = action[&"l_elbow"][0]*rotor_speed
     climber.r_upperarm.joint.motor_target_velocity = action[&"r_elbow"][0]*rotor_speed
 
-    raycast_ahead.position = Vector2(action[&"raycast_pos"][0], action[&"raycast_pos"][1]) * 150.0
     var new_controlled: Grabber = (climber.joints.keys())[grabber_i]
     climber.currently_controlled = new_controlled
         

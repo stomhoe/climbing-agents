@@ -30,9 +30,10 @@ zoom = Vector2(2, 2)
 script = ExtResource("5_4oapl")
 
 [node name="Label" type="Label" parent="Camera2D"]
-offset_top = 160.0
-offset_right = 40.0
-offset_bottom = 183.0
+offset_left = -279.0
+offset_top = -159.0
+offset_right = -199.0
+offset_bottom = -136.0
 
 [node name="Boxes" type="Node2D" parent="."]
 

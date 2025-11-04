@@ -26,3 +26,14 @@ debug_color = Color(4.1392445e-06, 0.64874595, 0.18077826, 0.41960785)
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 mesh = SubResource("SphereMesh_mphqt")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+enabled = false
+
+[node name="RayCast2D2" type="RayCast2D" parent="."]
+rotation = 1.5707964
+enabled = false
+
+[node name="RayCast2D3" type="RayCast2D" parent="."]
+rotation = 3.1415927
+enabled = false

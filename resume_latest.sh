@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 source "venv/bin/activate"
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <resume_model_path>"
-    exit 1
-fi
-
-RESUME_PATH=$1
+RESUME_PATH=$(find logs -name "*.zip" -print0 | xargs -0 ls -lt | head -n 1 | awk '{print $9}')
 
 # Generate experiment name based on the current date and time
 EXPERIMENT_NAME="$(date +'%B%d-%H:%M')"

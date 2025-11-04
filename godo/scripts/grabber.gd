@@ -50,7 +50,7 @@ func _on_grab_area_body_entered(body: Node):
         mesh_instance_2d.modulate = Color.GREEN
     else:
 
-        if body is BodyPart  and climber.role == Climber.Role.INFECTED and body.climber.role == Climber.Role.PREY and !climber.map.grace_active:
+        if body is BodyPart  and climber.role == Climber.Role.INFECTED and body.climber.role == Climber.Role.PREY and not climber.map.grace_active:
             body.climber.role = Climber.Role.INFECTED
             climber.bitten_count += 1
             

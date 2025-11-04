@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://du810krjernvh"]
+[gd_scene load_steps=17 format=3 uid="uid://du810krjernvh"]
 
 [ext_resource type="Script" uid="uid://csywm5ogyueew" path="res://scripts/climber.gd" id="1_7e176"]
 [ext_resource type="Shape2D" uid="uid://cr7ppqcms2hw4" path="res://colliders/body.tres" id="2_ygfqx"]
@@ -8,7 +8,6 @@
 [ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="5_nwbdq"]
 [ext_resource type="Script" uid="uid://n04gwns6q2lp" path="res://scripts/ai_climb_controller.gd" id="7_7aipt"]
 [ext_resource type="Script" uid="uid://bi0dbi4mseps2" path="res://scripts/body_sensor.gd" id="8_7aipt"]
-[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="9_7aipt"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kce74"]
 
@@ -46,14 +45,14 @@ position = Vector2(-28.65, -9)
 
 [node name="RightHand" parent="." instance=ExtResource("5_3nhoh")]
 position = Vector2(28.65, -9)
+rotation = 3.1415927
 
 [node name="LeftFoot" parent="." instance=ExtResource("5_3nhoh")]
 position = Vector2(-6.0000005, 26.615)
-rotation = 1.5707964
 
 [node name="RightFoot" parent="." instance=ExtResource("5_3nhoh")]
 position = Vector2(5.9999995, 26.615)
-rotation = 1.5707964
+rotation = 3.1415927
 
 [node name="Torso" type="RigidBody2D" parent="."]
 mass = 8.0
@@ -195,11 +194,11 @@ rotation = 1.5707964
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rcalf"]
-shape = SubResource("RectangleShape2D_emysf")
-
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Rcalf"]
 mesh = SubResource("BoxMesh_7aipt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rcalf"]
+shape = SubResource("RectangleShape2D_emysf")
 
 [node name="RemoteTransform2D2" type="RemoteTransform2D" parent="Rcalf"]
 position = Vector2(7, 0)
@@ -215,19 +214,6 @@ rotation = -1.5707964
 script = ExtResource("8_7aipt")
 ray_length = 300
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="RaycastAhead" type="Node2D" parent="AIController2D/NodeAbove"]
-rotation = -1.5707964
-script = ExtResource("8_7aipt")
-ray_length = 300
-metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="Sprite2D" type="Sprite2D" parent="AIController2D/NodeAbove/RaycastAhead"]
-visible = false
-position = Vector2(-68, -6.7870715e-06)
-rotation = 1.5707964
-scale = Vector2(0.1171875, 0.15625)
-texture = ExtResource("9_7aipt")
 
 [node name="Label2" type="Node2D" parent="."]
 
