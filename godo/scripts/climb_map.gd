@@ -28,8 +28,10 @@ var position_tolerance: float = 15.0   # Distance tolerance for considering "sam
             climbers_node.add_child(climber)
             climber.set_pos(get_parent().global_position)
             climber.name = "Climber_%d" % i  # Set a numbered name for each climber
+            climber.int_id = i
             climber.target_angle = reward_angle
             climber.map = self
+            climber.torso.modulate = Color(randf(), randf(), randf())
             climbers.append(climber)
             climber_positions.append(climber.get_pos())
         
@@ -191,7 +193,7 @@ func _process(delta: float):
                 climber.stagnation_timer = 0.0
                 climber_positions[i] = current_pos
 
-            climber.ai_controller.reward = get_dist_reward(climber)
+            climber.ai_controller.reward = 300. + get_dist_reward(climber) + climber.accumulated_reward_from_making_others_fall - climber.accumulated_punishment_from_getting_fallen
 
             if !climber_highest_reward or climber.ai_controller.reward > climber_highest_reward.ai_controller.reward:
                 climber_highest_reward = climber

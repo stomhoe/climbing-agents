@@ -5,12 +5,14 @@ class_name AIClimbController
 @onready var node_above: Node2D = $NodeAbove
 
 @onready var body_sensor: BodySensor = $NodeAbove/RaycastBody
-@onready var label: Label = $"../Label2/Label"
+@onready var reward_label: Label = $"../Labels/Label"
+@onready var id_label: Label = $"../Labels/id_Label"
 #@onready var raycast_ahead: BodySensor = $NodeAbove/RaycastAhead
 
 
 func _process(_delta: float):
-    label.text = str(int(reward))
+    reward_label.text = str(int(reward))
+    id_label.text = str(int(climber.int_id))
 
 const POS_DIV: float = 2000.0
 
@@ -59,12 +61,10 @@ func get_action_space() -> Dictionary:
          "r_knee": {"size": 1, "action_type": "continuous"},
          "l_elbow": {"size": 1, "action_type": "continuous"},
          "r_elbow": {"size": 1, "action_type": "continuous"},
-
-        #"lock_l_arm": {"size": 1, "action_type": "discrete"},
-        #"lock_r_arm": {"size": 1, "action_type": "discrete"},
-        #"lock_l_leg": {"size": 1, "action_type": "discrete"},
-        #"lock_r_leg": {"size": 1, "action_type": "discrete"},
-
+        # "lock_l_arm": {"size": 1, "action_type": "discrete"},
+        # "lock_r_arm": {"size": 1, "action_type": "discrete"},
+        # "lock_l_leg": {"size": 1, "action_type": "discrete"},
+        # "lock_r_leg": {"size": 1, "action_type": "discrete"},
         "left_hand_grab_on_contact": {"size": 1, "action_type": "discrete"},
         "right_hand_grab_on_contact": {"size": 1, "action_type": "discrete"},
         "left_foot_grab_on_contact": {"size": 1, "action_type": "discrete"},
@@ -85,15 +85,20 @@ func set_action(action: Dictionary) -> void:
     climber.r_hand_grabber.grab_on_contact = action[&"right_hand_grab_on_contact"]
     climber.l_foot_grabber.grab_on_contact = action[&"left_foot_grab_on_contact"]
     climber.r_foot_grabber.grab_on_contact = action[&"right_foot_grab_on_contact"]
-
-    #for joint in climber.joints[climber.r_hand_grabber]:
-        #joint.angular_limit_enabled = action[&"lock_r_arm"] as bool
-    #for joint in climber.joints[climber.l_hand_grabber]:
-        #joint.angular_limit_enabled = action[&"lock_l_arm"] as bool
-    #for joint in climber.joints[climber.r_foot_grabber]:
-        #joint.angular_limit_enabled = action[&"lock_r_leg"] as bool
-    #for joint in climber.joints[climber.l_foot_grabber]:
-        #joint.angular_limit_enabled = action[&"lock_l_leg"] as bool
+    '''
+    for joint in climber.joints[climber.r_hand_grabber]:
+        joint.angular_limit_enabled = action[&"lock_r_arm"] as bool
+        joint.motor_enabled = not action[&"lock_r_arm"] as bool
+    for joint in climber.joints[climber.l_hand_grabber]:
+        joint.angular_limit_enabled = action[&"lock_l_arm"] as bool
+        joint.motor_enabled = not action[&"lock_l_arm"] as bool
+    for joint in climber.joints[climber.r_foot_grabber]:
+        joint.angular_limit_enabled = action[&"lock_r_leg"] as bool
+        joint.motor_enabled = not action[&"lock_r_leg"] as bool
+    for joint in climber.joints[climber.l_foot_grabber]:
+        joint.angular_limit_enabled = action[&"lock_l_leg"] as bool
+        joint.motor_enabled = not action[&"lock_l_leg"] as bool
+    '''
 
     climber.l_shoulder.motor_target_velocity = action[&"l_shoulder"][0]*rotor_speed
     climber.r_shoulder.motor_target_velocity = action[&"r_shoulder"][0]*rotor_speed

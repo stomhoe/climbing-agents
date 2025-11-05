@@ -149,6 +149,12 @@ parser.add_argument(
     type=float,
     help="Randomness increase cap",
 )
+parser.add_argument(
+    "--pvp",
+    default=False,
+    type=int,
+    help="If set, enables player vs player mode",
+)
 
 args, extras = parser.parse_known_args()
 
@@ -217,6 +223,7 @@ env = StableBaselinesGodotEnv(
     infection_ratio=args.infection_ratio,
     rand_incr=args.rand_incr,
     rand_cap=args.rand_cap,
+    pvp=args.pvp,
 )
 env = VecMonitor(env)
 

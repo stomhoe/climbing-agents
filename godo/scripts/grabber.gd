@@ -7,6 +7,8 @@ class_name Grabber
 @onready var mesh_instance_2d: MeshInstance2D = $MeshInstance2D
 @onready var climber: Climber = get_parent()
 
+var grabbing_climber: Climber = null
+
 var raycasts: Array[RayCast2D]
 
 var is_currently_controlled: bool = false:
@@ -41,29 +43,40 @@ func release():
     mesh_instance_2d.modulate = Color.GRAY
     joint.node_b = NodePath("")
     grabbing_static = false
+    if grabbing_climber != null:
+        grabbing_climber.grabbed_by.erase(climber)
+    grabbing_climber = null
 
 
-func _on_grab_area_body_entered(body: Node):
+func _on_grab_area_body_entered(other: Node):
     if is_currently_controlled:
         return
     if joint.node_b != NodePath(""):
         return
-    if body is BodyPart and body.get_parent() == climber:
+    if other is BodyPart and other.get_parent() == climber:
         return
 
-    if body is StaticBody2D:
+    if other is StaticBody2D:
         joint.node_a = climber.corresponding_body_part[self].get_path()#DEJAR ACÁ
-        joint.node_b = body.get_path()
+        joint.node_b = other.get_path()
         mesh_instance_2d.modulate = Color.GREEN
         grabbing_static = true
     else:
         grabbing_static = false
-        joint.node_b = body.get_path()
+        joint.node_b = other.get_path()
+        mesh_instance_2d.modulate = Color.CYAN
 
-        if body is BodyPart  and climber.role == Climber.Role.INFECTED and body.climber.role == Climber.Role.SURVIVOR and not climber.map.grace_active:
-            body.climber.role = Climber.Role.INFECTED
-            climber.bitten_count += 1
+        if other is BodyPart:
+            grabbing_climber = (other as BodyPart).get_parent()
+
+
+            if climber.role == Climber.Role.INFECTED and other.climber.role == Climber.Role.SURVIVOR and not climber.map.grace_active:
+                other.climber.role = Climber.Role.INFECTED
+                climber.bitten_count += 1
+            elif climber.role == Climber.Role.CLIMBER:
+                other.climber.last_toucher = climber
+                
 
 func _on_hold_area_body_exited(body: Node2D):
-    if body.get_path() == joint.node_b:
+    if body.get_path() == joint.node_b and not climber.grabbed_by.is_empty():
         release()

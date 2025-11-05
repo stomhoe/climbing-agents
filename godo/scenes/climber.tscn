@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://du810krjernvh"]
+[gd_scene load_steps=18 format=3 uid="uid://du810krjernvh"]
 
 [ext_resource type="Script" uid="uid://csywm5ogyueew" path="res://scripts/climber.gd" id="1_7e176"]
 [ext_resource type="Shape2D" uid="uid://cr7ppqcms2hw4" path="res://colliders/body.tres" id="2_ygfqx"]
@@ -8,6 +8,15 @@
 [ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="5_nwbdq"]
 [ext_resource type="Script" uid="uid://n04gwns6q2lp" path="res://scripts/ai_climb_controller.gd" id="7_7aipt"]
 [ext_resource type="Script" uid="uid://bi0dbi4mseps2" path="res://scripts/body_sensor.gd" id="8_7aipt"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_7aipt"]
+outline_size = 8
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_kce74"]
+font_size = 18
+outline_size = 12
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kce74"]
 
@@ -33,12 +42,33 @@ size = Vector3(10, 3, 1)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_emysf"]
 size = Vector2(9, 3)
 
-[sub_resource type="LabelSettings" id="LabelSettings_7aipt"]
-outline_size = 8
-outline_color = Color(0, 0, 0, 1)
-
 [node name="Climber" type="Node2D"]
 script = ExtResource("1_7e176")
+
+[node name="Labels" type="Node2D" parent="."]
+
+[node name="Label" type="Label" parent="Labels"]
+offset_left = -10.0
+offset_top = -29.0
+offset_right = 30.0
+offset_bottom = -6.0
+scale = Vector2(0.5, 0.5)
+theme_override_font_sizes/font_size = 20
+label_settings = SubResource("LabelSettings_7aipt")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="id_Label" type="Label" parent="Labels"]
+z_index = 3
+offset_left = -10.0
+offset_top = -6.0
+offset_right = 30.0
+offset_bottom = 17.0
+scale = Vector2(0.5, 0.5)
+theme_override_colors/font_color = Color(0, 0.74454325, 0.0040331646, 1)
+theme_override_font_sizes/font_size = 20
+label_settings = SubResource("LabelSettings_kce74")
+horizontal_alignment = 1
 
 [node name="LeftHand" parent="." instance=ExtResource("5_3nhoh")]
 position = Vector2(-28.65, -9)
@@ -111,7 +141,7 @@ position = Vector2(0, -14.925)
 mesh = SubResource("CapsuleMesh_qjkbj")
 
 [node name="LabelRemoteTransform" type="RemoteTransform2D" parent="Torso"]
-remote_path = NodePath("../../Label2")
+remote_path = NodePath("../../Labels")
 update_rotation = false
 update_scale = false
 
@@ -219,14 +249,3 @@ rotation = -1.5707964
 script = ExtResource("8_7aipt")
 ray_length = 300
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="Label2" type="Node2D" parent="."]
-
-[node name="Label" type="Label" parent="Label2"]
-offset_left = -10.0
-offset_top = -29.0
-offset_right = 30.0
-offset_bottom = -6.0
-scale = Vector2(0.5, 0.5)
-theme_override_font_sizes/font_size = 20
-label_settings = SubResource("LabelSettings_7aipt")

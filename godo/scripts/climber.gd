@@ -41,6 +41,32 @@ class_name Climber
     l_foot_grabber: l_calf
 }
 
+var int_id: int = -1
+
+var accumulated_reward_from_making_others_fall: float = 0.0
+var accumulated_punishment_from_getting_fallen: float = 0.0
+var grabbed_by: Array[Climber] = []
+
+var last_toucher: Climber = null:
+    set(value):
+        rem_fallassist_timer = ASSIST_TIME_RESET
+        if last_toucher != null:
+            var fall_dist = min(max(victim_height_when_touched - map.get_dist_reward(self), 0), 200.)
+
+            if fall_dist > 40.0 and Config.pvp_on_round >= 0 and map.current_round >= Config.pvp_on_round:
+                last_toucher.accumulated_reward_from_making_others_fall += fall_dist
+                self.accumulated_punishment_from_getting_fallen += fall_dist * 1.3
+
+        if value != null:
+            victim_height_when_touched = map.get_dist_reward(self)
+            if not grabbed_by.has(value):
+                grabbed_by.append(value)
+        last_toucher = value
+
+var victim_height_when_touched: float = 0
+const ASSIST_TIME_RESET: float = 4.0 
+var rem_fallassist_timer: float = 0.0
+
 var map: ClimbMap
 var spawn_position: Vector2 = Vector2.ZERO
 var bitten_count: int = 0
@@ -52,10 +78,12 @@ var role: Role = Role.CLIMBER:
         if role == Role.INFECTED:
             map.add_new_infected(self)
             for part: BodyPart in body_parts:
-                part.modulate = Color.GREEN
+                if part != torso:
+                    part.modulate = Color.GREEN
         else:
             for part in body_parts:
-                part.modulate = Color.WHITE
+                if part != torso:
+                    part.modulate = Color.WHITE
 
         #if role == Role.CLIMBER:
             #for part in body_parts:
@@ -82,6 +110,9 @@ func reset(punish: bool = false):
     if punish and ai_controller.reward > 0.0:
         ai_controller.reward *= 0.5
     ai_controller.reset()
+    accumulated_reward_from_making_others_fall = 0.0
+    accumulated_punishment_from_getting_fallen = 0.0
+    last_toucher = null
     _release_all_grabs()
     stagnation_timer = 0.0
     nullify_velocity()
@@ -97,23 +128,19 @@ func nullify_velocity() -> void:
         body_part.linear_velocity = Vector2.ZERO
         body_part.angular_velocity = 0.0
 
-func set_pos(pos: Vector2) -> void: for body_part in body_parts: body_part.global_position = pos
-
+func set_pos(pos: Vector2) -> void: for body_part in body_parts: body_part.global_position = pos; grabbed_by.clear()
 func get_pos() -> Vector2: return torso.global_position
 
-
-func _at_least_one_grabbed() -> bool:
+func _at_least_one_attached_to_wall() -> bool:
     return r_hand_grabber.is_attached_to_wall() or l_hand_grabber.is_attached_to_wall() or r_foot_grabber.is_attached_to_wall() or l_foot_grabber.is_attached_to_wall()
-
-# Control variables
 
 func _ready():
     for joints_arr in joints.values():
         for joint: PinJoint2D in joints_arr:
             joint.motor_enabled = true
             joint.angular_limit_enabled = false
-            joint.angular_limit_lower = deg_to_rad(-1)
-            joint.angular_limit_upper = deg_to_rad(1)
+            # joint.angular_limit_lower = deg_to_rad(-5)
+            # joint.angular_limit_upper = deg_to_rad(5)
 
     for part in body_parts:
         for part2 in body_parts:
@@ -139,6 +166,7 @@ var closest_infected_dist_vec: Vector2 = Vector2.ZERO
 
 func _process(delta: float):
     delta *= Config.speed_up
+    
 
     var min_dist: float = INF
     if role == Role.SURVIVOR:
@@ -156,7 +184,12 @@ func _process(delta: float):
                 min_dist = dist
                 target_angle = (prey.get_pos() - get_pos()).angle()
         ai_controller.reward = 1000. -min(min_dist, 2000.0) + bitten_count * 1500
-    
+    else:
+        if last_toucher != null:
+            rem_fallassist_timer -= delta
+            if rem_fallassist_timer <= 0.0:
+                last_toucher = null
+            
     
 
 
@@ -172,7 +205,7 @@ func _apply_muscle_forces(delta: float):
         var final_strength: float = control_strength
         
         # Apply swing boost if within the boost timead
-        if _at_least_one_grabbed():
+        if _at_least_one_attached_to_wall():
             if swing_timer > 0.0:
                 final_strength += swing_boost_strength * swing_boost_time
                 swing_timer -= delta

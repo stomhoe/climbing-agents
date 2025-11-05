@@ -37,6 +37,8 @@ static var infection_ratio: float = 0.0
 static var rand_incr: float = 0.01
 static var rand_cap: float = 1.50
 
+static var pvp_on_round: int = -1
+
 func _ready():
 
     if sync.args.has(&"n_arenas"):
@@ -47,7 +49,7 @@ func _ready():
     if sync.args.has(&"n_climbers"):
         n_climbers = int(sync.args[&"n_climbers"])
     else:
-        n_climbers = 3
+        n_climbers = 4
         
     if sync.args.has(&"round_duration"):
         round_duration = float(sync.args[&"round_duration"])
@@ -63,6 +65,9 @@ func _ready():
 
     if sync.args.has(&"rand_cap"):
         rand_cap = float(sync.args[&"rand_cap"])
+
+    if sync.args.has(&"pvp"):
+        pvp_on_round = int(sync.args[&"pvp"])
 
     speed_up = sync.speed_up
 
