@@ -35,9 +35,11 @@ static var speed_up: float = 1.0
 static var infection_ratio: float = 1.0
 
 static var rand_incr: float = 0.01
-static var rand_cap: float = 1.50
+static var rand_cap: float = 1.0
 
 static var pvp_on_round: int = -1
+
+static var collision_enabled: bool = false
 
 func _ready():
 
@@ -68,6 +70,9 @@ func _ready():
 
     if sync.args.has(&"pvp"):
         pvp_on_round = int(sync.args[&"pvp"])
+
+    if sync.args.has(&"collision_enabled"):
+        collision_enabled = bool(sync.args[&"collision_enabled"])
 
     speed_up = sync.speed_up
 

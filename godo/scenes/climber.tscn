@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://du810krjernvh"]
+[gd_scene load_steps=19 format=3 uid="uid://du810krjernvh"]
 
 [ext_resource type="Script" uid="uid://csywm5ogyueew" path="res://scripts/climber.gd" id="1_7e176"]
 [ext_resource type="Shape2D" uid="uid://cr7ppqcms2hw4" path="res://colliders/body.tres" id="2_ygfqx"]
@@ -41,6 +41,8 @@ size = Vector3(10, 3, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_emysf"]
 size = Vector2(9, 3)
+
+[sub_resource type="SphereMesh" id="SphereMesh_kce74"]
 
 [node name="Climber" type="Node2D"]
 script = ExtResource("1_7e176")
@@ -86,7 +88,7 @@ rotation = 1.5707964
 
 [node name="Torso" type="RigidBody2D" parent="."]
 collision_layer = 3
-mass = 8.0
+mass = 4.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Torso"]
@@ -124,8 +126,13 @@ motor_enabled = true
 enabled = false
 zoom = Vector2(4, 4)
 
-[node name="RemoteTransform2D2" type="RemoteTransform2D" parent="Torso"]
+[node name="RemoteTransformRaycastHolder" type="RemoteTransform2D" parent="Torso"]
 remote_path = NodePath("../../AIController2D/NodeAbove")
+update_rotation = false
+update_scale = false
+
+[node name="RemoteTransformBodySensor" type="RemoteTransform2D" parent="Torso"]
+remote_path = NodePath("../../AIController2D/RaycastBody")
 update_rotation = false
 update_scale = false
 
@@ -149,12 +156,14 @@ update_scale = false
 position = Vector2(-6, 12.585)
 collision_layer = 3
 collision_mask = 1
+mass = 0.5
 next_limb = NodePath("../Lcalf")
 
 [node name="Rthigh" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
 position = Vector2(6, 12.585)
 collision_layer = 3
 collision_mask = 1
+mass = 0.5
 next_limb = NodePath("../Rcalf")
 
 [node name="Lupperarm" parent="." node_paths=PackedStringArray("next_limb") instance=ExtResource("4_7aipt")]
@@ -162,6 +171,7 @@ position = Vector2(-12, -9)
 rotation = -3.1415927
 collision_layer = 3
 collision_mask = 1
+mass = 0.5
 gravity_scale = 0.0
 next_limb = NodePath("../Lforearm")
 
@@ -170,12 +180,14 @@ position = Vector2(12, -9)
 rotation = 0.0
 collision_layer = 3
 collision_mask = 1
+mass = 0.5
 gravity_scale = 0.0
 next_limb = NodePath("../Rforearm")
 
 [node name="Lforearm" type="RigidBody2D" parent="."]
 position = Vector2(-21.65, -9)
 collision_layer = 3
+mass = 0.5
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -192,6 +204,7 @@ remote_path = NodePath("../../LeftHand")
 [node name="Rforearm" type="RigidBody2D" parent="."]
 position = Vector2(21.65, -9)
 collision_layer = 3
+mass = 0.5
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -209,6 +222,7 @@ remote_path = NodePath("../../RightHand")
 position = Vector2(-6, 19.615)
 rotation = 1.5707964
 collision_layer = 3
+mass = 0.5
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -226,6 +240,7 @@ remote_path = NodePath("../../LeftFoot")
 position = Vector2(6, 19.615)
 rotation = 1.5707964
 collision_layer = 3
+mass = 0.5
 gravity_scale = 0.0
 script = ExtResource("5_nwbdq")
 
@@ -242,10 +257,20 @@ remote_path = NodePath("../../RightFoot")
 [node name="AIController2D" type="Node2D" parent="." groups=["AGENT"]]
 script = ExtResource("7_7aipt")
 
-[node name="NodeAbove" type="Node2D" parent="AIController2D"]
-
-[node name="RaycastBody" type="Node2D" parent="AIController2D/NodeAbove"]
+[node name="RaycastBody" type="Node2D" parent="AIController2D"]
 rotation = -1.5707964
 script = ExtResource("8_7aipt")
 ray_length = 300
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
+
+[node name="NodeAbove" type="Node2D" parent="AIController2D"]
+
+[node name="RaycastAngled" type="Node2D" parent="AIController2D/NodeAbove"]
+position = Vector2(0, -80)
+rotation = -1.5707964
+script = ExtResource("8_7aipt")
+ray_length = 300
+metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="AIController2D/NodeAbove/RaycastAngled"]
+mesh = SubResource("SphereMesh_kce74")

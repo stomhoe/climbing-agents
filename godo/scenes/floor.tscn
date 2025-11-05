@@ -5,10 +5,10 @@ friction = 20.0
 rough = true
 
 [sub_resource type="BoxMesh" id="BoxMesh_00lvc"]
-size = Vector3(800, 1, 1)
+size = Vector3(400, 1, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qsneh"]
-size = Vector2(800, 40)
+size = Vector2(400, 40)
 
 [node name="Floor" type="StaticBody2D"]
 collision_layer = 5

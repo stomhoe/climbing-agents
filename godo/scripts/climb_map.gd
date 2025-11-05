@@ -41,6 +41,7 @@ signal climbers_initialized
 
 func _ready():
     reward_angle = -PI/2 #DEJARLO SETTEADO ACÁ
+    
 
 var climb_round_timer: float = -1
 
@@ -124,12 +125,30 @@ func _new_climb_round():
     climber_highest_reward = null
     reward_angle = -PI/2 + randf_range(-PI/2., PI/2.) * calc_rand_mult()
 
-    for climber in climbers:
+    for i in range(climbers.size()):
+        var climber = climbers[i]
         # Add randomness to climber spawn position
         var random_offset: Vector2 = Vector2(randf_range(-30.0, 30.0), randf_range(-30.0, 30.0))
-        climber.spawn_position = global_position + reward_vec * 40.0 + random_offset
+        # Try to find a spawn position that is not too close to other climbers
+        var spawn_position: Vector2 = global_position + reward_vec * 40.0
+        var max_attempts := 20
+        var min_distance := 40.0
+        var attempt := 0
+        while attempt < max_attempts and Config.collision_enabled:
+            spawn_position = global_position + reward_vec * 40.0 + random_offset
+            var too_close := false
+            for j in range(i):
+                if spawn_position.distance_to(climbers[j].get_pos()) < min_distance:
+                    too_close = true
+                    break
+            if not too_close:
+                break
+            random_offset = Vector2(randf_range(-30.0, 30.0), randf_range(-30.0, 30.0))
+            attempt += 1
+        climber.spawn_position = spawn_position
         climber.role = Climber.Role.CLIMBER
         climber.reset()
+
 
     floor.rotation = reward_angle + PI/2
 
@@ -234,6 +253,12 @@ func spawn_box() -> void:
         box.scale = Vector2(2.2, 2.2)
         spawn_position *= 1.6
         box.rotation = reward_angle
+        # Separate climbers from box if too close
+        for climber in climbers:
+            var climber_pos = climber.get_pos()
+            if spawn_position.distance_to(climber_pos) < 30.0:
+                var direction = (climber_pos - spawn_position).normalized()
+                climber.set_pos(spawn_position + direction * 30.0)
 
     box.position = spawn_position
 

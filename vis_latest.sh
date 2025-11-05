@@ -9,6 +9,7 @@ EXPERIMENT_NAME="resvis-$(date +'%B%d-%H:%M')"
 python stable_baselines3_example.py \
     --viz \
     --n_climbers=3 \
+    --collision_enabled=false \
     --round_duration=120 \
     --random=1.0 \
     --rand_incr=0.01 \

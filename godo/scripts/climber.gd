@@ -57,7 +57,7 @@ var last_toucher: Climber = null:
         if last_toucher != null:
             var fall_dist = min(max(victim_height_when_touched - map.get_dist_reward(self), 0), 200.)
 
-            if victim_height_when_touched > 60. and fall_dist > 30.0 and Config.pvp_on_round >= 0 and map.current_round >= Config.pvp_on_round:
+            if victim_height_when_touched > 100. and fall_dist > 40.0 and Config.pvp_on_round >= 0 and map.current_round >= Config.pvp_on_round:
                 last_toucher.accumulated_reward_from_making_others_fall += fall_dist
                 self.accumulated_punishment_from_getting_fallen += fall_dist
 
@@ -89,12 +89,13 @@ var role: Role = Role.CLIMBER:
                 if part != torso:
                     part.modulate = Color.WHITE
 
-        #if role == Role.CLIMBER:
-            #for part in body_parts:
-                #part.collision_layer = 0
-        #else:
-            #for part in body_parts:
-                #part.collision_layer = 1
+
+        if role == Role.CLIMBER:
+            for part in body_parts:
+                part.collision_layer = int(Config.collision_enabled)
+        # else:
+        #     for part in body_parts:
+        #         part.collision_layer = 1
 
         if role != Role.SURVIVOR:
             closest_infected_dist_vec = Vector2.ZERO
@@ -105,7 +106,7 @@ var role: Role = Role.CLIMBER:
 @onready var ai_controller: AIClimbController = $AIController2D
 var target_angle: float:
     set(value):
-        ai_controller.node_above.global_rotation = value + PI/2
+        #if value != TAU + 0.5: ai_controller.node_above.global_rotation = value + PI/2
         target_angle = value
 
 var stagnation_timer: float = 0.0

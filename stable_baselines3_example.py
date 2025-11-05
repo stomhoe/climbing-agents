@@ -153,7 +153,13 @@ parser.add_argument(
     "--pvp",
     default=10,
     type=int,
-    help="If set, enables player vs player mode on round number specified",
+    help="If set, enables player vs player rewards on round number specified",
+)
+parser.add_argument(
+    "--collision_enabled",
+    default=False,
+    type=bool,
+    help="If set, enables collision between climbers",
 )
 
 args, extras = parser.parse_known_args()
