@@ -86,7 +86,7 @@ func _new_infection_tag_round():
         floor = null
     enclosure = ENCLOSURE_SCENE.instantiate()
     self.add_child(enclosure)
-    rand_size_mult = randf_range(0.75, 1.5) * n_climbers / 10.0
+    rand_size_mult = n_climbers / 10.0
     enclosure.size = 500 * rand_size_mult
     climb_round_timer = _calc_round_duration()
 
