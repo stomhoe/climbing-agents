@@ -7,7 +7,7 @@ class_name Grabber
 @onready var mesh_instance_2d: MeshInstance2D = $MeshInstance2D
 @onready var climber: Climber = get_parent()
 
-var grabbing_climber: Climber = null
+var grabbed_climber: Climber = null
 
 var raycasts: Array[RayCast2D]
 
@@ -38,14 +38,21 @@ var grabbing_static: bool = false
 
 func is_attached_to_wall() -> bool: return grabbing_static
 
+func what_is_grabbing() -> float:
+    if grabbing_static:
+        return 1.0
+    elif grabbed_climber != null:
+        return 0.5
+    else:
+        return 0.0
 
 func release():
     mesh_instance_2d.modulate = Color.GRAY
     joint.node_b = NodePath("")
     grabbing_static = false
-    if grabbing_climber != null:
-        grabbing_climber.grabbed_by.erase(climber)
-    grabbing_climber = null
+    if grabbed_climber != null:
+        grabbed_climber.grabbed_by.erase(climber)
+        grabbed_climber = null
 
 
 func _on_grab_area_body_entered(other: Node):
@@ -67,7 +74,7 @@ func _on_grab_area_body_entered(other: Node):
         mesh_instance_2d.modulate = Color.CYAN
 
         if other is BodyPart:
-            grabbing_climber = (other as BodyPart).get_parent()
+            grabbed_climber = (other as BodyPart).get_parent()
 
 
             if climber.role == Climber.Role.INFECTED and other.climber.role == Climber.Role.SURVIVOR and not climber.map.grace_active:

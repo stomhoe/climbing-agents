@@ -12,7 +12,6 @@ class_name AIClimbController
 
 func _process(_delta: float):
     reward_label.text = str(int(reward))
-    id_label.text = str(int(climber.int_id))
 
 const POS_DIV: float = 2000.0
 
@@ -29,13 +28,14 @@ func get_obs() -> Dictionary:
     obs.append(climber.l_upperarm.global_rotation / TAU)
     obs.append(climber.r_upperarm.global_rotation / TAU)
     obs.append(climber.l_thigh.global_rotation / TAU)
+    obs.append(float(climber.grabbed_by.size()) / 4.0)
     obs.append(climber.r_thigh.global_rotation / TAU)
     obs.append(climber.l_calf.global_rotation / TAU)
     obs.append(climber.r_calf.global_rotation / TAU)
-    obs.append(float(climber.l_foot_grabber.is_attached_to_wall()))
-    obs.append(float(climber.r_foot_grabber.is_attached_to_wall()))
-    obs.append(float(climber.l_hand_grabber.is_attached_to_wall()))
-    obs.append(float(climber.r_hand_grabber.is_attached_to_wall()))
+    obs.append(float(climber.l_foot_grabber.what_is_grabbing()))
+    obs.append(float(climber.r_foot_grabber.what_is_grabbing()))
+    obs.append(float(climber.l_hand_grabber.what_is_grabbing()))
+    obs.append(float(climber.r_hand_grabber.what_is_grabbing()))
     obs.append(climber.closest_infected_dist_vec.x / (POS_DIV * 0.5))
     obs.append(climber.closest_infected_dist_vec.y / (POS_DIV * 0.5))
     obs.append(climber.get_pos().x / POS_DIV)

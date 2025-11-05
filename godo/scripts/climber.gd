@@ -41,7 +41,11 @@ class_name Climber
     l_foot_grabber: l_calf
 }
 
-var int_id: int = -1
+var int_id: int = -1:
+    set(value):
+        id_label.text = str(value)
+        int_id = value
+@onready var id_label: Label = $Labels/id_Label
 
 var accumulated_reward_from_making_others_fall: float = 0.0
 var accumulated_punishment_from_getting_fallen: float = 0.0
@@ -53,9 +57,9 @@ var last_toucher: Climber = null:
         if last_toucher != null:
             var fall_dist = min(max(victim_height_when_touched - map.get_dist_reward(self), 0), 200.)
 
-            if fall_dist > 40.0 and Config.pvp_on_round >= 0 and map.current_round >= Config.pvp_on_round:
+            if victim_height_when_touched > 60. and fall_dist > 30.0 and Config.pvp_on_round >= 0 and map.current_round >= Config.pvp_on_round:
                 last_toucher.accumulated_reward_from_making_others_fall += fall_dist
-                self.accumulated_punishment_from_getting_fallen += fall_dist * 1.3
+                self.accumulated_punishment_from_getting_fallen += fall_dist
 
         if value != null:
             victim_height_when_touched = map.get_dist_reward(self)
@@ -194,9 +198,9 @@ func _process(delta: float):
 
 
 var swing_boost_time: float = 1.5  # Duration of the swing boost in seconds
-var swing_boost_strength: float = 4700.0  # Additional strength during the swing boost
+var swing_boost_strength: float = 5000.0  # Additional strength during the swing boost
 var swing_timer: float = 0.0  # Timer to track the swing boost duration
-var control_strength: float = 2000.0
+var control_strength: float = 2300.0
 
 func _apply_muscle_forces(delta: float):
     if currently_controlled:
@@ -209,7 +213,7 @@ func _apply_muscle_forces(delta: float):
             if swing_timer > 0.0:
                 final_strength += swing_boost_strength * swing_boost_time
                 swing_timer -= delta
-            final_strength += 3000.
+            final_strength += 5000.
         
         limb.apply_force(force_direction * final_strength, currently_controlled.global_position - limb.global_position)
 

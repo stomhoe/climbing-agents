@@ -87,7 +87,7 @@ func _new_infection_tag_round():
     enclosure = ENCLOSURE_SCENE.instantiate()
     self.add_child(enclosure)
     rand_size_mult = randf_range(0.75, 1.5) * n_climbers / 10.0
-    enclosure.size = 1000 * rand_size_mult
+    enclosure.size = 500 * rand_size_mult
     climb_round_timer = _calc_round_duration()
 
     infected.clear(); non_infected.clear()
@@ -99,12 +99,12 @@ func _new_infection_tag_round():
             continue
 
         var climber: Climber = climbers[i]
-        climber.spawn_position = Vector2(randf_range(-enclosure.size+20, enclosure.size -20), enclosure.size - 20)
+        climber.spawn_position = global_position + Vector2(randf_range(-enclosure.size+20, enclosure.size -20), enclosure.size - 20)
         climber.role = Climber.Role.SURVIVOR
         climber.reset()
 
     grace_active = true
-    first_infected.spawn_position = Vector2(randf_range(-enclosure.size+20, enclosure.size -20), enclosure.size - 20)
+    first_infected.spawn_position = global_position + Vector2(randf_range(-enclosure.size+20, enclosure.size -20), enclosure.size - 20)
     first_infected.reset()
     first_infected.role = Climber.Role.INFECTED
 
@@ -126,7 +126,7 @@ func _new_climb_round():
 
     for climber in climbers:
         # Add randomness to climber spawn position
-        var random_offset = Vector2(randf_range(-30.0, 30.0), randf_range(-30.0, 30.0))
+        var random_offset: Vector2 = Vector2(randf_range(-30.0, 30.0), randf_range(-30.0, 30.0))
         climber.spawn_position = global_position + reward_vec * 40.0 + random_offset
         climber.role = Climber.Role.CLIMBER
         climber.reset()
@@ -144,6 +144,9 @@ var current_game_mode: GameMode:
             _new_climb_round()
             
 
+func infection_game_ended() -> bool:
+    return infected.size() == climbers.size() and climbers.size() > 1
+
 var grace_period: float = 3.0
 var grace_active: bool = true
 const OUT_OF_BOUNDS_THRESHOLD: float = 3000.0
@@ -151,7 +154,7 @@ func _process(delta: float):
     delta *= Config.speed_up
     climb_round_timer -= delta
 
-    if climb_round_timer < 0 or (current_game_mode == GameMode.INFECTION_TAG and infected.size() == climbers.size()):
+    if climb_round_timer < 0 or infection_game_ended():
         for survivor in non_infected:
             survivor.ai_controller.reward += 30000.0
         grace_active = true
@@ -210,8 +213,7 @@ var last_spawned_box: StaticBody2D = null
 
 func spawn_box() -> void:
     var box: StaticBody2D = BOX_SCENE.instantiate()
-    var spawn_position: Vector2 = Vector2.ZERO
-    spawn_position += 40 * reward_vec.normalized()
+    var spawn_position: Vector2 = 40 * reward_vec.normalized()
 
     if last_spawned_box != null:
       

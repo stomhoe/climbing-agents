@@ -32,7 +32,7 @@ static var round_duration: float = 120.
 static var init_rand_mult: float = 0.0
 
 static var speed_up: float = 1.0
-static var infection_ratio: float = 0.0
+static var infection_ratio: float = 1.0
 
 static var rand_incr: float = 0.01
 static var rand_cap: float = 1.50
@@ -44,12 +44,12 @@ func _ready():
     if sync.args.has(&"n_arenas"):
         n_arenas = int(sync.args[&"n_arenas"])
     else:
-        n_arenas = 10
+        n_arenas = 2
     
     if sync.args.has(&"n_climbers"):
         n_climbers = int(sync.args[&"n_climbers"])
     else:
-        n_climbers = 4
+        n_climbers = 15
         
     if sync.args.has(&"round_duration"):
         round_duration = float(sync.args[&"round_duration"])

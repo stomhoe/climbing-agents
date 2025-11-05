@@ -86,7 +86,7 @@ rotation = 1.5707964
 
 [node name="Torso" type="RigidBody2D" parent="."]
 collision_layer = 3
-mass = 4.0
+mass = 8.0
 script = ExtResource("5_nwbdq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Torso"]

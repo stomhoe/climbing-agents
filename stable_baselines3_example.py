@@ -151,9 +151,9 @@ parser.add_argument(
 )
 parser.add_argument(
     "--pvp",
-    default=False,
+    default=10,
     type=int,
-    help="If set, enables player vs player mode",
+    help="If set, enables player vs player mode on round number specified",
 )
 
 args, extras = parser.parse_known_args()
