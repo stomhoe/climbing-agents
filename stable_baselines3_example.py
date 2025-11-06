@@ -144,6 +144,13 @@ parser.add_argument(
 )
 
 parser.add_argument(
+    "--idle_timeout",
+    default=7.,
+    type=float,
+    help="Time in seconds before a climber is considered idle and reset",
+)
+
+parser.add_argument(
     "--rand_cap",
     default=1.00,
     type=float,
@@ -230,6 +237,8 @@ env = StableBaselinesGodotEnv(
     rand_incr=args.rand_incr,
     rand_cap=args.rand_cap,
     pvp=args.pvp,
+    collision_enabled=args.collision_enabled,
+    idle_timeout=args.idle_timeout,
 )
 env = VecMonitor(env)
 

@@ -207,7 +207,7 @@ func _process(delta: float):
 
             if distance_moved < position_tolerance:
                 climber.stagnation_timer += delta
-                if climber.stagnation_timer >= 10.0:
+                if climber.stagnation_timer >= Config.idle_timeout:
                     climber.reset(true)
                     continue
             else:

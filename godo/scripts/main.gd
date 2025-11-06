@@ -41,6 +41,8 @@ static var pvp_on_round: int = -1
 
 static var collision_enabled: bool = false
 
+static var idle_timeout: float = 7.0
+
 func _ready():
 
     if sync.args.has(&"n_arenas"):
@@ -73,6 +75,9 @@ func _ready():
 
     if sync.args.has(&"collision_enabled"):
         collision_enabled = bool(sync.args[&"collision_enabled"])
+
+    if sync.args.has(&"idle_timeout"):
+        idle_timeout = float(sync.args[&"idle_timeout"])
 
     speed_up = sync.speed_up
 

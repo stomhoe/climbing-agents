@@ -25,7 +25,7 @@ set_resume_arg() {
 
 if [ "$NEW_RUN" = false ]; then
     set_resume_arg
-    RANDOM_ARG="--random=1.0"
+    RANDOM_ARG="--random=1.5"
     RAND_INCR=""
     RAND_CAP=""
 else
@@ -38,20 +38,20 @@ EXPERIMENT_NAME="nocol$(date +'%B%d-%H:%M:%S')"
 
 while true; do
     python stable_baselines3_example.py \
-        --n_climbers=$([ "$VIZ" = "--viz" ] && echo 10 || echo 70) \
+        --n_climbers=$([ "$VIZ" = "--viz" ] && echo 5 || echo 70) \
         $RANDOM_ARG \
         $RAND_INCR \
         $RAND_CAP \
         --infection_ratio=0.0 \
-        --round_duration=$([ "$VIZ" = "--viz" ] && echo 30 || echo 300) \
+        --round_duration=$([ "$VIZ" = "--viz" ] && echo 30 || echo 160) \
         --n_arenas=1 \
         --pvp=0 \
         $COLLISION_ENABLED \
         $VIZ \
-        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 7) \
+        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 8) \
         --onnx_export_path=model.onnx \
         $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=10_000") \
-        --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \
+        --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 15) \
         --env_path=godo.x86_64 \
         --experiment_name="$EXPERIMENT_NAME" \
         --timesteps=100_000_000_000 \
