@@ -51,5 +51,5 @@ while true; do
 
     RESUME_PATH=$(find "$(pwd)/logs" -name "*.zip" -print0 | xargs -0 ls -lt | head -n 1 | awk '{print $9}')
     RESUME_ARG="--resume_model_path=$RESUME_PATH"
-    EXPERIMENT_NAME="infection$(date +'%B%d-%H:%M:%S')"
+    EXPERIMENT_NAME="pvp$(date +'%B%d-%H:%M:%S')"
 done
