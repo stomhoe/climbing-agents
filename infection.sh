@@ -26,7 +26,6 @@ else
     RAND_INCR="--rand_incr=0.01"
     RAND_CAP="--rand_cap=1"
 fi
-EXPERIMENT_NAME="infection$(date +'%B%d-%H:%M:%S')"
 
 while true; do
     python stable_baselines3_example.py \
@@ -51,4 +50,5 @@ while true; do
 
     RESUME_PATH=$(find "$(pwd)/logs" -name "*.zip" -print0 | xargs -0 ls -lt | head -n 1 | awk '{print $9}')
     RESUME_ARG="--resume_model_path=$RESUME_PATH"
+    EXPERIMENT_NAME="infection$(date +'%B%d-%H:%M:%S')"
 done
