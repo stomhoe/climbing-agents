@@ -29,7 +29,7 @@ var n_climbers: int:
 
 static var round_duration: float = 60.
 
-static var init_rand_mult: float = 0.0
+static var init_rand_mult: float = 1.0
 
 static var speed_up: float = 1.0
 static var infection_ratio: float = 0

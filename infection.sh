@@ -17,12 +17,12 @@ done
 if [ "$NEW_RUN" = false ]; then
     RESUME_PATH=$(find "$(pwd)/logs" -name "*.zip" -print0 | xargs -0 ls -lt | head -n 1 | awk '{print $9}')
     RESUME_ARG="--resume_model_path=$RESUME_PATH"
-    RANDOM="--random=1"
+    RANDOM_ARG="--random=1"
     RAND_INCR=""
     RAND_CAP=""
 else
     RESUME_ARG=""
-    RANDOM="--random=0"
+    RANDOM_ARG="--random=0"
     RAND_INCR="--rand_incr=0.01"
     RAND_CAP="--rand_cap=1"
 fi
@@ -30,7 +30,7 @@ fi
 while true; do
     python stable_baselines3_example.py \
         --n_climbers=5 \
-        $RANDOM \
+        $RANDOM_ARG \
         $RAND_INCR \
         $RAND_CAP \
         --infection_ratio=1.0 \
