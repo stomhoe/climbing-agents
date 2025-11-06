@@ -21,4 +21,4 @@ python stable_baselines3_example.py \
     --env_path=godo.x86_64 \
     --experiment_name="$EXPERIMENT_NAME" \
     --timesteps=100_000_000_000 \
-    --resume_model_path="$RESUME_PATH"
+    --resume_model_path="$RESUME_PATH"                                                                                                                                                                                                                                      

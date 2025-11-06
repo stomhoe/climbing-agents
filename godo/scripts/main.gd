@@ -27,12 +27,12 @@ var n_climbers: int:
         for map_instance in instantiated_maps:
             map_instance.n_climbers = n_climbers
 
-static var round_duration: float = 120.
+static var round_duration: float = 60.
 
 static var init_rand_mult: float = 0.0
 
 static var speed_up: float = 1.0
-static var infection_ratio: float = 1.0
+static var infection_ratio: float = 0
 
 static var rand_incr: float = 0.01
 static var rand_cap: float = 1.0
@@ -46,7 +46,7 @@ func _ready():
     if sync.args.has(&"n_arenas"):
         n_arenas = int(sync.args[&"n_arenas"])
     else:
-        n_arenas = 2
+        n_arenas = 1
     
     if sync.args.has(&"n_climbers"):
         n_climbers = int(sync.args[&"n_climbers"])

@@ -2,13 +2,12 @@ extends AIController2D
 class_name AIClimbController
 
 @onready var climber: Climber = $".."
-@onready var node_above: Node2D = $NodeAbove
 
 @onready var body_sensor: BodySensor = $RaycastBody
 @onready var reward_label: Label = $"../Labels/Label"
 @onready var id_label: Label = $"../Labels/id_Label"
-@onready var raycast_angled: BodySensor = $NodeAbove/RaycastAngled
 
+@onready var node_above: CornerSensors = $NodeAbove
 
 func _process(_delta: float):
     reward_label.text = str(int(reward))
@@ -41,7 +40,7 @@ func get_obs() -> Dictionary:
     obs.append(climber.get_pos().x / POS_DIV)
     obs.append(climber.get_pos().y / POS_DIV)
     obs.append_array(body_sensor.get_raycasts())
-    obs.append_array(raycast_angled.get_raycasts_static_only())
+    obs.append_array(node_above.get_all_static_raycasts())
 
     return {"obs":obs}
 
@@ -71,7 +70,7 @@ func get_action_space() -> Dictionary:
         "left_foot_grab_on_contact": {"size": 1, "action_type": "discrete"},
         "right_foot_grab_on_contact": {"size": 1, "action_type": "discrete"},
 
-        "node_above_angle": {"size": 1, "action_type": "continuous"},
+        #"node_above_angle": {"size": 1, "action_type": "continuous"},
 
     }
     
@@ -112,7 +111,7 @@ func set_action(action: Dictionary) -> void:
     climber.l_upperarm.joint.motor_target_velocity = action[&"l_elbow"][0]*rotor_speed
     climber.r_upperarm.joint.motor_target_velocity = action[&"r_elbow"][0]*rotor_speed
 
-    node_above.global_rotation = (action[&"node_above_angle"][0] * TAU) + PI/2
+    #node_above.global_rotation = (action[&"node_above_angle"][0] * TAU) + PI/2
 
     var new_controlled: Grabber = (climber.joints.keys())[grabber_i]
     climber.currently_controlled = new_controlled

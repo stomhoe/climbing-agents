@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://npu3np1aken3" path="res://scripts/body_part.gd" id="5_nwbdq"]
 [ext_resource type="Script" uid="uid://n04gwns6q2lp" path="res://scripts/ai_climb_controller.gd" id="7_7aipt"]
 [ext_resource type="Script" uid="uid://bi0dbi4mseps2" path="res://scripts/body_sensor.gd" id="8_7aipt"]
+[ext_resource type="Script" uid="uid://do4q02622brau" path="res://scripts/cornersensorsholder.gd" id="9_7aipt"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7aipt"]
 outline_size = 8
@@ -41,8 +42,6 @@ size = Vector3(10, 3, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_emysf"]
 size = Vector2(9, 3)
-
-[sub_resource type="SphereMesh" id="SphereMesh_kce74"]
 
 [node name="Climber" type="Node2D"]
 script = ExtResource("1_7e176")
@@ -264,13 +263,32 @@ ray_length = 300
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
 [node name="NodeAbove" type="Node2D" parent="AIController2D"]
+script = ExtResource("9_7aipt")
 
-[node name="RaycastAngled" type="Node2D" parent="AIController2D/NodeAbove"]
-position = Vector2(0, -80)
+[node name="RaycastCorner" type="Node2D" parent="AIController2D/NodeAbove"]
+position = Vector2(-80, -80)
 rotation = -1.5707964
 script = ExtResource("8_7aipt")
 ray_length = 300
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="AIController2D/NodeAbove/RaycastAngled"]
-mesh = SubResource("SphereMesh_kce74")
+[node name="RaycastCorner2" type="Node2D" parent="AIController2D/NodeAbove"]
+position = Vector2(80, -80)
+rotation = -1.5707964
+script = ExtResource("8_7aipt")
+ray_length = 300
+metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
+
+[node name="RaycastCorner3" type="Node2D" parent="AIController2D/NodeAbove"]
+position = Vector2(80, 80)
+rotation = -1.5707964
+script = ExtResource("8_7aipt")
+ray_length = 300
+metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
+
+[node name="RaycastCorner4" type="Node2D" parent="AIController2D/NodeAbove"]
+position = Vector2(-80, 80)
+rotation = -1.5707964
+script = ExtResource("8_7aipt")
+ray_length = 300
+metadata/_custom_type_script = "uid://c3ox4b85c5hd1"

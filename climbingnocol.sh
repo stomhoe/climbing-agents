@@ -29,7 +29,7 @@ fi
 EXPERIMENT_NAME="nocol$(date +'%B%d-%H:%M:%S')"
 
 python stable_baselines3_example.py \
-    --n_climbers=60 \
+    --n_climbers=$([ "$VIZ" = "--viz" ] && echo 10 || echo 70) \
     $RANDOM \
     $RAND_INCR \
     $RAND_CAP \
@@ -42,7 +42,7 @@ python stable_baselines3_example.py \
     --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 7) \
     --onnx_export_path=model.onnx \
     --save_checkpoint_frequency=200_000 \
-    --speedup=10 \
+    --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \
     --env_path=godo.x86_64 \
     --experiment_name="$EXPERIMENT_NAME" \
     --timesteps=100_000_000_000 \
