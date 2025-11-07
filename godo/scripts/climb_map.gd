@@ -239,13 +239,13 @@ func spawn_box() -> void:
       
         box.rotation = randf() * PI * 2 
         spawn_position += last_spawned_box.position
-        var min_distance: float = 35.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
+        var min_distance: float = 30.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
 
         var max_angle: float
-        if box_count < 10:
-            max_angle = PI/2
+        if box_count < 3:
+            max_angle = PI/3.
         else:
-            max_angle = PI
+            max_angle = PI/1.6
 
         var noisy_direction: Vector2 = reward_vec.rotated(randf_range(-max_angle, max_angle))
         var offset_length: float = min_distance + randf() * 40.0  # Add some randomness to distance
@@ -302,13 +302,13 @@ func get_dist_reward(climber: Climber) -> float:
     var base_angle_limit: float = deg_to_rad(75)
     var extra_strictness: float = clamp((distance_from_orig.length()) * 0.0004, 0.0, deg_to_rad(65))#ESTÁ EN RADIANES
     var angle_limit: float = base_angle_limit - extra_strictness
-    if mod_i % 1000 == 0:
-        print("Climber ID: %d, Distance from orig: %f, Extra strictness: %f°, Angle limit: %f°" % [
-            climber.int_id,
-            distance_from_orig.length(),
-            rad_to_deg(extra_strictness),
-            rad_to_deg(angle_limit)
-        ])
+    # if mod_i % 1000 == 0:
+    #     print("Climber ID: %d, Distance from orig: %f, Extra strictness: %f°, Angle limit: %f°" % [
+    #         climber.int_id,
+    #         distance_from_orig.length(),
+    #         rad_to_deg(extra_strictness),
+    #         rad_to_deg(angle_limit)
+    #     ])
     var angle_diff: float = abs(distance_from_orig.angle_to(reward_vec))
     if angle_diff > angle_limit:
         reward = -abs(reward)

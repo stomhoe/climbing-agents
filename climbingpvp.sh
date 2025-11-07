@@ -35,7 +35,7 @@ while true; do
         $RAND_INCR \
         $RAND_CAP \
         --infection_ratio=0.0 \
-        --round_duration=60 \
+        --round_duration=600 \
         --n_arenas=$([ "$VIZ" = "--viz" ] && echo 1 || echo 30) \
         --pvp=0 \
         --collision \

@@ -20,7 +20,7 @@ set_resume_arg() {
 
 if [ "$NEW_RUN" = false ]; then
     set_resume_arg
-    RANDOM_ARG="--random=1.5"
+    RANDOM_ARG="--random=1.7"
     RAND_INCR=""
     RAND_CAP=""
 else
@@ -33,16 +33,16 @@ EXPERIMENT_NAME="nocol$(date +'%B%d-%H:%M:%S')"
 
 while true; do
     python stable_baselines3_example.py \
-        --n_climbers=$([ "$VIZ" = "--viz" ] && echo 5 || echo 70) \
+        --n_climbers=$([ "$VIZ" = "--viz" ] && echo 5 || echo 22) \
         $RANDOM_ARG \
         $RAND_INCR \
         $RAND_CAP \
         --infection_ratio=0.0 \
-        --round_duration=$([ "$VIZ" = "--viz" ] && echo 30 || echo 40) \
-        --n_arenas=1 \
+        --round_duration=$([ "$VIZ" = "--viz" ] && echo 30 || echo 400) \
+        --n_arenas=3 \
         --pvp=0 \
         $VIZ \
-        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 8) \
+        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 7) \
         --onnx_export_path=model.onnx \
         $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=10_000") \
         --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \

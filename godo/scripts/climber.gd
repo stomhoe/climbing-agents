@@ -55,9 +55,9 @@ var last_toucher: Climber = null:
     set(value):
         rem_fallassist_timer = ASSIST_TIME_RESET
         if last_toucher != null:
-            var fall_dist = min(max(victim_height_when_touched - map.get_dist_reward(self), 0), 200.)
+            var fall_dist = min(max(victim_height_when_touched - map.get_dist_reward(self), 0) * 0.5, 100.)
 
-            if victim_height_when_touched > 100. and fall_dist > 40.0 and Config.pvp_on_round >= 0 and map.current_round >= Config.pvp_on_round:
+            if victim_height_when_touched > 300. and fall_dist > 60.0 and Config.pvp_on_round >= 0 and map.current_round >= Config.pvp_on_round:
                 last_toucher.accumulated_reward_from_making_others_fall += fall_dist
                 self.accumulated_punishment_from_getting_fallen += fall_dist
 
