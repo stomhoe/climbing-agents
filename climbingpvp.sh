@@ -34,6 +34,8 @@ set_exp_name() {
     EXPERIMENT_NAME="$([ "$VIZ" = "--viz" ] && echo "viz-")pvp$(date +'%B%d-%H:%M:%S')"
 }
 
+set_exp_name
+
 while true; do
     python stable_baselines3_example.py \
         --n_climbers=2 \
@@ -46,10 +48,10 @@ while true; do
         --pvp=0 \
         --collision \
         $VIZ \
-        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 7) \
+        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 6) \
         --onnx_export_path=model.onnx \
         $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=100_000") \
-        --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \
+        --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 6) \
         --env_path=godo.x86_64 \
         --experiment_name="$EXPERIMENT_NAME" \
         --timesteps=100_000_000_000 \

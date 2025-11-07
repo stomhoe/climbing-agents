@@ -33,6 +33,7 @@ fi
 set_exp_name() {
     EXPERIMENT_NAME="$([ "$VIZ" = "--viz" ] && echo "viz-")infection$(date +'%B%d-%H:%M:%S')"
 }
+set_exp_name
 
 while true; do
     python stable_baselines3_example.py \
