@@ -229,18 +229,25 @@ func _process(delta: float):
 
 @onready var boxes: Node2D = $Boxes
 var last_spawned_box: StaticBody2D = null
-
+var box_count: int = 0
 func spawn_box() -> void:
     var box: StaticBody2D = BOX_SCENE.instantiate()
     var spawn_position: Vector2 = 40 * reward_vec.normalized()
+    box_count += 1
 
     if last_spawned_box != null:
       
         box.rotation = randf() * PI * 2 
         spawn_position += last_spawned_box.position
-        var min_distance: float = 40.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
+        var min_distance: float = 35.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
 
-        var noisy_direction: Vector2 = reward_vec.rotated(randf_range(-PI, PI))
+        var max_angle: float
+        if box_count < 10:
+            max_angle = PI/2
+        else:
+            max_angle = PI
+
+        var noisy_direction: Vector2 = reward_vec.rotated(randf_range(-max_angle, max_angle))
         var offset_length: float = min_distance + randf() * 40.0  # Add some randomness to distance
         var random_offset: Vector2 = noisy_direction * offset_length
 
@@ -251,14 +258,22 @@ func spawn_box() -> void:
 
     else:
         box.scale = Vector2(2.2, 2.2)
-        spawn_position *= 1.6
+        spawn_position *= 1.8
         box.rotation = reward_angle
         # Separate climbers from box if too close
         for climber in climbers:
             var climber_pos = climber.get_pos()
             if spawn_position.distance_to(climber_pos) < 30.0:
-                var direction = (climber_pos - spawn_position).normalized()
-                climber.set_pos(spawn_position + direction * 30.0)
+                var direction: Vector2 = (climber_pos - spawn_position).normalized()
+                var perp: Vector2 = direction.orthogonal().normalized()
+                var perp_2: Vector2 = -perp
+                # Pick the perp with the furthest angle from gravity vector
+                var gravity_vec: Vector2 = Vector2(cos(gravity_angle), sin(gravity_angle))
+                var angle1 = abs(perp.angle_to(gravity_vec))
+                var angle2 = abs(perp_2.angle_to(gravity_vec))
+                var chosen_perp: Vector2 = perp if angle1 > angle2 else perp_2
+                
+                climber.set_pos(spawn_position + chosen_perp * 30.0)
 
     box.position = spawn_position
 

@@ -30,13 +30,13 @@ EXPERIMENT_NAME="pvp$(date +'%B%d-%H:%M:%S')"
 
 while true; do
     python stable_baselines3_example.py \
-        --n_climbers=3 \
+        --n_climbers=2 \
         $RANDOM_ARG \
         $RAND_INCR \
         $RAND_CAP \
         --infection_ratio=0.0 \
         --round_duration=60 \
-        --n_arenas=20 \
+        --n_arenas=$([ "$VIZ" = "--viz" ] && echo 1 || echo 30) \
         --pvp=0 \
         --collision \
         $VIZ \
