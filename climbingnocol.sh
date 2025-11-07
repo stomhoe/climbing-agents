@@ -3,8 +3,6 @@ source "venv/bin/activate"
 
 NEW_RUN=false
 VIZ=""
-COLLISION_ENABLED="--collision_enabled=false"
-
 # Parse arguments
 for arg in "$@"; do
     if [ "$arg" = "n" ]; then
@@ -12,9 +10,6 @@ for arg in "$@"; do
     fi
     if [ "$arg" = "v" ]; then
         VIZ="--viz"
-    fi
-    if [ "$arg" = "c" ]; then
-        COLLISION_ENABLED="--collision_enabled=true"
     fi
 done
 
@@ -43,15 +38,14 @@ while true; do
         $RAND_INCR \
         $RAND_CAP \
         --infection_ratio=0.0 \
-        --round_duration=$([ "$VIZ" = "--viz" ] && echo 30 || echo 160) \
+        --round_duration=$([ "$VIZ" = "--viz" ] && echo 30 || echo 40) \
         --n_arenas=1 \
         --pvp=0 \
-        $COLLISION_ENABLED \
         $VIZ \
         --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 8) \
         --onnx_export_path=model.onnx \
         $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=10_000") \
-        --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 15) \
+        --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \
         --env_path=godo.x86_64 \
         --experiment_name="$EXPERIMENT_NAME" \
         --timesteps=100_000_000_000 \

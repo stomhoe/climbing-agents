@@ -37,7 +37,7 @@ while true; do
         --round_duration=180 \
         --n_arenas=3 \
         --pvp=0 \
-        --collision_enabled=false \
+        --collision=false \
         $VIZ \
         --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 7) \
         --onnx_export_path=model.onnx \

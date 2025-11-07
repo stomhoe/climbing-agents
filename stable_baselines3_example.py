@@ -163,9 +163,9 @@ parser.add_argument(
     help="If set, enables player vs player rewards on round number specified",
 )
 parser.add_argument(
-    "--collision_enabled",
+    "--collision",
+    action="store_true",
     default=False,
-    type=bool,
     help="If set, enables collision between climbers",
 )
 
@@ -237,7 +237,7 @@ env = StableBaselinesGodotEnv(
     rand_incr=args.rand_incr,
     rand_cap=args.rand_cap,
     pvp=args.pvp,
-    collision_enabled=args.collision_enabled,
+    collision=args.collision,
     idle_timeout=args.idle_timeout,
 )
 env = VecMonitor(env)

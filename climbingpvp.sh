@@ -17,7 +17,7 @@ done
 if [ "$NEW_RUN" = false ]; then
     RESUME_PATH=$(find "$(pwd)/logs" -name "*.zip" -print0 | xargs -0 ls -lt | head -n 1 | awk '{print $9}')
     RESUME_ARG="--resume_model_path=$RESUME_PATH"
-    RANDOM_ARG="--random=1"
+    RANDOM_ARG="--random=1.7"
     RAND_INCR=""
     RAND_CAP=""
 else
@@ -35,14 +35,14 @@ while true; do
         $RAND_INCR \
         $RAND_CAP \
         --infection_ratio=0.0 \
-        --round_duration=300 \
+        --round_duration=60 \
         --n_arenas=20 \
         --pvp=0 \
-        --collision_enabled=true \
+        --collision \
         $VIZ \
         --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 7) \
         --onnx_export_path=model.onnx \
-        $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=50_000") \
+        $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=10_000") \
         --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \
         --env_path=godo.x86_64 \
         --experiment_name="$EXPERIMENT_NAME" \

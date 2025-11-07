@@ -10,7 +10,7 @@ func get_raycasts() -> PackedFloat64Array:
         var ray: RayCast2D = rays[i]
         ray.enabled = true
 
-        if Config.collision_enabled:
+        if Config.collision:
             ray.collision_mask = 2; ray.force_raycast_update()
             var object: Object = ray.get_collider()
             var distance: float = _get_raycast_distance(ray)

@@ -17,7 +17,7 @@ var n_arenas: int:
             map_instance.name = "ClimbMap_%d" % i
             self.add_child(map_instance)
             instantiated_maps.append(map_instance)
-            var sep: float = 3000. if (sync.args.has("show_window") or not sync.args.has("env_path")) else 100000.
+            var sep: float = 3000. if (sync.args.has("show_window") and not sync.args.has("env_path")) else 100000.
             map_instance.position = Vector2( i * sep, 0)
             map_instance.climbers_initialized.connect(on_climbers_initialized)
 
@@ -39,7 +39,7 @@ static var rand_cap: float = 1.0
 
 static var pvp_on_round: int = -1
 
-static var collision_enabled: bool = false
+static var collision: bool = false
 
 static var idle_timeout: float = 7.0
 
@@ -60,6 +60,8 @@ func _ready():
 
     if sync.args.has(&"random"):
         init_rand_mult = float(sync.args[&"random"])
+        
+    print("random: %f.2" % init_rand_mult)
 
     if sync.args.has(&"infection_ratio"):
         infection_ratio = float(sync.args[&"infection_ratio"])
@@ -68,13 +70,12 @@ func _ready():
         rand_incr = float(sync.args[&"rand_incr"])
 
     if sync.args.has(&"rand_cap"):
-        rand_cap = float(sync.args[&"rand_cap"])
+        rand_cap = max(float(sync.args[&"rand_cap"]), init_rand_mult)
 
     if sync.args.has(&"pvp"):
         pvp_on_round = int(sync.args[&"pvp"])
 
-    if sync.args.has(&"collision_enabled"):
-        collision_enabled = bool(sync.args[&"collision_enabled"])
+    collision = sync.args.has(&"collision") and sync.args[&"collision"] == "True"
 
     if sync.args.has(&"idle_timeout"):
         idle_timeout = float(sync.args[&"idle_timeout"])

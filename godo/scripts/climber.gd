@@ -92,7 +92,7 @@ var role: Role = Role.CLIMBER:
 
         if role == Role.CLIMBER:
             for part in body_parts:
-                part.collision_layer = int(Config.collision_enabled)
+                part.collision_layer = int(Config.collision)
         # else:
         #     for part in body_parts:
         #         part.collision_layer = 1

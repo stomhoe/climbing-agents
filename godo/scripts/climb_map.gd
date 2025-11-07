@@ -134,7 +134,7 @@ func _new_climb_round():
         var max_attempts := 20
         var min_distance := 40.0
         var attempt := 0
-        while attempt < max_attempts and Config.collision_enabled:
+        while attempt < max_attempts and Config.collision:
             spawn_position = global_position + reward_vec * 40.0 + random_offset
             var too_close := false
             for j in range(i):
@@ -168,7 +168,7 @@ func infection_game_ended() -> bool:
 
 var grace_period: float = 3.0
 var grace_active: bool = true
-const OUT_OF_BOUNDS_THRESHOLD: float = 3000.0
+const OUT_OF_BOUNDS_THRESHOLD: float = -2000.0
 func _process(delta: float):
     delta *= Config.speed_up
     climb_round_timer -= delta
@@ -187,17 +187,17 @@ func _process(delta: float):
         for i in range(climbers.size()):
             var climber: Climber = climbers[i]
 
-            var projected_distance: float = get_dist_reward(climber) + OFFSET_DISTANCE
+            var dist_reward: float = get_dist_reward(climber)
 
-            # Out of bounds detection
-            var gravity_projection: float = (climber.get_pos() - global_position).dot(gravity_vec)
-            if gravity_projection > OUT_OF_BOUNDS_THRESHOLD:
+            var dist_from_origin: Vector2 = climber.get_pos() - global_position
+
+            if dist_reward < OUT_OF_BOUNDS_THRESHOLD:
                 climber.reset(true)
                 continue
 
-            const min_distance_threshold: float = 24.0
+            const min_distance_threshold: float = 27.0
 
-            if projected_distance > max_reached_distance + min_distance_threshold:
+            if dist_reward + OFFSET_DISTANCE > max_reached_distance + min_distance_threshold:
                 max_reached_distance += min_distance_threshold
                 spawn_box()  
 
@@ -238,9 +238,9 @@ func spawn_box() -> void:
       
         box.rotation = randf() * PI * 2 
         spawn_position += last_spawned_box.position
-        var min_distance: float = 10.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
+        var min_distance: float = 40.0 + (max_reached_distance * 0.005)  # Increase min distance based on progress
 
-        var noisy_direction: Vector2 = reward_vec.rotated(randf_range(-PI/1.6, PI/1.6))
+        var noisy_direction: Vector2 = reward_vec.rotated(randf_range(-PI, PI))
         var offset_length: float = min_distance + randf() * 40.0  # Add some randomness to distance
         var random_offset: Vector2 = noisy_direction * offset_length
 
@@ -279,9 +279,25 @@ var reward_angle: float:
 func add_new_infected(climber: Climber) -> void:
     infected.append(climber); non_infected.erase(climber)
 
+var mod_i: int = 0
 func get_dist_reward(climber: Climber) -> float:
-    var distance_reward_vec = climber.get_pos() - global_position
-    return distance_reward_vec.dot(reward_vec)
+    mod_i += 1
+    var distance_from_orig: Vector2 = climber.get_pos() - global_position
+    var reward: float = distance_from_orig.dot(reward_vec)
+    var base_angle_limit: float = deg_to_rad(75)
+    var extra_strictness: float = clamp((distance_from_orig.length()) * 0.0004, 0.0, deg_to_rad(65))#ESTÁ EN RADIANES
+    var angle_limit: float = base_angle_limit - extra_strictness
+    if mod_i % 1000 == 0:
+        print("Climber ID: %d, Distance from orig: %f, Extra strictness: %f°, Angle limit: %f°" % [
+            climber.int_id,
+            distance_from_orig.length(),
+            rad_to_deg(extra_strictness),
+            rad_to_deg(angle_limit)
+        ])
+    var angle_diff: float = abs(distance_from_orig.angle_to(reward_vec))
+    if angle_diff > angle_limit:
+        reward = -abs(reward)
+    return reward
 
 
     
