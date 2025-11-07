@@ -9,3 +9,5 @@ data_godo_linuxbsd_x86_64/
 *godo.sh
 *godo.pck
 *godo.x86_64
+model.zip
+model.onnx

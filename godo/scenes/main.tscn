@@ -12,6 +12,8 @@ script = ExtResource("1_0wfyh")
 
 [node name="Sync" type="Node" parent="."]
 script = ExtResource("3_sugp2")
+control_mode = 2
+onnx_model_path = "model.onnx"
 metadata/_custom_type_script = "uid://bgnch8w7tbswk"
 
 [node name="Camera2D" type="Camera2D" parent="."]

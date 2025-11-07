@@ -14,10 +14,14 @@ for arg in "$@"; do
     fi
 done
 
-if [ "$NEW_RUN" = false ]; then
+set_resume_arg() {
     RESUME_PATH=$(find "$(pwd)/logs" -name "*.zip" -print0 | xargs -0 ls -lt | head -n 1 | awk '{print $9}')
     RESUME_ARG="--resume_model_path=$RESUME_PATH"
-    RANDOM_ARG="--random=1.7"
+}
+
+if [ "$NEW_RUN" = false ]; then
+    set_resume_arg
+    RANDOM_ARG="--random=1.5"
     RAND_INCR=""
     RAND_CAP=""
 else
@@ -26,7 +30,9 @@ else
     RAND_INCR="--rand_incr=0.01"
     RAND_CAP="--rand_cap=1"
 fi
-EXPERIMENT_NAME="pvp$(date +'%B%d-%H:%M:%S')"
+set_exp_name() {
+    EXPERIMENT_NAME="$([ "$VIZ" = "--viz" ] && echo "viz-")pvp$(date +'%B%d-%H:%M:%S')"
+}
 
 while true; do
     python stable_baselines3_example.py \
@@ -42,14 +48,13 @@ while true; do
         $VIZ \
         --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 7) \
         --onnx_export_path=model.onnx \
-        $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=10_000") \
+        $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=100_000") \
         --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \
         --env_path=godo.x86_64 \
         --experiment_name="$EXPERIMENT_NAME" \
         --timesteps=100_000_000_000 \
         $RESUME_ARG
 
-    RESUME_PATH=$(find "$(pwd)/logs" -name "*.zip" -print0 | xargs -0 ls -lt | head -n 1 | awk '{print $9}')
-    RESUME_ARG="--resume_model_path=$RESUME_PATH"
-    EXPERIMENT_NAME="pvp$(date +'%B%d-%H:%M:%S')"
+    set_resume_arg
+    set_exp_name
 done
