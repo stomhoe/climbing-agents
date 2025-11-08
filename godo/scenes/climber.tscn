@@ -278,17 +278,3 @@ rotation = -1.5707964
 script = ExtResource("8_7aipt")
 ray_length = 300
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="RaycastCorner3" type="Node2D" parent="AIController2D/NodeAbove"]
-position = Vector2(80, 80)
-rotation = -1.5707964
-script = ExtResource("8_7aipt")
-ray_length = 300
-metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
-
-[node name="RaycastCorner4" type="Node2D" parent="AIController2D/NodeAbove"]
-position = Vector2(-80, 80)
-rotation = -1.5707964
-script = ExtResource("8_7aipt")
-ray_length = 300
-metadata/_custom_type_script = "uid://c3ox4b85c5hd1"

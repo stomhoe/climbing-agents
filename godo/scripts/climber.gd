@@ -106,7 +106,7 @@ var role: Role = Role.CLIMBER:
 @onready var ai_controller: AIClimbController = $AIController2D
 var target_angle: float:
     set(value):
-        #if value != TAU + 0.5: ai_controller.node_above.global_rotation = value + PI/2
+        if value != TAU + 0.5: ai_controller.node_above.global_rotation = value + PI/2
         target_angle = value
 
 var stagnation_timer: float = 0.0
