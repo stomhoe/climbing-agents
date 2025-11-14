@@ -35,8 +35,9 @@ func get_obs() -> Dictionary:
     obs.append(float(climber.l_hand_grabber.what_is_grabbing()))
     obs.append(float(climber.r_hand_grabber.what_is_grabbing()))
     #obs.append(climber.closest_infected_dist_vec.x / (POS_DIV * 0.5)); obs.append(climber.closest_infected_dist_vec.y / (POS_DIV * 0.5))
-    obs.append_array(body_sensor.get_raycasts())
-    obs.append_array(node_above.get_all_static_raycasts())
+    obs.append_array(body_sensor.accumulated_obs)
+    # obs.append_array(body_sensor.get_raycasts())
+    # obs.append_array(node_above.get_all_static_raycasts())
 
     return {"obs":obs}
 

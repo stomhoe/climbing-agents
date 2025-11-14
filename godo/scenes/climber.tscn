@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://du810krjernvh"]
+[gd_scene load_steps=20 format=3 uid="uid://du810krjernvh"]
 
 [ext_resource type="Script" uid="uid://csywm5ogyueew" path="res://scripts/climber.gd" id="1_7e176"]
 [ext_resource type="Shape2D" uid="uid://cr7ppqcms2hw4" path="res://colliders/body.tres" id="2_ygfqx"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://n04gwns6q2lp" path="res://scripts/ai_climb_controller.gd" id="7_7aipt"]
 [ext_resource type="Script" uid="uid://bi0dbi4mseps2" path="res://scripts/body_sensor.gd" id="8_7aipt"]
 [ext_resource type="Script" uid="uid://do4q02622brau" path="res://scripts/cornersensorsholder.gd" id="9_7aipt"]
+[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="10_qjkbj"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7aipt"]
 outline_size = 8
@@ -267,14 +268,21 @@ script = ExtResource("9_7aipt")
 
 [node name="RaycastCorner" type="Node2D" parent="AIController2D/NodeAbove"]
 position = Vector2(-80, -80)
-rotation = -1.5707964
 script = ExtResource("8_7aipt")
 ray_length = 300
+cone_width = 80.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
 [node name="RaycastCorner2" type="Node2D" parent="AIController2D/NodeAbove"]
 position = Vector2(80, -80)
-rotation = -1.5707964
+rotation = 3.1415927
 script = ExtResource("8_7aipt")
 ray_length = 300
+cone_width = 80.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
+
+[node name="Sprite2D" type="Sprite2D" parent="AIController2D/NodeAbove"]
+visible = false
+position = Vector2(0, -100)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("10_qjkbj")
