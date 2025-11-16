@@ -23,43 +23,43 @@ class_name PositionSensor2D
 
 
 func _ready() -> void:
-	if debug_lines:
-		line = Line2D.new()
-		add_child(line)
-		line.width = 1
-		line.default_color = debug_color
+    if debug_lines:
+        line = Line2D.new()
+        add_child(line)
+        line.width = 1
+        line.default_color = debug_color
 
 func get_observation():
-	var observations: Array[float]
+    var observations: Array[float]
 
-	if debug_lines:
-		line.clear_points()
+    if debug_lines:
+        line.clear_points()
 
-	for obj in objects_to_observe:
-		var relative_position := Vector2.ZERO
+    for obj in objects_to_observe:
+        var relative_position := Vector2.ZERO
 
-		## If object has been removed, keep the zeroed position
-		if is_instance_valid(obj): relative_position = to_local(obj.global_position)
+        ## If object has been removed, keep the zeroed position
+        if is_instance_valid(obj): relative_position = to_local(obj.global_position)
 
-		if debug_lines:
-			line.add_point(Vector2.ZERO)
-			line.add_point(relative_position)
+        if debug_lines:
+            line.add_point(Vector2.ZERO)
+            line.add_point(relative_position)
 
-		var direction := Vector2.ZERO 
-		var distance := 0.0
-		if use_separate_direction:
-			direction = relative_position.normalized()
-			distance = min(relative_position.length() / max_distance, 1.0)
-			if include_x:
-				observations.append(direction.x)
-			if include_y:
-				observations.append(direction.y)
-			observations.append(distance)
-		else:
-			relative_position = relative_position.limit_length(max_distance) / max_distance
-			if include_x:
-				observations.append(relative_position.x)
-			if include_y:
-				observations.append(relative_position.y)
+        var direction := Vector2.ZERO 
+        var distance := 0.0
+        if use_separate_direction:
+            direction = relative_position.normalized()
+            distance = min(relative_position.length() / max_distance, 1.0)
+            if include_x:
+                observations.append(direction.x)
+            if include_y:
+                observations.append(direction.y)
+            observations.append(distance)
+        else:
+            relative_position = relative_position.limit_length(max_distance) / max_distance
+            if include_x:
+                observations.append(relative_position.x)
+            if include_y:
+                observations.append(relative_position.y)
 
-	return observations
+    return observations

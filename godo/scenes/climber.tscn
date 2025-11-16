@@ -269,6 +269,7 @@ script = ExtResource("9_7aipt")
 [node name="RaycastCorner" type="Node2D" parent="AIController2D/NodeAbove"]
 position = Vector2(-80, -80)
 script = ExtResource("8_7aipt")
+n_rays = 8.0
 ray_length = 300
 cone_width = 80.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
@@ -277,12 +278,12 @@ metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 position = Vector2(80, -80)
 rotation = 3.1415927
 script = ExtResource("8_7aipt")
+n_rays = 8.0
 ray_length = 300
 cone_width = 80.0
 metadata/_custom_type_script = "uid://c3ox4b85c5hd1"
 
 [node name="Sprite2D" type="Sprite2D" parent="AIController2D/NodeAbove"]
-visible = false
 position = Vector2(0, -100)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("10_qjkbj")

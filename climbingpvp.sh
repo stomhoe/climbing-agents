@@ -21,13 +21,13 @@ set_resume_arg() {
 
 if [ "$NEW_RUN" = false ]; then
     set_resume_arg
-    RANDOM_ARG="--random=1.5"
+    RANDOM_ARG="--random=1.0"
     RAND_INCR=""
-    RAND_CAP=""
+    RAND_CAP="--rand_cap=1.0"
 else
     RESUME_ARG=""
-    RANDOM_ARG="--random=0"
-    RAND_INCR="--rand_incr=0.01"
+    RANDOM_ARG="--random=1.0"
+    RAND_INCR="--rand_incr=0.0"
     RAND_CAP="--rand_cap=1"
 fi
 set_exp_name() {
@@ -45,7 +45,7 @@ while true; do
         --infection_ratio=0.0 \
         --round_duration=600 \
         --n_arenas=$([ "$VIZ" = "--viz" ] && echo 1 || echo 30) \
-        --pvp=0 \
+        --pvp=-1 \
         --collision \
         $VIZ \
         --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 6) \
