@@ -12,7 +12,7 @@ var climbers: Array[Climber] = []
 
 # Position tracking for stagnation penalty
 var climber_positions: PackedVector2Array = PackedVector2Array()
-var position_tolerance: float = 15.0   # Distance tolerance for considering "same position"
+var position_tolerance: float = 20.0   # Distance tolerance for considering "same position"
 
 @export var n_climbers: int:
     set(value):
@@ -168,7 +168,7 @@ func infection_game_ended() -> bool:
 
 var grace_period: float = 3.0
 var grace_active: bool = true
-const OUT_OF_BOUNDS_THRESHOLD: float = -2000.0
+const OUT_OF_BOUNDS_THRESHOLD: float = -150.0
 func _process(delta: float):
     delta *= Config.speed_up
     climb_round_timer -= delta
@@ -181,15 +181,12 @@ func _process(delta: float):
         climb_round_timer = _calc_round_duration()
         _new_round()
         return
-    var gravity_vec: Vector2 = Vector2(cos(gravity_angle), sin(gravity_angle))
 
     if current_game_mode == GameMode.CLIMBING:
         for i in range(climbers.size()):
             var climber: Climber = climbers[i]
 
             var dist_reward: float = get_dist_reward(climber)
-
-            var dist_from_origin: Vector2 = climber.get_pos() - global_position
 
             if dist_reward < OUT_OF_BOUNDS_THRESHOLD:
                 climber.reset(true)
@@ -215,7 +212,7 @@ func _process(delta: float):
                 climber.stagnation_timer = 0.0
                 climber_positions[i] = current_pos
 
-            climber.ai_controller.reward = 300. + get_dist_reward(climber) + climber.accumulated_reward_from_making_others_fall - climber.accumulated_punishment_from_getting_fallen
+            climber.ai_controller.reward = get_dist_reward(climber) + climber.accumulated_reward_from_making_others_fall - climber.accumulated_punishment_from_getting_fallen
 
             if !climber_highest_reward or climber.ai_controller.reward > climber_highest_reward.ai_controller.reward:
                 climber_highest_reward = climber
@@ -248,7 +245,7 @@ func spawn_box() -> void:
             max_angle = PI/1.6
 
         var noisy_direction: Vector2 = reward_vec.rotated(randf_range(-max_angle, max_angle))
-        var offset_length: float = min_distance + randf() * 40.0  # Add some randomness to distance
+        var offset_length: float = min_distance + randf() * 40.0 
         var random_offset: Vector2 = noisy_direction * offset_length
 
         var perp: Vector2 = noisy_direction.orthogonal().normalized()
@@ -260,7 +257,7 @@ func spawn_box() -> void:
         box.scale = Vector2(2.2, 2.2)
         spawn_position *= 1.8
         box.rotation = reward_angle
-        # Separate climbers from box if too close
+
         for climber in climbers:
             var climber_pos = climber.get_pos()
             if spawn_position.distance_to(climber_pos) < 30.0:
@@ -299,7 +296,7 @@ func get_dist_reward(climber: Climber) -> float:
     mod_i += 1
     var distance_from_orig: Vector2 = climber.get_pos() - global_position
     var reward: float = distance_from_orig.dot(reward_vec)
-    var base_angle_limit: float = deg_to_rad(75)
+    var base_angle_limit: float = deg_to_rad(100)
     var extra_strictness: float = clamp((distance_from_orig.length()) * 0.0004, 0.0, deg_to_rad(65))#ESTÁ EN RADIANES
     var angle_limit: float = base_angle_limit - extra_strictness
     # if mod_i % 1000 == 0:
@@ -312,7 +309,7 @@ func get_dist_reward(climber: Climber) -> float:
     var angle_diff: float = abs(distance_from_orig.angle_to(reward_vec))
     if angle_diff > angle_limit:
         reward = -abs(reward)
-    return reward
+    return reward + 100.0
 
 
     

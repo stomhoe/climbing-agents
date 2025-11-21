@@ -61,7 +61,6 @@ func _ready():
     if sync.args.has(&"random"):
         init_rand_mult = float(sync.args[&"random"])
         
-    print("random: %f.2" % init_rand_mult)
 
     if sync.args.has(&"infection_ratio"):
         infection_ratio = float(sync.args[&"infection_ratio"])

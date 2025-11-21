@@ -4,21 +4,28 @@ class_name AIClimbController
 @onready var climber: Climber = $".."
 
 @onready var body_sensor: BodySensor = $RaycastBody
-@onready var reward_label: Label = $"../Labels/Label"
-@onready var id_label: Label = $"../Labels/id_Label"
+@onready var reward_label: Label = $"../Labels/score_Label"
 
 @onready var node_above: CornerSensors = $NodeAbove
 
+
 func _process(_delta: float):
-    reward_label.text = str(int(reward))
+    var int_reward: int = int(reward)
+    reward_label.text = str(int_reward)
+    if int_reward <= 0:
+        reward_label.set(&"theme_override_colors/font_color",Color.RED)
+    else:
+        reward_label.set(&"theme_override_colors/font_color",Color.WHITE)
 
 const POS_DIV: float = 2000.0
 
 var obs: PackedFloat64Array = PackedFloat64Array()
 func get_obs() -> Dictionary:
     obs.clear()
-    obs.append(climber.target_angle / TAU)
+    obs.append(climber.target_angle)
     obs.append(climber.torso.global_rotation / TAU)
+    obs.append(climber.torso.global_position.x / POS_DIV)
+    obs.append(climber.torso.global_position.y / POS_DIV)
     obs.append(climber.torso.angular_velocity / 1000.0)
     obs.append(climber.torso.linear_velocity.x / 200.0)
     obs.append(climber.torso.linear_velocity.y / 200.0)
