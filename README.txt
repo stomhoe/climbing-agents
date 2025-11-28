@@ -17,3 +17,5 @@ python stable_baselines3_example.py --env_path=godo_ --experiment_name=experimen
 
 
 https://github.com/edbeeching/godot_rl_agents/blob/main/docs/ADV_STABLE_BASELINES_3.md
+
+TODO: EMPEZAR A MEDIR AVERAGES Y MÉTRICAS
