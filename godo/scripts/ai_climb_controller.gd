@@ -119,3 +119,9 @@ func set_action(action: Dictionary) -> void:
     var new_controlled: Grabber = (climber.joints.keys())[grabber_i]
     climber.currently_controlled = new_controlled
         
+
+var is_success := false
+func get_info() -> Dictionary:
+    if done: 
+        return {"is_success": is_success}
+    return {}

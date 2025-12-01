@@ -30,10 +30,9 @@ else
     RAND_CAP="--rand_cap=0.5"
 fi
 set_exp_name() {
-    EXPERIMENT_NAME="$([ "$VIZ" = "--viz" ] && echo "viz-")nocol$(date +'%B%d-%H:%M:%S')"
+    echo "$([ "$VIZ" = "--viz" ] && echo "viz-")nocol$(date +'%B%d-%H:%M:%S')"
 }
 
-set_exp_name
 
 while true; do
     python stable_baselines3_example.py \
@@ -42,19 +41,21 @@ while true; do
         $RAND_INCR \
         $RAND_CAP \
         --infection_ratio=0.0 \
-        --round_duration=$([ "$VIZ" = "--viz" ] && echo 30 || echo 100) \
+        --round_duration=$([ "$VIZ" = "--viz" ] && echo 60 || echo 60) \
         --n_arenas=1 \
         --pvp=-1 \
         $VIZ \
         --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 5) \
-        --onnx_export_path=model.onnx \
-        $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=100_000") \
-        --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \
+        --onnx_export_path=$(set_exp_name).onnx \
+        $([ "$VIZ" != "--viz" ] && echo "--save_model_path=logs/sb3/$(set_exp_name)_saved.zip") \
+        $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=200_000") \
+        --speedup=$([ "$VIZ" = "--viz" ] && echo 10 || echo 10) \
         --env_path=godo.x86_64 \
-        --experiment_name="$EXPERIMENT_NAME" \
+        --experiment_name=$(set_exp_name) \
         --timesteps=100_000_000_000 \
+        --height_to_win=1300.0 \
         $RESUME_ARG
 
     set_resume_arg
-    set_exp_name
+    
 done

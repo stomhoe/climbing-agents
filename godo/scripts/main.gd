@@ -27,6 +27,8 @@ var n_climbers: int:
         for map_instance in instantiated_maps:
             map_instance.n_climbers = n_climbers
 
+static var height_to_win: float = 2000.0
+
 static var round_duration: float = 60.
 
 static var init_rand_mult: float = 1.0
@@ -78,6 +80,9 @@ func _ready():
 
     if sync.args.has(&"idle_timeout"):
         idle_timeout = float(sync.args[&"idle_timeout"])
+
+    if sync.args.has(&"height_to_win"):
+        height_to_win = float(sync.args[&"height_to_win"])
 
     speed_up = sync.speed_up
 

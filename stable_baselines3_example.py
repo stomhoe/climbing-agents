@@ -131,6 +131,12 @@ parser.add_argument(
     help="randomness range",
 )
 parser.add_argument(
+    "--height_to_win",
+    default=2000.0,
+    type=float,
+    help="Height a climber needs to reach to win the round",
+)
+parser.add_argument(
     "--infection_ratio",
     default=0.2,
     type=float,
@@ -232,6 +238,7 @@ env = StableBaselinesGodotEnv(
     n_climbers=args.n_climbers,
     round_duration=args.round_duration,
     random=args.random,
+    height_to_win=args.height_to_win,
     n_arenas=args.n_arenas,
     infection_ratio=args.infection_ratio,
     rand_incr=args.rand_incr,
