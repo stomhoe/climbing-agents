@@ -55,7 +55,6 @@ func get_action_space() -> Dictionary:
         "control" : {"size": 1, "action_type": "discrete"},
         "control_2" : {"size": 1, "action_type": "discrete"},
         "move" : {"size": 2, "action_type": "continuous"},
-
          "l_shoulder": {"size": 1, "action_type": "continuous"},
          "r_shoulder": {"size": 1, "action_type": "continuous"},
          "l_hip": {"size": 1, "action_type": "continuous"},
@@ -64,58 +63,34 @@ func get_action_space() -> Dictionary:
          "r_knee": {"size": 1, "action_type": "continuous"},
          "l_elbow": {"size": 1, "action_type": "continuous"},
          "r_elbow": {"size": 1, "action_type": "continuous"},
-        # "lock_l_arm": {"size": 1, "action_type": "discrete"},
-        # "lock_r_arm": {"size": 1, "action_type": "discrete"},
-        # "lock_l_leg": {"size": 1, "action_type": "discrete"},
-        # "lock_r_leg": {"size": 1, "action_type": "discrete"},
         "left_hand_grab_on_contact": {"size": 1, "action_type": "discrete"},
         "right_hand_grab_on_contact": {"size": 1, "action_type": "discrete"},
         "left_foot_grab_on_contact": {"size": 1, "action_type": "discrete"},
         "right_foot_grab_on_contact": {"size": 1, "action_type": "discrete"},
-
-        #"node_above_angle": {"size": 1, "action_type": "continuous"},
-
     }
     
-var rotor_speed: float = 30
+# Rotor speed multiplier
+var mult: float = 30
 
-func set_action(action: Dictionary) -> void:	
+func set_action(a: Dictionary) -> void:	
     
-    var move: Vector2 = Vector2(action[&"move"][0], action[&"move"][1])
+    var move := Vector2(a[&"move"][0], a[&"move"][1])
     climber.force_direction = move.normalized()
 
-    var grabber_i: int = (abs(action[&"control"]*2) + abs(action[&"control_2"])) as int
+    var grabber_i := int(abs(a[&"control"]*2) + abs(a[&"control_2"]))
 
-    climber.l_hand_grabber.grab_on_contact = action[&"left_hand_grab_on_contact"]
-    climber.r_hand_grabber.grab_on_contact = action[&"right_hand_grab_on_contact"]
-    climber.l_foot_grabber.grab_on_contact = action[&"left_foot_grab_on_contact"]
-    climber.r_foot_grabber.grab_on_contact = action[&"right_foot_grab_on_contact"]
-    '''
-    for joint in climber.joints[climber.r_hand_grabber]:
-        joint.angular_limit_enabled = action[&"lock_r_arm"] as bool
-        joint.motor_enabled = not action[&"lock_r_arm"] as bool
-    for joint in climber.joints[climber.l_hand_grabber]:
-        joint.angular_limit_enabled = action[&"lock_l_arm"] as bool
-        joint.motor_enabled = not action[&"lock_l_arm"] as bool
-    for joint in climber.joints[climber.r_foot_grabber]:
-        joint.angular_limit_enabled = action[&"lock_r_leg"] as bool
-        joint.motor_enabled = not action[&"lock_r_leg"] as bool
-    for joint in climber.joints[climber.l_foot_grabber]:
-        joint.angular_limit_enabled = action[&"lock_l_leg"] as bool
-        joint.motor_enabled = not action[&"lock_l_leg"] as bool
-    '''
-
-    climber.l_shoulder.motor_target_velocity = action[&"l_shoulder"][0]*rotor_speed
-    climber.r_shoulder.motor_target_velocity = action[&"r_shoulder"][0]*rotor_speed
-    climber.l_hip.motor_target_velocity = action[&"l_hip"][0]*rotor_speed
-    climber.r_hip.motor_target_velocity = action[&"r_hip"][0]*rotor_speed
-    climber.l_thigh.joint.motor_target_velocity = action[&"l_knee"][0]*rotor_speed
-    climber.r_thigh.joint.motor_target_velocity = action[&"r_knee"][0]*rotor_speed
-    climber.l_upperarm.joint.motor_target_velocity = action[&"l_elbow"][0]*rotor_speed
-    climber.r_upperarm.joint.motor_target_velocity = action[&"r_elbow"][0]*rotor_speed
-
-    #node_above.global_rotation = (action[&"node_above_angle"][0] * TAU) + PI/2
-
+    climber.l_hand_grabber.grab_on_contact = a[&"left_hand_grab_on_contact"]
+    climber.r_hand_grabber.grab_on_contact = a[&"right_hand_grab_on_contact"]
+    climber.l_foot_grabber.grab_on_contact = a[&"left_foot_grab_on_contact"]
+    climber.r_foot_grabber.grab_on_contact = a[&"right_foot_grab_on_contact"]
+    climber.l_shoulder.motor_target_velocity = a[&"l_shoulder"][0] * mult
+    climber.r_shoulder.motor_target_velocity = a[&"r_shoulder"][0] * mult
+    climber.l_hip.motor_target_velocity = a[&"l_hip"][0] * mult
+    climber.r_hip.motor_target_velocity = a[&"r_hip"][0] * mult
+    climber.l_thigh.joint.motor_target_velocity = a[&"l_knee"][0] * mult
+    climber.r_thigh.joint.motor_target_velocity = a[&"r_knee"][0] * mult
+    climber.l_upperarm.joint.motor_target_velocity = a[&"l_elbow"][0] * mult
+    climber.r_upperarm.joint.motor_target_velocity = a[&"r_elbow"][0] * mult
     var new_controlled: Grabber = (climber.joints.keys())[grabber_i]
     climber.currently_controlled = new_controlled
         
