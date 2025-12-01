@@ -37,16 +37,16 @@ set_exp_name
 
 while true; do
     python stable_baselines3_example.py \
-        --n_climbers=$([ "$VIZ" = "--viz" ] && echo 10 || echo 60) \
+        --n_climbers=$([ "$VIZ" = "--viz" ] && echo 10 || echo 50) \
         $RANDOM_ARG \
         $RAND_INCR \
         $RAND_CAP \
         --infection_ratio=0.0 \
-        --round_duration=$([ "$VIZ" = "--viz" ] && echo 30 || echo 60) \
+        --round_duration=$([ "$VIZ" = "--viz" ] && echo 30 || echo 100) \
         --n_arenas=1 \
         --pvp=-1 \
         $VIZ \
-        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 8) \
+        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 5) \
         --onnx_export_path=model.onnx \
         $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=100_000") \
         --speedup=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \

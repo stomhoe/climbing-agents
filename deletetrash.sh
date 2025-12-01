@@ -1,5 +1,4 @@
 EXPS_DIR="logs"
-
 # Delete directories matching patterns
 find "$EXPS_DIR" -maxdepth 2 -type d \( -name 'editor*' \) -exec rm -rf {} +
 
@@ -8,8 +7,9 @@ latest_file=$(find "$EXPS_DIR" -type f -name 'events.out.tfevents.*' -printf '%T
 
 # Find all events.out.tfevents.* files
 find "$EXPS_DIR" -type f -name 'events.out.tfevents.*' | while read -r event_file; do
-    if [[ "$event_file" != "$latest_file" ]]; then
-        dir_to_delete=$(dirname "$event_file")
+    dir_to_delete=$(dirname "$event_file")
+    # Delete if directory starts with 'viz'
+    if [[ "$(basename "$dir_to_delete")" == viz* ]]; then
         rm -rf "$dir_to_delete"
     fi
 done
