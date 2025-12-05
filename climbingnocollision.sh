@@ -46,9 +46,9 @@ while true; do
         --pvp=-1 \
         $VIZ \
         --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 4) \
-        --onnx_export_path=$(set_exp_name).onnx \
+        $([ "$VIZ" != "--viz" ] && echo "--onnx_export_path=$(set_exp_name).onnx") \
         $([ "$VIZ" != "--viz" ] && echo "--save_model_path=logs/sb3/$(set_exp_name)_saved.zip") \
-        $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=200_000") \
+        $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=100_000") \
         --speedup=$([ "$VIZ" = "--viz" ] && echo 10 || echo 10) \
         --env_path=godo.x86_64 \
         --experiment_name=$(set_exp_name) \
