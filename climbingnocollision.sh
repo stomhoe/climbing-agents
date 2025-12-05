@@ -36,7 +36,7 @@ set_exp_name() {
 
 while true; do
     python stable_baselines3_example.py \
-        --n_climbers=$([ "$VIZ" = "--viz" ] && echo 10 || echo 50) \
+        --n_climbers=$([ "$VIZ" = "--viz" ] && echo 10 || echo 40) \
         $RANDOM_ARG \
         $RAND_INCR \
         $RAND_CAP \
@@ -45,7 +45,7 @@ while true; do
         --n_arenas=1 \
         --pvp=-1 \
         $VIZ \
-        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 5) \
+        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 4) \
         --onnx_export_path=$(set_exp_name).onnx \
         $([ "$VIZ" != "--viz" ] && echo "--save_model_path=logs/sb3/$(set_exp_name)_saved.zip") \
         $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=200_000") \

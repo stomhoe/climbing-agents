@@ -291,21 +291,12 @@ var reward_angle: float:
 func add_new_infected(climber: Climber) -> void:
     infected.append(climber); non_infected.erase(climber)
 
-var mod_i: int = 0
 func get_dist_reward(climber: Climber) -> float:
-    mod_i += 1
-    var distance_from_orig: Vector2 = climber.get_pos() - global_position
+    var distance_from_orig := climber.get_pos() - global_position
     var reward: float = distance_from_orig.dot(reward_vec)
     var base_angle_limit: float = deg_to_rad(100)
-    var extra_strictness: float = clamp((distance_from_orig.length()) * 0.0004, 0.0, deg_to_rad(65))#ESTÁ EN RADIANES
+    var extra_strictness: float = clamp((distance_from_orig.length()) * 0.0004, 0., deg_to_rad(65))#ESTÁ EN RADIANES
     var angle_limit: float = base_angle_limit - extra_strictness
-    # if mod_i % 1000 == 0:
-    #     print("Climber ID: %d, Distance from orig: %f, Extra strictness: %f°, Angle limit: %f°" % [
-    #         climber.int_id,
-    #         distance_from_orig.length(),
-    #         rad_to_deg(extra_strictness),
-    #         rad_to_deg(angle_limit)
-    #     ])
     var angle_diff: float = abs(distance_from_orig.angle_to(reward_vec))
     if angle_diff > angle_limit:
         reward = -abs(reward)

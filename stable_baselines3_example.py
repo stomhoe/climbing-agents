@@ -100,80 +100,21 @@ parser.add_argument(
     default=False,
 )
 parser.add_argument("--speedup", default=1, type=int, help="Whether to speed up the physics in the env")
-parser.add_argument(
-    "--n_parallel",
-    default=1,
-    type=int,
+parser.add_argument("--n_parallel", default=1, type=int, 
     help="How many instances of the environment executable to " "launch - requires --env_path to be set if > 1.",
 )
-parser.add_argument(
-    "--n_climbers",
-    default=10,
-    type=int,
-    help="How many climbers to spawn per arena",
-)
-parser.add_argument(
-    "--n_arenas",
-    default=20,
-    type=int,
-    help="How many arenas to spawn in the environment.",
-)
-parser.add_argument(
-    "--round_duration",
-    default=60,
-    type=float,
-    help="How long each round lasts in seconds.",
-)
-parser.add_argument(
-    "--random",
-    default=0.0,
-    type=float,
-    help="randomness range",
-)
-parser.add_argument(
-    "--height_to_win",
-    default=2000.0,
-    type=float,
-    help="Height a climber needs to reach to win the round",
-)
-parser.add_argument(
-    "--infection_ratio",
-    default=0.2,
-    type=float,
-    help="Ratio of games that will be infection tag mode",
-)
-parser.add_argument(
-    "--rand_incr",
-    default=0.01,
-    type=float,
-    help="Randomness increment for each round",
-)
-
-parser.add_argument(
-    "--idle_timeout",
-    default=7.,
-    type=float,
-    help="Time in seconds before a climber is considered idle and reset",
-)
-
-parser.add_argument(
-    "--rand_cap",
-    default=1.00,
-    type=float,
-    help="Randomness increase cap",
-)
-parser.add_argument(
-    "--pvp",
-    default=10,
-    type=int,
-    help="If set, enables player vs player rewards on round number specified",
-)
-parser.add_argument(
-    "--collision",
-    action="store_true",
-    default=False,
-    help="If set, enables collision between climbers",
-)
+parser.add_argument("--n_climbers", default=10, type=int, help="How many climbers to spawn per tower",)
+parser.add_argument("--n_arenas", default=20, type=int, help="How many separate towers to spawn in the environment.")
+parser.add_argument("--round_duration", default=60, type=float, help="How long each round lasts in seconds.")
+parser.add_argument("--random", default=0.0, type=float, help="randomness range")
+parser.add_argument("--height_to_win", default=2000.0, type=float, help="Height a climber needs to reach to win the round")
+parser.add_argument("--rand_incr", default=0.01, type=float, help="Randomness increment for each round")
+parser.add_argument("--idle_timeout", default=7., type=float, help="Time in seconds before a climber is considered idle and reset")
+parser.add_argument("--rand_cap", default=1.00, type=float, help="Randomness increase cap")
+parser.add_argument("--pvp", default=10, type=int, help="If set > 0, enables player vs player rewards on round number specified")
+parser.add_argument("--collision", action="store_true", default=False, help="If set, enables collision between climbers")
+#ignorar
+parser.add_argument("--infection_ratio", default=0.0, type=float, help="Ratio of games that will be infection tag mode")
 
 args, extras = parser.parse_known_args()
 
