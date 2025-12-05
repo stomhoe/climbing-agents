@@ -17,6 +17,9 @@ set_resume_arg() {
     RESUME_PATH=$(find "$(pwd)/logs" -name "*.zip" -print0 | xargs -0 ls -lt | head -n 1 | awk '{print $9}')
     RESUME_ARG="--resume_model_path=$RESUME_PATH"
 }
+if [ "$VIZ" != "--viz" ]; then
+    killall -9 godo.x86_64
+fi
 
 if [ "$NEW_RUN" = false ]; then
     set_resume_arg
