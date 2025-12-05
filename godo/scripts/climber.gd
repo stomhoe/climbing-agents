@@ -118,6 +118,8 @@ func reset(punish: bool = false):
     if role == Role.CLIMBER:
         var is_success := map.get_dist_reward(self) >= 2000.0 * Config.round_duration / 60.0
         ai_controller.is_success = is_success   
+        ai_controller.done = true
+        ai_controller.needs_reset = true
 
     ai_controller.reset()
     accumulated_reward_from_making_others_fall = 0.0
