@@ -76,6 +76,11 @@ var spawn_position: Vector2 = Vector2.ZERO
 var bitten_count: int = 0
 enum Role {CLIMBER, SURVIVOR, INFECTED}
 
+func angular_distance_to_target_angle_normalized() -> float:
+    var self_angle: float = (get_pos() - map.position).angle()
+    var angle_diff: float = wrapf(self_angle - target_angle, -PI, PI)
+    return angle_diff/PI
+
 var role: Role = Role.CLIMBER:
     set(value):
         role = value

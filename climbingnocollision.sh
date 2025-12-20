@@ -48,7 +48,7 @@ while true; do
         --n_arenas=1 \
         --pvp=-1 \
         $VIZ \
-        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 4) \
+        --n_parallel=$([ "$VIZ" = "--viz" ] && echo 1 || echo 10) \
         $([ "$VIZ" != "--viz" ] && echo "--onnx_export_path=$(set_exp_name).onnx") \
         $([ "$VIZ" != "--viz" ] && echo "--save_model_path=logs/sb3/$(set_exp_name)_saved.zip") \
         $([ "$VIZ" != "--viz" ] && echo "--save_checkpoint_frequency=100_000") \

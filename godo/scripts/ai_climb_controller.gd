@@ -22,7 +22,7 @@ const POS_DIV: float = 2000.0
 var obs: PackedFloat64Array = PackedFloat64Array()
 func get_obs() -> Dictionary:
     obs.clear()
-    obs.append(climber.target_angle)
+    obs.append(climber.angular_distance_to_target_angle_normalized())
     obs.append(climber.torso.global_rotation / TAU)
     obs.append(climber.torso.global_position.x / POS_DIV)
     obs.append(climber.torso.global_position.y / POS_DIV)
