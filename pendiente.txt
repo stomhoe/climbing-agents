@@ -1,2 +1,0 @@
-
-poner código de generación de estadísticas para comparar rendimiento entre distintos algoritmos de RL (comparar velocidad de mejora)
